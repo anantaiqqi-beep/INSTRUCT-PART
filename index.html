@@ -18,7 +18,7 @@
             --sap-btn-hover: #f0f2f4;
             --sap-tree-hover: #eaf3fc;
             --sap-tree-selected: #d0e5fa;
-            --sap-folder-icon: #f4b400; /* Warna Folder Khas SAP Signature */
+            --sap-folder-icon: #f4b400; /* Warna Folder Khas SAP */
         }
 
         [data-theme="dark"] {
@@ -159,7 +159,7 @@
             align-items: center;
             padding: 6px 12px;
             cursor: pointer;
-            gap: 6px;
+            gap: 8px;
             color: var(--sap-text-primary);
         }
 
@@ -167,29 +167,7 @@
             background-color: var(--sap-tree-hover);
         }
 
-        .sap-tree-row.selected {
-            background-color: var(--sap-tree-selected);
-            font-weight: bold;
-        }
-
-        /* Tree Arrow Indicator */
-        .sap-tree-arrow {
-            width: 12px;
-            font-size: 9px;
-            color: var(--sap-text-secondary);
-            display: inline-block;
-            transition: transform 0.15s ease;
-        }
-
-        .sap-tree-arrow.open {
-            transform: rotate(90deg);
-        }
-
-        .sap-tree-arrow.empty {
-            visibility: hidden;
-        }
-
-        /* SAP Folder Icon SVG */
+        /* SAP Folder Icon SVG Dynamic Toggle */
         .sap-folder-icon {
             width: 16px;
             height: 16px;
@@ -197,10 +175,18 @@
             flex-shrink: 0;
         }
 
+        /* SVG Path: Folder Closed vs Folder Open */
+        .folder-open-path { display: none; }
+        .folder-closed-path { display: inline; }
+
+        /* KONDISI TERBUKA (OPEN) */
+        .sap-tree-row.is-open .folder-open-path { display: inline; }
+        .sap-tree-row.is-open .folder-closed-path { display: none; }
+
         /* Sub-menu indentasi ala Tree */
         .sap-tree-children {
             display: none;
-            padding-left: 18px;
+            padding-left: 20px;
         }
 
         .sap-tree-children.open {
@@ -252,20 +238,24 @@
                 <!-- ROOT 1: FAVORITES (KOSONG) -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row" onclick="toggleFolder(this)">
-                        <span class="sap-tree-arrow">▶</span>
-                        <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                        <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                            <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                            <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                        </svg>
                         <span>Favorites</span>
                     </div>
                     <ul class="sap-tree-children">
-                        <!-- Kosong sesuai permintaan -->
+                        <!-- Kosong -->
                     </ul>
                 </li>
 
-                <!-- ROOT 2: MODULES (DENGAN SUB-FOLDER) -->
+                <!-- ROOT 2: MODULES (DEFAULT OPEN) -->
                 <li class="sap-tree-item">
-                    <div class="sap-tree-row" onclick="toggleFolder(this)">
-                        <span class="sap-tree-arrow open">▶</span>
-                        <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                    <div class="sap-tree-row is-open" onclick="toggleFolder(this)">
+                        <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                            <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                            <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                        </svg>
                         <span>Modules</span>
                     </div>
                     <ul class="sap-tree-children open">
@@ -273,8 +263,10 @@
                         <!-- Sub-Folder 1: Office -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                </svg>
                                 <span>Office</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -283,8 +275,10 @@
                         <!-- Sub-Folder 2: Accounting -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                </svg>
                                 <span>Accounting</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -293,8 +287,10 @@
                         <!-- Sub-Folder 3: Logistic -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                </svg>
                                 <span>Logistic</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -303,8 +299,10 @@
                         <!-- Sub-Folder 4: HR -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                </svg>
                                 <span>HR</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -313,8 +311,10 @@
                         <!-- Sub-Folder 5: Tools -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
+                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    <path class="folder-open-path" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                </svg>
                                 <span>Tools</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -331,7 +331,7 @@
 
     </div>
 
-    <!-- JAVASCRIPT: TOGGLE THEME & TREE EXPAND/COLLAPSE -->
+    <!-- JAVASCRIPT: TOGGLE THEME & FOLDER TOGGLE WITH ICON SWITCH -->
     <script>
         // Switch Theme (Light/Dark)
         function toggleTheme() {
@@ -344,16 +344,13 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
-        // Expand / Collapse Folder Tree
+        // Expand / Collapse Folder Tree + Change Folder Icon
         function toggleFolder(element) {
             const children = element.nextElementSibling;
-            const arrow = element.querySelector('.sap-tree-arrow');
             
             if (children && children.classList.contains('sap-tree-children')) {
                 children.classList.toggle('open');
-                if (arrow) {
-                    arrow.classList.toggle('open');
-                }
+                element.classList.toggle('is-open');
             }
         }
     </script>
