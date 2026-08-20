@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ananta Business One</title>
     <style>
-        /* --- VARIABEL WARNA (SAP Horizon Light, Dark & Signature Blue Status Bar) --- */
+        /* --- VARIABEL WARNA (SAP Horizon Light & Dark) --- */
         [data-theme="light"] {
             --sap-background-color: #f5f6f7;
             --sap-shell-color: #ffffff;
@@ -22,12 +22,12 @@
             --sap-folder-front: #f3b738;
             --sap-arrow-color: #6a6d70;
             
-            /* Status Bar Signature Blue Theme */
-            --sap-statusbar-bg: #dbe5f1;
-            --sap-statusbar-border: #abb8c7;
-            --sap-statusbar-text: #1e395b;
-            --sap-statusbar-field-bg: #ffffff;
-            --sap-statusbar-field-border: #b1c1d8;
+            /* Status Bar & Fields (Disinkronkan dengan tema UI) */
+            --sap-statusbar-bg: #ffffff;
+            --sap-statusbar-border: #d5dadd;
+            --sap-statusbar-text: #223548;
+            --sap-statusbar-field-bg: #f5f6f7;
+            --sap-statusbar-field-border: #d5dadd;
         }
 
         [data-theme="dark"] {
@@ -46,12 +46,12 @@
             --sap-folder-front: #ffcc00;
             --sap-arrow-color: #a2b4c7;
 
-            /* Status Bar Signature Dark */
-            --sap-statusbar-bg: #1c2733;
-            --sap-statusbar-border: #2e3d4e;
-            --sap-statusbar-text: #d0e1f9;
-            --sap-statusbar-field-bg: #111822;
-            --sap-statusbar-field-border: #32455a;
+            /* Status Bar & Fields (Disinkronkan dengan tema UI) */
+            --sap-statusbar-bg: #1d232a;
+            --sap-statusbar-border: #2e3742;
+            --sap-statusbar-text: #f5f6f7;
+            --sap-statusbar-field-bg: #12171c;
+            --sap-statusbar-field-border: #2e3742;
         }
 
         * {
@@ -165,7 +165,7 @@
             position: relative;
         }
 
-        /* RESIZER BAR (DRAG TO RESIZE PANEL) */
+        /* RESIZER BAR */
         .sap-resizer {
             width: 5px;
             background-color: var(--sap-border-color);
@@ -205,7 +205,7 @@
             background-color: var(--sap-tree-hover);
         }
 
-        /* ICON PANAH TOGGLE */
+        /* ICON PANAH TOGGLE TREE */
         .sap-arrow-icon {
             width: 14px;
             height: 14px;
@@ -260,19 +260,35 @@
             gap: 16px;
         }
 
-        /* 6. FOOTER STATUS BAR (SAP SIGNATURE BLUE THEME) */
+        /* 6. FOOTER STATUS BAR CONTAINER & FLOATING TOGGLE BUTTON */
+        .sap-status-bar-wrapper {
+            position: relative;
+            width: 100%;
+            z-index: 10;
+        }
+
         .sap-status-bar {
             height: 26px;
-            background: var(--sap-statusbar-bg);
+            background-color: var(--sap-statusbar-bg);
             border-top: 1px solid var(--sap-statusbar-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 8px;
+            padding: 0 36px 0 8px; /* Padding kanan untuk menyisakan ruang tombol */
             font-size: 11px;
             color: var(--sap-statusbar-text);
             user-select: none;
-            z-index: 10;
+            transition: height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+            overflow: hidden;
+        }
+
+        /* Sembunyikan Status Bar */
+        .sap-status-bar-wrapper.collapsed .sap-status-bar {
+            height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+            border-top: none;
         }
 
         .sap-status-message-area {
@@ -289,7 +305,7 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #2b7d2b; /* Indicator OK / Ready */
+            background-color: #2b7d2b;
             flex-shrink: 0;
         }
 
@@ -316,6 +332,46 @@
 
         .sap-status-field.system-id {
             font-weight: bold;
+        }
+
+        /* TOMBOL TOGGLE PANAH DI POJOK KANAN BAWAH */
+        .status-toggle-btn {
+            position: absolute;
+            right: 6px;
+            bottom: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--sap-statusbar-field-bg);
+            border: 1px solid var(--sap-statusbar-field-border);
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sap-text-primary);
+            z-index: 15;
+            transition: background-color 0.15s ease, bottom 0.2s ease;
+        }
+
+        .status-toggle-btn:hover {
+            background-color: var(--sap-btn-hover);
+            color: var(--sap-interactive-color);
+        }
+
+        .status-toggle-btn svg {
+            width: 12px;
+            height: 12px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        /* Rotasi panah saat status bar tersembunyi */
+        .sap-status-bar-wrapper.collapsed .status-toggle-btn svg {
+            transform: rotate(180deg);
+        }
+
+        .sap-status-bar-wrapper.collapsed .status-toggle-btn {
+            bottom: 6px;
         }
     </style>
 </head>
@@ -505,24 +561,33 @@
 
     </div>
 
-    <!-- 6. Footer Status Bar (SAP Logon Signature Blue) -->
-    <footer class="sap-status-bar">
-        <div class="sap-status-message-area">
-            <span class="sap-status-icon"></span>
-            <span>Ready</span>
-        </div>
-        <div class="sap-status-info-fields">
-            <div class="sap-status-field system-id" title="System ID">PRD</div>
-            <div class="sap-status-field" title="Client">100</div>
-            <div class="sap-status-field" title="User">ANANTA</div>
-            <div class="sap-status-field" title="Server">sap-app-01</div>
-            <div class="sap-status-field" title="Response Time">INS (1) 23ms</div>
-        </div>
-    </footer>
+    <!-- 6. Footer Status Bar Container & Toggle Button -->
+    <div class="sap-status-bar-wrapper" id="statusBarWrapper">
+        <footer class="sap-status-bar">
+            <div class="sap-status-message-area">
+                <span class="sap-status-icon"></span>
+                <span>Ready</span>
+            </div>
+            <div class="sap-status-info-fields">
+                <div class="sap-status-field system-id" title="System ID">PRD</div>
+                <div class="sap-status-field" title="Client">100</div>
+                <div class="sap-status-field" title="User">ANANTA</div>
+                <div class="sap-status-field" title="Server">sap-app-01</div>
+                <div class="sap-status-field" title="Response Time">INS (1) 23ms</div>
+            </div>
+        </footer>
 
-    <!-- JAVASCRIPT: THEME, FOLDER TOGGLE, & RESIZABLE SIDEBAR -->
+        <!-- Tombol Panah Toggle Toggle Status Bar -->
+        <button class="status-toggle-btn" id="statusToggleBtn" onclick="toggleStatusBar()" title="Sembunyikan/Tampilkan Status Bar">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- JAVASCRIPT -->
     <script>
-        // Switch Theme
+        // Switch Theme (Light/Dark)
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -533,7 +598,7 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
-        // Expand / Collapse Folder
+        // Expand / Collapse Folder Tree
         function toggleFolder(element) {
             const children = element.nextElementSibling;
             
@@ -543,7 +608,13 @@
             }
         }
 
-        // Resizable Sidebar Functionality
+        // Toggle Expand/Collapse Status Bar
+        function toggleStatusBar() {
+            const wrapper = document.getElementById('statusBarWrapper');
+            wrapper.classList.toggle('collapsed');
+        }
+
+        // Resizable Sidebar
         const sidebar = document.getElementById('sidebar');
         const resizer = document.getElementById('resizer');
         let isResizing = false;
@@ -559,7 +630,6 @@
             if (!isResizing) return;
             let newWidth = e.clientX - sidebar.getBoundingClientRect().left;
             
-            // Batas minimal dan maksimal lebar panel
             if (newWidth >= 180 && newWidth <= 600) {
                 sidebar.style.width = newWidth + 'px';
             }
