@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 380px;
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        .login-card h2 {
+            font-size: 20px;
+            color: #333333;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #555555;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #1890ff;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: #777777;
+            transition: fill 0.2s;
+        }
+
+        .toggle-password:hover svg {
+            fill: #333333;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #1890ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #40a9ff;
+        }
+
+        .btn-login:disabled {
+            background-color: #bfbfbf;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 16px;
+            font-size: 13px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        #message.success {
+            display: block;
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        #message.error {
+            display: block;
+            background-color: #fff1f0;
+            color: #ff4d4f;
+            border: 1px solid #ffa39e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card" id="loginCard">
+        <h2>System Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan Username" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="Masukkan Password" required>
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                        <svg id="eyeIcon" viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">Login</button>
+            <div id="message"></div>
+        </form>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const loginForm = document.getElementById('loginForm');
+        const btnLogin = document.getElementById('btnLogin');
+        const messageDiv = document.getElementById('message');
+
+        const eyeOpenPath = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
+        const eyeClosedPath = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.17c0-1.66-1.34-3-3-3l-.17.02z";
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            eyeIcon.querySelector('path').setAttribute('d', isPassword ? eyeClosedPath : eyeOpenPath);
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = passwordInput.value.trim();
+            var MATH = username + password;
+
+            btnLogin.disabled = true;
+            btnLogin.innerText = 'Memvalidasi...';
+            messageDiv.className = '';
+            messageDiv.style.display = 'none';
+
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbwARJAXmtGqvlV4-oicW_HBUiBz_JvYHxLMjl23LoxtFOSvAk0EUxpYIJvPC_OYaI0n/exec";
+            const targetPageUrl = "https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/4a359c86c4053049d632caaf872f4d68cee1947a/index.html";
+
+            try {
+                const response = await fetch(`${webAppUrl}?math=${encodeURIComponent(MATH)}`);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    btnLogin.innerText = 'Memuat Halaman...';
+                    
+                    // Fetch HTML dari GitHub Repositori
+                    const htmlResponse = await fetch(targetPageUrl);
+                    const htmlContent = await htmlResponse.text();
+
+                    // Timpa & Muat Halaman Utama
+                    document.open();
+                    document.write(htmlContent);
+                    document.close();
+                } else {
+                    messageDiv.className = 'error';
+                    messageDiv.innerText = result.message;
+                    btnLogin.disabled = false;
+                    btnLogin.innerText = 'Login';
+                }
+            } catch (error) {
+                messageDiv.className = 'error';
+                messageDiv.innerText = 'Gagal terhubung ke server.';
+                btnLogin.disabled = false;
+                btnLogin.innerText = 'Login';
+            }
+        });
+    </script>
+</body>
+</html>
