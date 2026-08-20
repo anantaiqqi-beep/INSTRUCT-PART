@@ -87,20 +87,20 @@
             background-color: #f2f2f2;
         }
 
-        /* Styling Icon Panah SVG */
-        .arrow-icon {
-            width: 14px;
-            height: 14px;
+        /* Image Icon Panah */
+        .arrow-img {
+            width: 12px;
+            height: 12px;
             margin-right: 10px;
-            fill: #555555;
             flex-shrink: 0;
-            /* Transisi animasi rotasi halus (0.3 detik) */
+            object-fit: contain;
+            /* Transisi animasi rotasi / slow spin */
             transition: transform 0.3s ease-in-out;
             transform: rotate(0deg); /* Posisi awal menghadap kanan */
         }
 
-        /* Rotasi panah ke bawah saat expanded */
-        .tree-item.expanded > .tree-header .arrow-icon {
+        /* Rotasi 90 derajat ke bawah saat menu expanded */
+        .tree-item.expanded > .tree-header .arrow-img {
             transform: rotate(90deg);
         }
 
@@ -111,13 +111,12 @@
             opacity: 0;
             padding-left: 20px;
             background-color: #fafafa;
-            /* Transisi animasi buka/tutup menu */
             transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
         }
 
         /* Tampilkan Submenu saat Expanded */
         .tree-item.expanded > .tree-submenu {
-            max-height: 200px; /* Batas tinggi maks untuk animasi transisi */
+            max-height: 200px;
             opacity: 1;
             padding-top: 4px;
             padding-bottom: 4px;
@@ -171,9 +170,7 @@
                 <!-- Office -->
                 <li class="tree-item">
                     <div class="tree-header">
-                        <svg class="arrow-icon" viewBox="0 0 24 24">
-                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                        </svg>
+                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
                         <span class="tree-title">Office</span>
                     </div>
                     <ul class="tree-submenu">
@@ -185,9 +182,7 @@
                 <!-- Accounting -->
                 <li class="tree-item">
                     <div class="tree-header">
-                        <svg class="arrow-icon" viewBox="0 0 24 24">
-                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                        </svg>
+                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
                         <span class="tree-title">Accounting</span>
                     </div>
                     <ul class="tree-submenu">
@@ -199,9 +194,7 @@
                 <!-- Logistic -->
                 <li class="tree-item">
                     <div class="tree-header">
-                        <svg class="arrow-icon" viewBox="0 0 24 24">
-                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                        </svg>
+                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
                         <span class="tree-title">Logistic</span>
                     </div>
                     <ul class="tree-submenu">
@@ -213,9 +206,7 @@
                 <!-- HR -->
                 <li class="tree-item">
                     <div class="tree-header">
-                        <svg class="arrow-icon" viewBox="0 0 24 24">
-                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                        </svg>
+                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
                         <span class="tree-title">HR</span>
                     </div>
                     <ul class="tree-submenu">
@@ -227,9 +218,7 @@
                 <!-- Tools -->
                 <li class="tree-item">
                     <div class="tree-header">
-                        <svg class="arrow-icon" viewBox="0 0 24 24">
-                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                        </svg>
+                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
                         <span class="tree-title">Tools</span>
                     </div>
                     <ul class="tree-submenu">
@@ -247,12 +236,11 @@
         <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
-    <!-- Script Interaktivitas Toggle -->
+    <!-- Script Toggle -->
     <script>
         document.querySelectorAll('.tree-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.parentElement;
-                // Toggle class 'expanded' untuk memicu animasi CSS
                 item.classList.toggle('expanded');
             });
         });
