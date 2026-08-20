@@ -21,12 +21,16 @@
             --sap-arrow-color: #6a6d70;
             --sap-dot-color: #0070f2;
             
+            /* Form & Input */
+            --sap-input-bg: #ffffff;
+            --sap-input-border: #899eb3;
+            --sap-card-bg: #ffffff;
+            --sap-card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #ffffff;
             --sap-statusbar-border: #d5dadd;
             --sap-statusbar-text: #223548;
-            --sap-card-bg: #ffffff;
-            --sap-card-shadow: 0 6px 18px rgba(0,0,0,0.15);
             --sap-statusbar-field-bg: #f5f6f7;
             --sap-statusbar-field-border: #d5dadd;
         }
@@ -46,12 +50,16 @@
             --sap-arrow-color: #a2b4c7;
             --sap-dot-color: #4db2ff;
 
+            /* Form & Input */
+            --sap-input-bg: #12171c;
+            --sap-input-border: #4d5d6d;
+            --sap-card-bg: #1d232a;
+            --sap-card-shadow: 0 4px 12px rgba(0,0,0,0.4);
+
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #1d232a;
             --sap-statusbar-border: #2e3742;
             --sap-statusbar-text: #f5f6f7;
-            --sap-card-bg: #1d232a;
-            --sap-card-shadow: 0 6px 18px rgba(0,0,0,0.5);
             --sap-statusbar-field-bg: #12171c;
             --sap-statusbar-field-border: #2e3742;
         }
@@ -207,6 +215,11 @@
             background-color: var(--sap-tree-hover);
         }
 
+        .sap-tree-row.selected {
+            background-color: var(--sap-tree-selected);
+            font-weight: 600;
+        }
+
         /* ICON PANAH TOGGLE TREE */
         .sap-arrow-icon {
             width: 14px;
@@ -224,7 +237,7 @@
             transform: rotate(90deg);
         }
 
-        /* ICON DOT / TRANSAKSI UNTUK SUB-MENU AKHIR */
+        /* ICON DOT / TRANSAKSI */
         .sap-dot-icon {
             width: 14px;
             height: 14px;
@@ -257,11 +270,121 @@
         /* MAIN CONTENT CONTAINER */
         .sap-main-content-container {
             flex: 1;
-            padding: 24px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+
+        /* STYLES DESAIN FORM WAREHOUSE */
+        .sap-card-panel {
+            background-color: var(--sap-card-bg);
+            border: 1px solid var(--sap-border-color);
+            border-radius: 6px;
+            box-shadow: var(--sap-card-shadow);
+            padding: 20px;
+            max-width: 800px;
+        }
+
+        .sap-card-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--sap-border-color);
+            color: var(--sap-interactive-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sap-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 24px;
+        }
+
+        .sap-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sap-form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .sap-form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--sap-text-secondary);
+        }
+
+        .sap-form-label span {
+            color: #d93b3b;
+        }
+
+        .sap-form-control {
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid var(--sap-input-border);
+            border-radius: 4px;
+            background-color: var(--sap-input-bg);
+            color: var(--sap-text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .sap-form-control:focus {
+            border-color: var(--sap-interactive-color);
+            box-shadow: 0 0 0 2px rgba(0, 112, 242, 0.2);
+        }
+
+        select.sap-form-control {
+            cursor: pointer;
+        }
+
+        textarea.sap-form-control {
+            height: auto;
+            padding: 8px 10px;
+            resize: vertical;
+        }
+
+        .sap-form-actions {
+            margin-top: 24px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .sap-btn {
+            height: 32px;
+            padding: 0 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .sap-btn-primary {
+            background-color: var(--sap-interactive-color);
+            color: #ffffff;
+        }
+
+        .sap-btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .sap-btn-secondary {
+            background-color: transparent;
+            border-color: var(--sap-border-color);
+            color: var(--sap-text-primary);
+        }
+
+        .sap-btn-secondary:hover {
+            background-color: var(--sap-btn-hover);
         }
 
         /* FOOTER STATUS BAR CONTAINER */
@@ -302,7 +425,7 @@
             flex-shrink: 0;
         }
 
-        /* FLOATING CARD POPOVER UNTUK STATUS ITEMS (VERTIKAL) */
+        /* FLOATING CARD POPOVER VERTIKAL */
         .sap-status-card {
             position: absolute;
             bottom: 32px;
@@ -352,7 +475,6 @@
             color: var(--sap-statusbar-text);
         }
 
-        /* TOMBOL PANAH TOGGLE DI STATUS BAR */
         .status-toggle-btn {
             background-color: var(--sap-statusbar-field-bg);
             border: 1px solid var(--sap-statusbar-field-border);
@@ -478,15 +600,15 @@
                                     </div>
                                     <ul class="sap-tree-children open">
                                         
-                                        <!-- Leaf Item 1: Warehouse (Icon DOT) -->
+                                        <!-- Leaf Item 1: Warehouse (Menu Transaksi) -->
                                         <li class="sap-tree-item">
-                                            <div class="sap-tree-row">
+                                            <div class="sap-tree-row" id="menuWarehouse" onclick="openWarehouseForm(this)">
                                                 <span class="sap-dot-icon"></span>
                                                 <span>Warehouse</span>
                                             </div>
                                         </li>
 
-                                        <!-- Leaf Item 2: Material (Icon DOT) -->
+                                        <!-- Leaf Item 2: Material -->
                                         <li class="sap-tree-item">
                                             <div class="sap-tree-row">
                                                 <span class="sap-dot-icon"></span>
@@ -532,7 +654,7 @@
         <div class="sap-resizer" id="resizer"></div>
 
         <!-- 5. Main Content Container -->
-        <main class="sap-main-content-container"></main>
+        <main class="sap-main-content-container" id="mainContent"></main>
 
     </div>
 
@@ -566,7 +688,7 @@
         <footer class="sap-status-bar">
             <div class="sap-status-message-area">
                 <span class="sap-status-icon"></span>
-                <span>Ready</span>
+                <span id="statusText">Ready</span>
             </div>
 
             <!-- Tombol Panah Toggle Popover Card -->
@@ -598,6 +720,66 @@
                 children.classList.toggle('open');
                 element.classList.toggle('is-open');
             }
+        }
+
+        // Fungsi Membuka Form Data Transaction Warehouse
+        function openWarehouseForm(element) {
+            // Unselect menu lain
+            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
+            element.classList.add('selected');
+
+            // Render Form Master Data Warehouse ke Main Content Container
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="sap-card-panel">
+                    <div class="sap-card-header">
+                        <span>Warehouse Master Data</span>
+                    </div>
+                    <form onsubmit="event.preventDefault();">
+                        <div class="sap-form-grid">
+                            
+                            <!-- 1. Plant -->
+                            <div class="sap-form-group">
+                                <label class="sap-form-label" for="plant">Plant <span>*</span></label>
+                                <select class="sap-form-control" id="plant">
+                                    <option value="">-- Select Plant --</option>
+                                    <option value="1000">1000 - Jakarta Central Plant</option>
+                                    <option value="2000">2000 - Surabaya Plant</option>
+                                    <option value="3000">3000 - Medan Plant</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. Warehouse Code -->
+                            <div class="sap-form-group">
+                                <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
+                                <input type="text" class="sap-form-control" id="whCode" placeholder="e.g. WH-001" maxlength="10" />
+                            </div>
+
+                            <!-- 3. Warehouse Name -->
+                            <div class="sap-form-group full-width">
+                                <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
+                                <input type="text" class="sap-form-control" id="whName" placeholder="e.g. Main Finished Goods Warehouse" />
+                            </div>
+
+                            <!-- 4. Location -->
+                            <div class="sap-form-group full-width">
+                                <label class="sap-form-label" for="location">Location <span>*</span></label>
+                                <textarea class="sap-form-control" id="location" rows="3" placeholder="Enter detailed location/address..."></textarea>
+                            </div>
+
+                        </div>
+
+                        <!-- Form Action Buttons -->
+                        <div class="sap-form-actions">
+                            <button type="button" class="sap-btn sap-btn-secondary">Cancel</button>
+                            <button type="submit" class="sap-btn sap-btn-primary">Save Data</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            // Update pesan di Status Bar
+            document.getElementById('statusText').textContent = 'Warehouse Transaction Opened';
         }
 
         // Toggle Floating Card Popover
