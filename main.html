@@ -28,6 +28,7 @@
             flex-direction: column;
             background-color: #ffffff;
             flex-shrink: 0;
+            position: relative;
         }
 
         /* Resizer Line */
@@ -56,29 +57,31 @@
             flex-shrink: 0;
         }
 
-        /* Button Action Wrapper */
+        /* Button Action Icon (Menggunakan SVG Murni) */
         .action-btn-wrapper {
-            background: transparent;
-            border: none;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
             cursor: pointer;
-            padding: 6px;
+            width: 36px;
+            height: 36px;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             outline: none;
+            flex-shrink: 0;
         }
 
         .action-btn-wrapper:hover {
-            background-color: #f0f0f0;
+            background-color: #e0e0e0;
+            border-color: #bbb;
         }
 
-        .action-icon {
+        .action-btn-wrapper svg {
             width: 20px;
             height: 20px;
-            object-fit: contain;
-            display: block;
+            fill: #333333;
         }
 
         .header-title {
@@ -90,29 +93,23 @@
             text-overflow: ellipsis;
         }
 
-        /* Floating Card Dropdown Menu (Fixed Positioning) */
+        /* Floating Card Dropdown Menu */
         .floating-card {
-            position: fixed;
-            top: 55px;
+            position: absolute;
+            top: 52px;
             left: 16px;
             width: 180px;
             background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid #dcdcdc;
             padding: 6px 0;
             z-index: 99999;
-            
-            display: none; /* Menggunakan display block/none langsung via kelas active */
-            opacity: 0;
-            transform: translateY(-8px);
-            transition: opacity 0.15s ease, transform 0.15s ease;
+            display: none; /* Controlled by JS */
         }
 
-        .floating-card.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
+        .floating-card.show {
+            display: block !important;
         }
 
         .floating-card ul {
@@ -186,31 +183,27 @@
             text-overflow: ellipsis;
         }
 
-        .arrow-img {
-            width: 10px;
-            height: 10px;
+        .arrow-icon {
+            width: 12px;
+            height: 12px;
             margin-right: 10px;
             flex-shrink: 0;
-            object-fit: contain;
             transition: transform 0.3s ease-in-out;
             transform: rotate(0deg);
+            fill: #666;
         }
 
-        .tree-item.expanded > .tree-header .arrow-img {
+        .tree-item.expanded > .tree-header .arrow-icon {
             transform: rotate(90deg);
         }
 
         .tree-submenu {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
+            display: none;
             padding-left: 12px;
-            transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
         }
 
         .tree-item.expanded > .tree-submenu {
-            max-height: 200px;
-            opacity: 1;
+            display: block;
             padding-top: 4px;
             padding-bottom: 4px;
         }
@@ -264,35 +257,34 @@
     <!-- Container Kiri -->
     <div id="left-container">
         <div id="left-header">
-            <!-- Button Wrapper agar area klik terjamin -->
-            <button class="action-btn-wrapper" id="actionBtn" title="Menu Options">
-                <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" 
-                     alt="Action Menu" 
-                     class="action-icon"
-                     onerror="this.onerror=null; this.remove(); document.getElementById('actionBtn').innerHTML='&#9776;';">
+            <!-- Tombol Menu dengan SVG Murni (Dijamin Muncul) -->
+            <button class="action-btn-wrapper" id="actionBtn" type="button" title="Menu Options">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
             </button>
 
             <span class="header-title">Ananta Business One</span>
         </div>
 
-        <!-- Floating Card Menu (Ditaruh diluar left-header untuk mencegah overflow clipping) -->
+        <!-- Floating Card Dropdown -->
         <div class="floating-card" id="actionCard">
             <ul>
                 <li>
-                    <a href="javascript:void(0)" onclick="alert('Profile Klik');">
+                    <a href="javascript:void(0)" onclick="alert('Buka Profile')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         Profile
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0)" onclick="alert('Settings Klik');">
+                    <a href="javascript:void(0)" onclick="alert('Buka Settings')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                         Settings
                     </a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                    <a href="javascript:void(0)" class="logout" onclick="alert('Logout Klik');">
+                    <a href="javascript:void(0)" class="logout" onclick="alert('Proses Logout')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         Logout
                     </a>
@@ -305,7 +297,7 @@
             <ul class="tree-menu">
                 <li class="tree-item">
                     <div class="tree-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
+                        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                         <span class="tree-title">Office</span>
                     </div>
                     <ul class="tree-submenu">
@@ -316,7 +308,7 @@
 
                 <li class="tree-item">
                     <div class="tree-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
+                        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                         <span class="tree-title">Accounting</span>
                     </div>
                     <ul class="tree-submenu">
@@ -327,34 +319,12 @@
 
                 <li class="tree-item">
                     <div class="tree-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
+                        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                         <span class="tree-title">Logistic</span>
                     </div>
                     <ul class="tree-submenu">
                         <li><a href="about:blank" target="content-frame">Submenu Logistic 1</a></li>
                         <li><a href="about:blank" target="content-frame">Submenu Logistic 2</a></li>
-                    </ul>
-                </li>
-
-                <li class="tree-item">
-                    <div class="tree-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
-                        <span class="tree-title">HR</span>
-                    </div>
-                    <ul class="tree-submenu">
-                        <li><a href="about:blank" target="content-frame">Submenu HR 1</a></li>
-                        <li><a href="about:blank" target="content-frame">Submenu HR 2</a></li>
-                    </ul>
-                </li>
-
-                <li class="tree-item">
-                    <div class="tree-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
-                        <span class="tree-title">Tools</span>
-                    </div>
-                    <ul class="tree-submenu">
-                        <li><a href="about:blank" target="content-frame">Submenu Tools 1</a></li>
-                        <li><a href="about:blank" target="content-frame">Submenu Tools 2</a></li>
                     </ul>
                 </li>
             </ul>
@@ -369,63 +339,58 @@
         <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
-    <!-- JavaScript Handling -->
+    <!-- Script Handling -->
     <script>
         const actionBtn = document.getElementById('actionBtn');
         const actionCard = document.getElementById('actionCard');
 
         // Toggle Floating Card Popover
-        actionBtn.addEventListener('click', (e) => {
+        actionBtn.onclick = function(e) {
             e.stopPropagation();
-            actionCard.classList.toggle('active');
-        });
+            actionCard.classList.toggle('show');
+        };
 
-        // Tutup Floating Card jika mengeklik area mana pun di luar card
-        window.addEventListener('click', (e) => {
-            if (!actionCard.contains(e.target) && !actionBtn.contains(e.target)) {
-                actionCard.classList.remove('active');
+        // Tutup Popover jika klik di luar
+        document.onclick = function(e) {
+            if (!actionCard.contains(e.target) && e.target !== actionBtn) {
+                actionCard.classList.remove('show');
             }
-        });
+        };
 
-        // Toggle Accordion Menu Tree
+        // Accordion Tree Menu
         document.querySelectorAll('.tree-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const item = header.parentElement;
+            header.onclick = function() {
+                const item = this.parentElement;
                 item.classList.toggle('expanded');
-            });
+            };
         });
 
-        // Dynamic Resizer Script
+        // Resizer Logic
         const leftContainer = document.getElementById('left-container');
         const resizer = document.getElementById('resizer');
         let isResizing = false;
 
-        resizer.addEventListener('mousedown', () => {
+        resizer.onmousedown = function() {
             isResizing = true;
             document.body.classList.add('is-dragging');
             resizer.classList.add('is-dragging');
-        });
+        };
 
-        document.addEventListener('mousemove', (e) => {
+        document.onmousemove = function(e) {
             if (!isResizing) return;
-
-            const minWidth = 50;
-            const maxWidth = window.innerWidth - 50;
             let newWidth = e.clientX;
+            if (newWidth < 50) newWidth = 50;
+            if (newWidth > window.innerWidth - 50) newWidth = window.innerWidth - 50;
+            leftContainer.style.width = newWidth + 'px';
+        };
 
-            if (newWidth < minWidth) newWidth = minWidth;
-            if (newWidth > maxWidth) newWidth = maxWidth;
-
-            leftContainer.style.width = `${newWidth}px`;
-        });
-
-        document.addEventListener('mouseup', () => {
+        document.onmouseup = function() {
             if (isResizing) {
                 isResizing = false;
                 document.body.classList.remove('is-dragging');
                 resizer.classList.remove('is-dragging');
             }
-        });
+        };
     </script>
 </body>
 </html>
