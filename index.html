@@ -115,7 +115,6 @@
             color: var(--sap-interactive-color);
         }
 
-        /* LINE VERTICAL PEMISAH */
         .sap-header-divider {
             width: 1px;
             height: 18px;
@@ -164,7 +163,7 @@
             border: none;
         }
 
-        /* MENU / FUNCTION BAR CONTAINER */
+        /* FUNCTION BAR CONTAINER */
         .sap-menu-bar-container {
             background-color: var(--sap-toolbar-color);
             height: 36px;
@@ -175,7 +174,6 @@
             padding: 0 8px;
         }
 
-        /* BUTTON BACK */
         .sap-back-btn {
             background: none;
             border: none;
@@ -210,7 +208,7 @@
             position: relative;
         }
 
-        /* SIDEBAR CONTAINER (SAP MENU PANEL) */
+        /* SIDEBAR CONTAINER */
         .sap-sidebar-container {
             width: 280px;
             min-width: 180px;
@@ -224,7 +222,6 @@
             position: relative;
         }
 
-        /* RESIZER BAR */
         .sap-resizer {
             width: 5px;
             background-color: var(--sap-border-color);
@@ -322,7 +319,7 @@
             flex-direction: column;
         }
 
-        /* FORM LANGSUNG TANPA CONTAINER CARD */
+        /* FORM STYLES */
         .sap-direct-form {
             width: 100%;
             max-width: 900px;
@@ -402,8 +399,13 @@
             color: #ffffff;
         }
 
-        .sap-btn-primary:hover {
+        .sap-btn-primary:hover:not(:disabled) {
             opacity: 0.9;
+        }
+
+        .sap-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .sap-btn-secondary {
@@ -416,7 +418,7 @@
             background-color: var(--sap-btn-hover);
         }
 
-        /* --- DATA GRID STYLES --- */
+        /* DATA GRID STYLES */
         .sap-grid-container {
             width: 100%;
             height: 100%;
@@ -482,7 +484,6 @@
             background-color: var(--sap-table-row-hover);
         }
 
-        /* Loading Indicator */
         .sap-loading-spinner {
             display: flex;
             flex-direction: column;
@@ -507,7 +508,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* FOOTER STATUS BAR CONTAINER */
+        /* FOOTER STATUS BAR */
         .sap-status-bar-wrapper {
             position: relative;
             width: 100%;
@@ -721,9 +722,8 @@
                                             </div>
                                             <ul class="sap-tree-children open">
                                                 
-                                                <!-- Transaksi: Data Warehouse -->
                                                 <li class="sap-tree-item">
-                                                    <div class="sap-tree-row" onclick="loadDataWarehouseGrid(this)">
+                                                    <div class="sap-tree-row" id="menuDataWarehouse" onclick="loadDataWarehouseGrid(this)">
                                                         <span class="sap-dot-icon"></span>
                                                         <span>Data Warehouse</span>
                                                     </div>
@@ -788,7 +788,6 @@
             </ul>
         </aside>
 
-        <!-- RESIZER BAR -->
         <div class="sap-resizer" id="resizer"></div>
 
         <!-- 5. Main Content Container -->
@@ -840,18 +839,18 @@
             }
         }
 
-        // --- FUNGSI MENGAMBIL & MENAMPILKAN DATA GRID WAREHOUSE FROM GOOGLE SHEETS ---
+        // --- FETCH DATA WAREHOUSE GRID ---
         function loadDataWarehouseGrid(element) {
-            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
-            element.classList.add('selected');
+            if (element) {
+                document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
+                element.classList.add('selected');
+            }
 
             document.getElementById('headerDivider').style.display = 'block';
             document.getElementById('screenTitle').textContent = 'Data Warehouse Master Data';
             document.getElementById('backBtn').disabled = false;
 
             const mainContent = document.getElementById('mainContent');
-            
-            // Tampilkan Indicator Loading
             mainContent.innerHTML = `
                 <div class="sap-loading-spinner">
                     <div class="spinner"></div>
@@ -860,7 +859,6 @@
             `;
             document.getElementById('statusText').textContent = 'Fetching data...';
 
-            // Fetch Data dari Apps Script Web App
             fetch(APPS_SCRIPT_URL)
                 .then(response => response.json())
                 .then(data => {
@@ -878,12 +876,9 @@
                 });
         }
 
-        // Render Data Table / Grid View
         function renderGridView(headers, rows) {
             const mainContent = document.getElementById('mainContent');
-
             let headerHTML = headers.map(h => `<th>${h || '-'}</th>`).join('');
-            
             let rowsHTML = rows.map(row => {
                 let colsHTML = row.map(col => `<td>${col !== null && col !== undefined ? col : ''}</td>`).join('');
                 return `<tr>${colsHTML}</tr>`;
@@ -908,6 +903,98 @@
             `;
         }
 
+        // --- BUKA FORM CREATE WAREHOUSE ---
+        function openCreateWarehouseForm(element) {
+            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('headerDivider').style.display = 'block';
+            document.getElementById('screenTitle').textContent = 'Create Warehouse Master Data';
+            document.getElementById('backBtn').disabled = false;
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <form class="sap-direct-form" id="createWhForm" onsubmit="submitCreateWarehouseForm(event)">
+                    <div class="sap-form-grid">
+                        <div class="sap-form-group">
+                            <label class="sap-form-label" for="plant">Plant <span>*</span></label>
+                            <select class="sap-form-control" id="plant" required>
+                                <option value="">-- Select Plant --</option>
+                                <option value="1000">1000 - Jakarta Central Plant</option>
+                                <option value="2000">2000 - Surabaya Plant</option>
+                                <option value="3000">3000 - Medan Plant</option>
+                            </select>
+                        </div>
+                        <div class="sap-form-group">
+                            <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
+                            <input type="text" class="sap-form-control" id="whCode" placeholder="e.g. WH-001" maxlength="10" required />
+                        </div>
+                        <div class="sap-form-group full-width">
+                            <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
+                            <input type="text" class="sap-form-control" id="whName" placeholder="e.g. Main Finished Goods Warehouse" required />
+                        </div>
+                        <div class="sap-form-group full-width">
+                            <label class="sap-form-label" for="location">Location <span>*</span></label>
+                            <textarea class="sap-form-control" id="location" rows="3" placeholder="Enter detailed location/address..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="sap-form-actions">
+                        <button type="button" class="sap-btn sap-btn-secondary" onclick="resetMainContent()">Cancel</button>
+                        <button type="submit" class="sap-btn sap-btn-primary" id="saveBtn">Save Data</button>
+                    </div>
+                </form>
+            `;
+
+            document.getElementById('statusText').textContent = 'Create Warehouse Master Data Opened';
+        }
+
+        // --- FUNGSI SUBMIT CREATE WAREHOUSE TO APPS SCRIPT ---
+        function submitCreateWarehouseForm(event) {
+            event.preventDefault();
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            document.getElementById('statusText').textContent = 'Saving data to Google Sheets...';
+
+            // Menyusun payload data
+            const payload = {
+                plant: document.getElementById('plant').value,
+                whCode: document.getElementById('whCode').value,
+                whName: document.getElementById('whName').value,
+                location: document.getElementById('location').value,
+                createdDate: new Date().toLocaleString('id-ID'),
+                createdBy: 'ANANTA'
+            };
+
+            // Mengirim data via POST fetch (text/plain untuk menghindari CORS preflight block di Apps Script)
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    alert('Data Warehouse berhasil disimpan!');
+                    // Redirect otomatis ke Data Warehouse Grid
+                    const dataWhMenu = document.getElementById('menuDataWarehouse');
+                    loadDataWarehouseGrid(dataWhMenu);
+                } else {
+                    alert('Gagal menyimpan data: ' + res.message);
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Data';
+                    document.getElementById('statusText').textContent = 'Error saving data';
+                }
+            })
+            .catch(err => {
+                alert('Terjadi kesalahan jaringan / CORS pada Apps Script.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Data';
+                document.getElementById('statusText').textContent = 'Connection error';
+            });
+        }
+
         function openWarehouseTransaction(element, titleText) {
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
@@ -920,50 +1007,6 @@
             mainContent.innerHTML = `<div style="font-size: 14px; color: var(--sap-text-secondary);">${titleText} Screen Active.</div>`;
 
             document.getElementById('statusText').textContent = `${titleText} Opened`;
-        }
-
-        function openCreateWarehouseForm(element) {
-            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
-            element.classList.add('selected');
-
-            document.getElementById('headerDivider').style.display = 'block';
-            document.getElementById('screenTitle').textContent = 'Create Warehouse Master Data';
-            document.getElementById('backBtn').disabled = false;
-
-            const mainContent = document.getElementById('mainContent');
-            mainContent.innerHTML = `
-                <form class="sap-direct-form" onsubmit="event.preventDefault();">
-                    <div class="sap-form-grid">
-                        <div class="sap-form-group">
-                            <label class="sap-form-label" for="plant">Plant <span>*</span></label>
-                            <select class="sap-form-control" id="plant">
-                                <option value="">-- Select Plant --</option>
-                                <option value="1000">1000 - Jakarta Central Plant</option>
-                                <option value="2000">2000 - Surabaya Plant</option>
-                                <option value="3000">3000 - Medan Plant</option>
-                            </select>
-                        </div>
-                        <div class="sap-form-group">
-                            <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
-                            <input type="text" class="sap-form-control" id="whCode" placeholder="e.g. WH-001" maxlength="10" />
-                        </div>
-                        <div class="sap-form-group full-width">
-                            <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
-                            <input type="text" class="sap-form-control" id="whName" placeholder="e.g. Main Finished Goods Warehouse" />
-                        </div>
-                        <div class="sap-form-group full-width">
-                            <label class="sap-form-label" for="location">Location <span>*</span></label>
-                            <textarea class="sap-form-control" id="location" rows="3" placeholder="Enter detailed location/address..."></textarea>
-                        </div>
-                    </div>
-                    <div class="sap-form-actions">
-                        <button type="button" class="sap-btn sap-btn-secondary" onclick="resetMainContent()">Cancel</button>
-                        <button type="submit" class="sap-btn sap-btn-primary">Save Data</button>
-                    </div>
-                </form>
-            `;
-
-            document.getElementById('statusText').textContent = 'Create Warehouse Master Data Opened';
         }
 
         function resetMainContent() {
@@ -1002,7 +1045,6 @@
         document.addEventListener('mousemove', function (e) {
             if (!isResizing) return;
             let newWidth = e.clientX - sidebar.getBoundingClientRect().left;
-            
             if (newWidth >= 180 && newWidth <= 600) {
                 sidebar.style.width = newWidth + 'px';
             }
