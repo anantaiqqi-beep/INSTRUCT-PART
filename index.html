@@ -17,7 +17,7 @@
             display: flex;
             background-color: #ffffff;
             overflow: hidden;
-            user-select: none; /* Mencegah seleksi teks saat memutar/drag resizer */
+            user-select: none;
         }
 
         /* Container Kiri */
@@ -30,7 +30,7 @@
             flex-shrink: 0;
         }
 
-        /* Resizer Line Antara Left & Right Panel */
+        /* Resizer Line */
         #resizer {
             width: 4px;
             height: 100%;
@@ -41,7 +41,7 @@
         }
 
         #resizer:hover, #resizer.is-dragging {
-            background-color: #1890ff; /* Efek highlight saat di-hover/drag */
+            background-color: #1890ff;
         }
 
         /* Header Kiri */
@@ -95,7 +95,7 @@
             align-items: center;
             padding: 10px 16px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 14px; /* Ukuran Teks Menu Tree */
             color: #333333;
             transition: background-color 0.2s;
         }
@@ -110,11 +110,11 @@
             text-overflow: ellipsis;
         }
 
-        /* Image Icon Panah (Diperbesar ke 18px) */
+        /* Image Icon Panah (Seukuran teks menu: 14px) */
         .arrow-img {
-            width: 18px;
-            height: 18px;
-            margin-right: 12px;
+            width: 14px;
+            height: 14px;
+            margin-right: 10px;
             flex-shrink: 0;
             object-fit: contain;
             transition: transform 0.3s ease-in-out;
@@ -177,7 +177,6 @@
             left: 0;
         }
 
-        /* Mencegah iframe menangkap event mouse saat dragging resizer */
         .is-dragging iframe {
             pointer-events: none;
         }
@@ -260,7 +259,7 @@
         </div>
     </div>
 
-    <!-- Element Resizer untuk Mengubah Lebar Panel -->
+    <!-- Element Resizer -->
     <div id="resizer"></div>
 
     <!-- Container Kanan -->
@@ -292,7 +291,6 @@
         document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
 
-            // Batas minimal 50px & maksimal lebar layar - 50px
             const minWidth = 50;
             const maxWidth = window.innerWidth - 50;
             
