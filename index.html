@@ -1,109 +1,134 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Viewer</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub File Viewer</title>
+    <style>
+        /* Mengatur dasar halaman agar bersih dan memenuhi layar */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh; /* Tinggi penuh viewport */
+            display: flex; /* Menggunakan Flexbox untuk tata letak utama */
+            background-color: #fff; /* Latar belakang putih seperti gambar */
+            color: #333;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      overflow: hidden;
-    }
+        /* Container Kolom Kiri (Sidebar/Daftar File) */
+        #left-container {
+            width: 250px; /* Lebar tetap seperti pada gambar */
+            border-right: 1px solid #ddd; /* Garis pemisah vertikalabu-abu */
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box; /* Memastikan border masuk dalam hitungan lebar */
+        }
 
-    .app-container {
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-    }
+        /* Bagian Atas Kolom Kiri (Contoh: Navigasi/Pencarian) */
+        #left-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee; /* Garis pemisah horizontal samar */
+            background-color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
 
-    /* Panel Kiri: Sidebar Menu Tree */
-    .sidebar {
-      width: 300px;
-      min-width: 200px;
-      background-color: #ffffff;
-      border-right: 1px solid #e0e0e0;
-      padding: 20px;
-      overflow-y: auto;
-    }
+        /* Bagian Konten Kolom Kiri (Contoh: Daftar File) */
+        #file-list {
+            flex-grow: 1; /* Mengisi sisa ruang vertikal */
+            padding: 10px 0;
+            overflow-y: auto; /* Tambahkan scroll jika daftar terlalu panjang */
+        }
 
-    /* Panel Kanan: Viewer Frame */
-    .content-viewer {
-      flex: 1;
-      height: 100%;
-      background-color: #fafafa;
-    }
+        /* Gaya untuk item daftar file individual */
+        .file-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
 
-    .content-viewer iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+        .file-item:hover {
+            background-color: #f5f5f5; /* Efek hover ringan */
+        }
 
-    /* Styling Sederhana untuk Menu Tree */
-    .menu-tree ul {
-      list-style-type: none;
-      padding-left: 15px;
-    }
+        .file-item.active {
+            background-color: #e6f7ff; /* Gaya untuk item yang aktif */
+            border-left: 3px solid #1890ff; /* Tambahkan aksen aktif */
+        }
 
-    .menu-tree li {
-      margin: 8px 0;
-    }
+        /* Container Kolom Kanan (Konten Utama/HTML Viewer) */
+        #right-container {
+            flex-grow: 1; /* Mengisi sisa lebar layar */
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
 
-    .menu-tree a {
-      color: #333;
-      text-decoration: none;
-      font-size: 14px;
-    }
+        /* Bagian Atas Kolom Kanan (Contoh: Header Halaman) */
+        #right-header {
+            padding: 15px 30px;
+            border-bottom: 1px solid #ddd; /* Garis pemisah horizontal abu-abu */
+            background-color: #fff;
+        }
 
-    .menu-tree a:hover {
-      color: #0066cc;
-      text-decoration: underline;
-    }
-  </style>
+        #right-header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        /* Bagian Konten Kolom Kanan (Tampilan HTML) */
+        #right-content {
+            flex-grow: 1; /* Mengisi sisa ruang vertikal */
+            position: relative; /* Penting untuk iframe agar merespons */
+        }
+
+        /* Gaya untuk iframe (untuk menampilkan HTML GitHub) */
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- Panel Kiri -->
-    <aside class="sidebar">
-      <h3>MENU TREE</h3>
-      <nav class="menu-tree">
-        <ul>
-          <li>
-            <span>📁 Folder Utama</span>
-            <ul>
-              <li>
-                <a href="https://username.github.io/repo-name/page1.html" target="viewer-frame">
-                  📄 Halaman 1 (GitHub)
-                </a>
-              </li>
-              <li>
-                <a href="https://username.github.io/repo-name/page2.html" target="viewer-frame">
-                  📄 Halaman 2 (GitHub)
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-    </aside>
+    <!-- Container Kolom Kiri -->
+    <div id="left-container">
+        <!-- Header Kolom Kiri -->
+        <div id="left-header">
+            Daftar File
+        </div>
 
-    <!-- Panel Kanan -->
-    <main class="content-viewer">
-      <iframe 
-        name="viewer-frame" 
-        src="about:blank" 
-        title="Content Viewer">
-      </iframe>
-    </main>
-  </div>
+        <!-- Daftar File (Placeholder) -->
+        <div id="file-list">
+            <!-- Contoh tautan ke file yang berbeda -->
+            <a href="https://your-github-username.github.io/your-repo-name/page1.html" target="content-frame" class="file-item active">Halaman 1 (Page 1)</a>
+            <a href="https://your-github-username.github.io/your-repo-name/page2.html" target="content-frame" class="file-item">Halaman 2 (Page 2)</a>
+            <a href="https://your-github-username.github.io/your-repo-name/another_page.html" target="content-frame" class="file-item">Halaman Lain</a>
+            <!-- Tambahkan file lain di sini -->
+        </div>
+    </div>
+
+    <!-- Container Kolom Kanan -->
+    <div id="right-container">
+        <!-- Header Kolom Kanan -->
+        <div id="right-header">
+            <h1>Halaman Pratinjau</h1>
+        </div>
+
+        <!-- Konten Kolom Kanan (Tampilan HTML via iframe) -->
+        <div id="right-content">
+            <!-- Iframe untuk memuat HTML. Beri ID dan atur 'name' untuk penargetan tautan. -->
+            <iframe id="content-frame" name="content-frame" src="https://your-github-username.github.io/your-repo-name/index.html"></iframe>
+        </div>
+    </div>
 
 </body>
 </html>
