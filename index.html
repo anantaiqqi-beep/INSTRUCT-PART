@@ -21,17 +21,18 @@
 
         /* Container Kiri */
         #left-container {
-            width: 250px;
+            width: 300px;
             height: 100%;
-            border-right: 1px solid #e0e0e0;
+            border-right: 1px solid #d0d0d0;
             display: flex;
             flex-direction: column;
             background-color: #ffffff;
         }
 
+        /* Satu-satunya header (hanya di container kiri) */
         #left-header {
-            height: 50px;
-            border-bottom: 1px solid #e0e0e0;
+            height: 60px;
+            border-bottom: 1px solid #d0d0d0;
             background-color: #ffffff;
         }
 
@@ -40,23 +41,11 @@
             overflow-y: auto;
         }
 
-        /* Container Kanan */
+        /* Container Kanan (Polos penuh tanpa header) */
         #right-container {
             flex: 1;
             height: 100%;
-            display: flex;
-            flex-direction: column;
             background-color: #ffffff;
-        }
-
-        #right-header {
-            height: 50px;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: #ffffff;
-        }
-
-        #right-content {
-            flex: 1;
             position: relative;
         }
 
@@ -80,10 +69,7 @@
 
     <!-- Container Kanan -->
     <div id="right-container">
-        <div id="right-header"></div>
-        <div id="right-content">
-            <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
-        </div>
+        <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
 </body>
