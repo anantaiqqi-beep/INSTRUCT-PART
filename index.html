@@ -18,7 +18,9 @@
             --sap-btn-hover: #f0f2f4;
             --sap-tree-hover: #eaf3fc;
             --sap-tree-selected: #d0e5fa;
-            --sap-folder-icon: #f4b400; /* Warna Kuning SAP */
+            --sap-folder-back: #e59312; /* Warna lipatan belakang */
+            --sap-folder-front: #f3b738; /* Warna lipatan depan */
+            --sap-arrow-color: #6a6d70;
         }
 
         [data-theme="dark"] {
@@ -33,7 +35,9 @@
             --sap-btn-hover: #2a333d;
             --sap-tree-hover: #25313d;
             --sap-tree-selected: #1d3954;
-            --sap-folder-icon: #ffcc00;
+            --sap-folder-back: #f0a828;
+            --sap-folder-front: #ffcc00;
+            --sap-arrow-color: #a2b4c7;
         }
 
         * {
@@ -144,7 +148,6 @@
             padding: 8px 0;
         }
 
-        /* SAP TREE MENU STYLES BERSIH (TANPA DOT/BULAT) */
         .sap-tree-list {
             list-style: none;
             padding-left: 0;
@@ -162,7 +165,7 @@
             align-items: center;
             padding: 6px 12px;
             cursor: pointer;
-            gap: 8px;
+            gap: 6px;
             color: var(--sap-text-primary);
         }
 
@@ -170,13 +173,33 @@
             background-color: var(--sap-tree-hover);
         }
 
-        /* SVG FOLDER ICON & PATH SWITCH */
+        /* ICON PANAH (ARROW TOGGLE) */
+        .sap-arrow-icon {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--sap-arrow-color);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        /* Rotasi panah saat terisi kelas is-open ( > menjadi v ) */
+        .sap-tree-row.is-open .sap-arrow-icon {
+            transform: rotate(90deg);
+        }
+
+        /* SVG FOLDER DUAL-LAYER */
         .sap-folder-icon {
-            width: 18px;
-            height: 18px;
-            fill: var(--sap-folder-icon);
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
         }
+
+        .folder-back { fill: var(--sap-folder-back); }
+        .folder-front { fill: var(--sap-folder-front); }
 
         .folder-open-path { display: none; }
         .folder-closed-path { display: inline; }
@@ -184,11 +207,11 @@
         .sap-tree-row.is-open .folder-open-path { display: inline; }
         .sap-tree-row.is-open .folder-closed-path { display: none; }
 
-        /* INDENTASI ANAK FOLDER (TIDAK ADA BULAT/DOT) */
+        /* INDENTASI ANAK FOLDER */
         .sap-tree-children {
             list-style: none;
             display: none;
-            padding-left: 18px;
+            padding-left: 20px;
             margin: 0;
         }
 
@@ -238,12 +261,25 @@
         <aside class="sap-sidebar-container">
             <ul class="sap-tree-list">
                 
-                <!-- ROOT 1: FAVORITES (DOUBLE KLIK UNTUK BUKA/TUTUP) -->
+                <!-- ROOT 1: FAVORITES -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                        <!-- Icon Panah ( > ) -->
+                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+
+                        <!-- Icon Folder Dual-Layer -->
                         <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                            <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                            <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                            <!-- Tertutup -->
+                            <g class="folder-closed-path">
+                                <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                            </g>
+                            <!-- Terbuka (Sesuai Foto) -->
+                            <g class="folder-open-path">
+                                <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                            </g>
                         </svg>
                         <span>Favorites</span>
                     </div>
@@ -252,12 +288,23 @@
                     </ul>
                 </li>
 
-                <!-- ROOT 2: MODULES (DEFAULT OPEN, DOUBLE KLIK UNTUK BUKA/TUTUP) -->
+                <!-- ROOT 2: MODULES (DEFAULT OPEN) -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
+                        <!-- Icon Panah -->
+                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+
+                        <!-- Icon Folder Dual-Layer -->
                         <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                            <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                            <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                            <g class="folder-closed-path">
+                                <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                            </g>
+                            <g class="folder-open-path">
+                                <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                            </g>
                         </svg>
                         <span>Modules</span>
                     </div>
@@ -266,9 +313,17 @@
                         <!-- Sub-Folder 1: Office -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                                    <g class="folder-closed-path">
+                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </g>
+                                    <g class="folder-open-path">
+                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                                    </g>
                                 </svg>
                                 <span>Office</span>
                             </div>
@@ -278,9 +333,17 @@
                         <!-- Sub-Folder 2: Accounting -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                                    <g class="folder-closed-path">
+                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </g>
+                                    <g class="folder-open-path">
+                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                                    </g>
                                 </svg>
                                 <span>Accounting</span>
                             </div>
@@ -290,9 +353,17 @@
                         <!-- Sub-Folder 3: Logistic -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                                    <g class="folder-closed-path">
+                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </g>
+                                    <g class="folder-open-path">
+                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                                    </g>
                                 </svg>
                                 <span>Logistic</span>
                             </div>
@@ -302,9 +373,17 @@
                         <!-- Sub-Folder 4: HR -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                                    <g class="folder-closed-path">
+                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </g>
+                                    <g class="folder-open-path">
+                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                                    </g>
                                 </svg>
                                 <span>HR</span>
                             </div>
@@ -314,9 +393,17 @@
                         <!-- Sub-Folder 5: Tools -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <path class="folder-closed-path" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    <path class="folder-open-path" d="M19 20H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h5l2 2h7c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM5 8v10h14V8H5z"/>
+                                    <g class="folder-closed-path">
+                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </g>
+                                    <g class="folder-open-path">
+                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
+                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
+                                    </g>
                                 </svg>
                                 <span>Tools</span>
                             </div>
@@ -334,9 +421,8 @@
 
     </div>
 
-    <!-- JAVASCRIPT: TOGGLE THEME & DOUBLE CLICK FOLDER EXPAND/COLLAPSE -->
+    <!-- JAVASCRIPT -->
     <script>
-        // Switch Theme (Light/Dark)
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -347,7 +433,6 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
-        // Double Click Handler untuk Expand/Collapse Folder
         function toggleFolder(element) {
             const children = element.nextElementSibling;
             
