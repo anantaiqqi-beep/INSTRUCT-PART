@@ -17,16 +17,31 @@
             display: flex;
             background-color: #ffffff;
             overflow: hidden;
+            user-select: none; /* Mencegah seleksi teks saat memutar/drag resizer */
         }
 
         /* Container Kiri */
         #left-container {
             width: 300px;
             height: 100%;
-            border-right: 1px solid #d0d0d0;
             display: flex;
             flex-direction: column;
             background-color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        /* Resizer Line Antara Left & Right Panel */
+        #resizer {
+            width: 4px;
+            height: 100%;
+            background-color: #d0d0d0;
+            cursor: col-resize;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
+        }
+
+        #resizer:hover, #resizer.is-dragging {
+            background-color: #1890ff; /* Efek highlight saat di-hover/drag */
         }
 
         /* Header Kiri */
@@ -39,6 +54,7 @@
             padding: 0 16px;
             gap: 12px;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
         .action-icon {
@@ -62,6 +78,7 @@
         #file-list {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 10px 0;
         }
 
@@ -87,24 +104,29 @@
             background-color: #f2f2f2;
         }
 
-        /* Image Icon Panah */
-        .arrow-img {
-            width: 12px;
-            height: 12px;
-            margin-right: 10px;
-            flex-shrink: 0;
-            object-fit: contain;
-            /* Transisi animasi rotasi / slow spin */
-            transition: transform 0.3s ease-in-out;
-            transform: rotate(0deg); /* Posisi awal menghadap kanan */
+        .tree-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Rotasi 90 derajat ke bawah saat menu expanded */
+        /* Image Icon Panah (Diperbesar ke 18px) */
+        .arrow-img {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            object-fit: contain;
+            transition: transform 0.3s ease-in-out;
+            transform: rotate(0deg);
+        }
+
+        /* Rotasi 90 derajat saat expanded */
         .tree-item.expanded > .tree-header .arrow-img {
             transform: rotate(90deg);
         }
 
-        /* Submenu Container dengan Efek Slide & Fade */
+        /* Submenu Container */
         .tree-submenu {
             max-height: 0;
             overflow: hidden;
@@ -114,7 +136,6 @@
             transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
         }
 
-        /* Tampilkan Submenu saat Expanded */
         .tree-item.expanded > .tree-submenu {
             max-height: 200px;
             opacity: 1;
@@ -128,6 +149,9 @@
             font-size: 13px;
             color: #555555;
             text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             transition: background-color 0.2s, color 0.2s;
         }
 
@@ -151,6 +175,11 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+
+        /* Mencegah iframe menangkap event mouse saat dragging resizer */
+        .is-dragging iframe {
+            pointer-events: none;
         }
     </style>
 </head>
@@ -231,18 +260,56 @@
         </div>
     </div>
 
+    <!-- Element Resizer untuk Mengubah Lebar Panel -->
+    <div id="resizer"></div>
+
     <!-- Container Kanan -->
     <div id="right-container">
         <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
-    <!-- Script Toggle -->
+    <!-- Script Toggle & Resizer Handle -->
     <script>
+        // Toggle Accordion Menu
         document.querySelectorAll('.tree-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.parentElement;
                 item.classList.toggle('expanded');
             });
+        });
+
+        // Dynamic Resizer Script
+        const leftContainer = document.getElementById('left-container');
+        const resizer = document.getElementById('resizer');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.classList.add('is-dragging');
+            resizer.classList.add('is-dragging');
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            // Batas minimal 50px & maksimal lebar layar - 50px
+            const minWidth = 50;
+            const maxWidth = window.innerWidth - 50;
+            
+            let newWidth = e.clientX;
+
+            if (newWidth < minWidth) newWidth = minWidth;
+            if (newWidth > maxWidth) newWidth = maxWidth;
+
+            leftContainer.style.width = `${newWidth}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.classList.remove('is-dragging');
+                resizer.classList.remove('is-dragging');
+            }
         });
     </script>
 </body>
