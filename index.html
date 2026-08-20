@@ -30,7 +30,9 @@
             --sap-card-shadow: 0 6px 18px rgba(0,0,0,0.15);
             --sap-statusbar-field-bg: #f5f6f7;
             --sap-statusbar-field-border: #d5dadd;
-            --sap-form-line-border: #d5dadd;
+            
+            /* WARNA GARIS YANG SERAGAM UNTUK BORDER & LINE */
+            --sap-form-line-border: #899eb3;
         }
 
         [data-theme="dark"] {
@@ -58,7 +60,9 @@
             --sap-card-shadow: 0 6px 18px rgba(0,0,0,0.5);
             --sap-statusbar-field-bg: #12171c;
             --sap-statusbar-field-border: #2e3742;
-            --sap-form-line-border: #2e3742;
+            
+            /* WARNA GARIS YANG SERAGAM UNTUK DARK MODE */
+            --sap-form-line-border: #4d5d6d;
         }
 
         * {
@@ -102,7 +106,7 @@
             box-shadow: var(--sap-card-shadow);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .sap-login-title {
@@ -353,10 +357,10 @@
             flex-direction: column;
         }
 
-        /* SAP GUI STYLE FORMS (CAPTION ON LEFT & BOTTOM LINE) */
+        /* SAP GUI FORM WITH ALIGNED BOTTOM LINE & MATCHING COLORS */
         .sap-direct-form {
             width: 100%;
-            max-width: 700px;
+            max-width: 500px;
             background-color: var(--sap-shell-color);
             border: 1px solid var(--sap-border-color);
             border-radius: 4px;
@@ -365,10 +369,9 @@
 
         .sap-form-group {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--sap-form-line-border);
+            padding: 4px 0 0 0;
             gap: 16px;
         }
 
@@ -377,8 +380,9 @@
             font-weight: 500;
             color: var(--sap-text-primary);
             white-space: nowrap;
-            min-width: 160px;
-            flex-shrink: 0;
+            flex: 1;
+            padding-bottom: 2px;
+            border-bottom: 1px solid var(--sap-form-line-border); /* Garis sejajar dengan input */
         }
 
         .sap-form-label span {
@@ -386,22 +390,20 @@
         }
 
         .sap-form-control-wrapper {
-            flex: 1;
             display: flex;
             justify-content: flex-end;
         }
 
         .sap-form-control {
-            height: 26px;
+            height: 24px;
             padding: 2px 6px;
-            border: 1px solid var(--sap-input-border);
+            border: 1px solid var(--sap-form-line-border); /* Warna border disamakan */
             border-radius: 2px;
             background-color: var(--sap-input-bg);
             color: var(--sap-text-primary);
             font-size: 12px;
             outline: none;
-            width: 100%;
-            max-width: 320px;
+            width: 120px;
         }
 
         .sap-form-control:focus {
@@ -658,14 +660,14 @@
             <div class="sap-form-group">
                 <label class="sap-form-label" for="loginUsername">Username <span>*</span></label>
                 <div class="sap-form-control-wrapper">
-                    <input type="text" class="sap-form-control" id="loginUsername" required autocomplete="off" placeholder="Username..." />
+                    <input type="text" class="sap-form-control" id="loginUsername" required autocomplete="off" placeholder="" />
                 </div>
             </div>
 
             <div class="sap-form-group">
                 <label class="sap-form-label" for="loginPassword">Password <span>*</span></label>
                 <div class="sap-form-control-wrapper">
-                    <input type="password" class="sap-form-control" id="loginPassword" required placeholder="Password..." />
+                    <input type="password" class="sap-form-control" id="loginPassword" required placeholder="" />
                 </div>
             </div>
 
@@ -973,7 +975,7 @@
             `;
         }
 
-        // --- FORM CREATE WAREHOUSE (STYLE SAP GUI DENGAN CAPTION DI SAMPING & LINE) ---
+        // --- FORM CREATE WAREHOUSE (Garis Sejajar dengan Input & Warna Sama) ---
         function openCreateWarehouseForm(element) {
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
@@ -987,48 +989,23 @@
                 <form class="sap-direct-form" id="createWhForm" onsubmit="submitCreateWarehouseForm(event)">
                     
                     <div class="sap-form-group">
-                        <label class="sap-form-label" for="plant">Plant <span>*</span></label>
+                        <label class="sap-form-label" for="baseUnit">Base Unit of Measure <span>*</span></label>
                         <div class="sap-form-control-wrapper">
-                            <select class="sap-form-control" id="plant" required>
-                                <option value="">-- Select Plant --</option>
-                                <option value="1000">1000 - Jakarta Central Plant</option>
-                                <option value="2000">2000 - Surabaya Plant</option>
-                                <option value="3000">3000 - Medan Plant</option>
-                            </select>
+                            <input type="text" class="sap-form-control" id="baseUnit" value="PC" required />
                         </div>
                     </div>
 
                     <div class="sap-form-group">
-                        <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
+                        <label class="sap-form-label" for="tempCond">Temp. conditions</label>
                         <div class="sap-form-control-wrapper">
-                            <input type="text" class="sap-form-control" id="whCode" placeholder="WH-001" maxlength="10" required />
+                            <input type="text" class="sap-form-control" id="tempCond" />
                         </div>
                     </div>
 
                     <div class="sap-form-group">
-                        <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
+                        <label class="sap-form-label" for="containerReq">Container reqmts</label>
                         <div class="sap-form-control-wrapper">
-                            <input type="text" class="sap-form-control" id="whName" placeholder="Main Warehouse" required />
-                        </div>
-                    </div>
-
-                    <div class="sap-form-group">
-                        <label class="sap-form-label" for="whType">Warehouse Type <span>*</span></label>
-                        <div class="sap-form-control-wrapper">
-                            <select class="sap-form-control" id="whType" required>
-                                <option value="">-- Select Type --</option>
-                                <option value="Raw Material">Raw Material</option>
-                                <option value="Finished Goods">Finished Goods</option>
-                                <option value="Sparepart">Sparepart</option>
-                                <option value="Transit">Transit</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="sap-form-group">
-                        <label class="sap-form-label" for="location">Location <span>*</span></label>
-                        <div class="sap-form-control-wrapper">
-                            <textarea class="sap-form-control" id="location" rows="2" placeholder="Address..." required></textarea>
+                            <input type="text" class="sap-form-control" id="containerReq" />
                         </div>
                     </div>
 
@@ -1052,11 +1029,9 @@
             document.getElementById('statusText').textContent = 'Saving data to Google Sheets...';
 
             const payload = {
-                plant: document.getElementById('plant').value,
-                whCode: document.getElementById('whCode').value,
-                whName: document.getElementById('whName').value,
-                whType: document.getElementById('whType').value,
-                location: document.getElementById('location').value,
+                baseUnit: document.getElementById('baseUnit').value,
+                tempCond: document.getElementById('tempCond').value,
+                containerReq: document.getElementById('containerReq').value,
                 createdBy: activeUser || 'ANANTA'
             };
 
