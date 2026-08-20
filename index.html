@@ -643,12 +643,49 @@
                                     </div>
                                     <ul class="sap-tree-children open">
                                         
-                                        <!-- Leaf Item 1: Warehouse (Menu Transaksi) -->
+                                        <!-- Sub-Folder Level 3: Warehouse (Folder Menu) -->
                                         <li class="sap-tree-item">
-                                            <div class="sap-tree-row" id="menuWarehouse" onclick="openWarehouseForm(this)">
-                                                <span class="sap-dot-icon"></span>
+                                            <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
+                                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                                </svg>
                                                 <span>Warehouse</span>
                                             </div>
+                                            <ul class="sap-tree-children open">
+                                                
+                                                <!-- Transaksi Baru: Data Warehouse -->
+                                                <li class="sap-tree-item">
+                                                    <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Data Warehouse Master Data')">
+                                                        <span class="sap-dot-icon"></span>
+                                                        <span>Data Warehouse</span>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Transaksi 1: Create Warehouse (Buka Form Master Data) -->
+                                                <li class="sap-tree-item">
+                                                    <div class="sap-tree-row" onclick="openCreateWarehouseForm(this)">
+                                                        <span class="sap-dot-icon"></span>
+                                                        <span>Create Warehouse</span>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Transaksi 2: Change Warehouse -->
+                                                <li class="sap-tree-item">
+                                                    <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Change Warehouse Master Data')">
+                                                        <span class="sap-dot-icon"></span>
+                                                        <span>Change Warehouse</span>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Transaksi 3: Delete Warehouse -->
+                                                <li class="sap-tree-item">
+                                                    <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Delete Warehouse Master Data')">
+                                                        <span class="sap-dot-icon"></span>
+                                                        <span>Delete Warehouse</span>
+                                                    </div>
+                                                </li>
+
+                                            </ul>
                                         </li>
 
                                         <!-- Leaf Item 2: Material -->
@@ -765,15 +802,30 @@
             }
         }
 
-        // Fungsi Membuka Form Transaction Warehouse
-        function openWarehouseForm(element) {
+        // Fungsi Generik untuk Buka Layar Transaksi General
+        function openWarehouseTransaction(element, titleText) {
+            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('headerDivider').style.display = 'block';
+            document.getElementById('screenTitle').textContent = titleText;
+            document.getElementById('backBtn').disabled = false;
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `<div style="font-size: 14px; color: var(--sap-text-secondary);">${titleText} Screen Active.</div>`;
+
+            document.getElementById('statusText').textContent = `${titleText} Opened`;
+        }
+
+        // Fungsi Membuka Form Transaction "Create Warehouse"
+        function openCreateWarehouseForm(element) {
             // Highlight item di Tree
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
 
             // Set Header Title & Line Pemisah
             document.getElementById('headerDivider').style.display = 'block';
-            document.getElementById('screenTitle').textContent = 'Warehouse Master Data';
+            document.getElementById('screenTitle').textContent = 'Create Warehouse Master Data';
 
             // Enable Back Button
             document.getElementById('backBtn').disabled = false;
@@ -824,7 +876,7 @@
             `;
 
             // Status message
-            document.getElementById('statusText').textContent = 'Warehouse Master Data Opened';
+            document.getElementById('statusText').textContent = 'Create Warehouse Master Data Opened';
         }
 
         // Fungsi Reset / Back ke Layar Kosong
