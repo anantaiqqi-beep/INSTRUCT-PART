@@ -29,11 +29,22 @@
             background-color: #ffffff;
         }
 
-        /* Satu-satunya header (hanya di container kiri) */
+        /* Header Kiri dengan Icon Action */
         #left-header {
             height: 60px;
             border-bottom: 1px solid #d0d0d0;
             background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+        }
+
+        /* Styling Icon Action */
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            object-fit: contain;
         }
 
         #file-list {
@@ -41,7 +52,7 @@
             overflow-y: auto;
         }
 
-        /* Container Kanan (Polos penuh tanpa header) */
+        /* Container Kanan (Polos) */
         #right-container {
             flex: 1;
             height: 100%;
@@ -63,7 +74,10 @@
 
     <!-- Container Kiri -->
     <div id="left-container">
-        <div id="left-header"></div>
+        <div id="left-header">
+            <!-- Icon Action Pojok Kiri Atas (Raw GitHub URL) -->
+            <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" alt="Action Menu" class="action-icon">
+        </div>
         <div id="file-list"></div>
     </div>
 
