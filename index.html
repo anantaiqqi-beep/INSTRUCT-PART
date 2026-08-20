@@ -3,24 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaya UI SAP Business One (White Theme)</title>
+    <title>Gaya UI SAP Business One (White Theme) - Container Only</title>
     <style>
-        /* --- KOSMETIK & VARIABEL (Warna SAP Horizon Light) --- */
+        /* --- VARIABEL WARNA (SAP Horizon Light) --- */
         :root {
-            --sap-background-color: #f5f6f7; /* Abu-abu sangat muda */
-            --sap-shell-color: #ffffff; /* Putih bersih untuk Header */
+            --sap-background-color: #f5f6f7;
+            --sap-shell-color: #ffffff;
             --sap-toolbar-color: #ffffff;
             --sap-sidebar-color: #ffffff;
-            
-            --sap-primary-text-color: #223548; /* Biru tua gelap */
-            --sap-secondary-text-color: #5b738b; /* Abu-biru */
-            
-            --sap-interactive-color: #0070f2; /* Biru SAP Aktif */
-            --sap-border-color: #d5dadd; /* Abu-abu terang untuk garis */
-            --sap-hover-background: #f0f2f4;
-            --sap-selected-background: #e5f0fa;
-
-            --sap-font-family: "72", "72full", Arial, Helvetica, sans-serif; /* Font standar SAP */
+            --sap-border-color: #d5dadd;
+            --sap-font-family: "72", "72full", Arial, Helvetica, sans-serif;
         }
 
         * {
@@ -29,159 +21,51 @@
             padding: 0;
         }
 
+        /* CONTAINER UTAMA / ROOT CONTAINER */
         body {
             font-family: var(--sap-font-family);
-            font-size: 14px;
             background-color: var(--sap-background-color);
-            color: var(--sap-primary-text-color);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        /* --- 1. HEADER (SAP Shell Header) --- */
-        .sap-header {
+        /* 1. CONTAINER HEADER (SHELL) */
+        .sap-header-container {
             background-color: var(--sap-shell-color);
             height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
             border-bottom: 1px solid var(--sap-border-color);
             z-index: 10;
+            width: 100%;
         }
 
-        .sap-header-left, .sap-header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sap-logo {
-            font-weight: bold;
-            font-size: 16px;
-            color: var(--sap-interactive-color);
-            margin-right: 12px;
-        }
-
-        .sap-btn-icon {
-            background: none;
-            border: none;
-            color: var(--sap-interactive-color);
-            font-size: 18px;
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .sap-btn-icon:hover {
-            background-color: var(--sap-hover-background);
-        }
-
-        .sap-search-bar {
-            background-color: #f0f2f4;
-            border: 1px solid var(--sap-border-color);
-            border-radius: 4px;
-            padding: 4px 8px;
-            width: 250px;
-            color: var(--sap-primary-text-color);
-        }
-
-        .sap-avatar {
-            width: 32px;
-            height: 32px;
-            background-color: #8396a8;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        /* --- 2. MENU BAR (Toolbar Bawah Header) --- */
-        .sap-menu-bar {
+        /* 2. CONTAINER MENU BAR / TOOLBAR */
+        .sap-menu-bar-container {
             background-color: var(--sap-toolbar-color);
             height: 36px;
             border-bottom: 1px solid var(--sap-border-color);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            gap: 20px;
-            font-size: 13px;
+            width: 100%;
         }
 
-        .sap-menu-item {
-            cursor: pointer;
-            color: var(--sap-secondary-text-color);
-        }
-
-        .sap-menu-item:hover, .sap-menu-item.active {
-            color: var(--sap-interactive-color);
-            font-weight: bold;
-        }
-
-        /* --- 3. BODY CONTAINER (Sidebar + Content) --- */
-        .sap-body {
+        /* 3. CONTAINER BODY (Samping-sampingan untuk Sidebar + Main Content) */
+        .sap-body-container {
             display: flex;
             flex: 1;
             overflow: hidden;
+            width: 100%;
         }
 
-        /* --- 4. SIDEBAR (Navigation Tree) --- */
-        .sap-sidebar {
+        /* 4. CONTAINER SIDEBAR NAVIGASI */
+        .sap-sidebar-container {
             width: 260px;
             background-color: var(--sap-sidebar-color);
             border-right: 1px solid var(--sap-border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 16px 0;
             overflow-y: auto;
         }
 
-        .sap-sidebar-section-title {
-            text-transform: uppercase;
-            color: var(--sap-secondary-text-color);
-            font-size: 11px;
-            padding: 0 16px;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .sap-nav-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 16px;
-            cursor: pointer;
-            color: var(--sap-primary-text-color);
-            gap: 12px;
-        }
-
-        .sap-nav-item:hover {
-            background-color: var(--sap-hover-background);
-        }
-
-        .sap-nav-item.selected {
-            background-color: var(--sap-selected-background);
-            color: var(--sap-interactive-color);
-            font-weight: bold;
-            border-left: 3px solid var(--sap-interactive-color);
-            padding-left: 13px; /* Adjust for border */
-        }
-
-        .sap-nav-icon {
-            color: var(--sap-interactive-color);
-            width: 16px;
-            text-align: center;
-        }
-
-        /* --- 5. MAIN CONTENT AREA --- */
-        .sap-content {
+        /* 5. CONTAINER MAIN CONTENT */
+        .sap-main-content-container {
             flex: 1;
             padding: 24px;
             overflow-y: auto;
@@ -189,217 +73,25 @@
             flex-direction: column;
             gap: 16px;
         }
-
-        .sap-content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .sap-page-title {
-            font-size: 20px;
-            font-weight: normal;
-        }
-
-        /* --- 6. ELEMENTS (Cards, Tables, Buttons SAP Style) --- */
-        .sap-card {
-            background-color: #ffffff;
-            border: 1px solid var(--sap-border-color);
-            border-radius: 4px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .sap-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .sap-table thead th {
-            text-align: left;
-            background-color: #f7f8f9;
-            color: var(--sap-secondary-text-color);
-            padding: 10px;
-            border-bottom: 2px solid var(--sap-border-color);
-            font-weight: bold;
-        }
-
-        .sap-table tbody td {
-            padding: 10px;
-            border-bottom: 1px solid var(--sap-border-color);
-            color: var(--sap-primary-text-color);
-        }
-
-        .sap-table tbody tr:hover {
-            background-color: #fbfcfc;
-            cursor: pointer;
-        }
-
-        .sap-btn-primary {
-            background-color: var(--sap-interactive-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .sap-btn-primary:hover {
-            background-color: #005bbd;
-        }
-
-        /* Simbol Ikon Sederhana (pengganti FontAwesome/SAP Icons) */
-        .icon-placeholder {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-color: #ccc; /* Nanti bisa diganti ikon beneran */
-            border-radius: 2px;
-        }
-
     </style>
 </head>
 <body>
 
-    <!-- 1. HEADER SHELL -->
-    <header class="sap-header">
-        <div class="sap-header-left">
-            <button class="sap-btn-icon">☰</button> <!-- Hamburger -->
-            <div class="sap-logo">SAP</div>
-            <div class="sap-menu-item">Business One</div>
-        </div>
-        <div class="sap-header-right">
-            <input type="text" class="sap-search-bar" placeholder="Cari menu, dokumen...">
-            <button class="sap-btn-icon">🔔</button> <!-- Notifikasi -->
-            <button class="sap-btn-icon">⚙️</button> <!-- Settings -->
-            <div class="sap-avatar">JD</div> <!-- User Avatar -->
-        </div>
-    </header>
+    <!-- 1. Header Container -->
+    <header class="sap-header-container"></header>
 
-    <!-- 2. MENU BAR TOOLBAR -->
-    <nav class="sap-menu-bar">
-        <div class="sap-menu-item">File</div>
-        <div class="sap-menu-item">Edit</div>
-        <div class="sap-menu-item">View</div>
-        <div class="sap-menu-item active">Data</div>
-        <div class="sap-menu-item">Go To</div>
-        <div class="sap-menu-item">Tools</div>
-        <div class="sap-menu-item">Window</div>
-        <div class="sap-menu-item">Help</div>
-    </nav>
+    <!-- 2. Menu Bar Container -->
+    <nav class="sap-menu-bar-container"></nav>
 
-    <!-- 3. BODY CONTENT -->
-    <div class="sap-body">
+    <!-- 3. Body Container -->
+    <div class="sap-body-container">
         
-        <!-- 4. SIDEBAR NAVIGASI (Tree) -->
-        <aside class="sap-sidebar">
-            <div class="sap-sidebar-section-title">Modul</div>
-            
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">🏠</span>
-                <span>Cockpit</span>
-            </a>
-            
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">👤</span>
-                <span>Business Partners</span>
-            </a>
+        <!-- 4. Sidebar Container -->
+        <aside class="sap-sidebar-container"></aside>
 
-            <a href="#" class="sap-nav-item selected">
-                <span class="sap-nav-icon">💰</span>
-                <span>Sales - A/R</span>
-            </a>
-            
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">🛒</span>
-                <span>Purchasing - A/P</span>
-            </a>
+        <!-- 5. Main Content Container -->
+        <main class="sap-main-content-container"></main>
 
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">📦</span>
-                <span>Inventory</span>
-            </a>
-
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">📊</span>
-                <span>Banking</span>
-            </a>
-
-            <a href="#" class="sap-nav-item">
-                <span class="sap-nav-icon">🔧</span>
-                <span>Administration</span>
-            </a>
-        </aside>
-
-        <!-- 5. MAIN CONTENT -->
-        <main class="sap-content">
-            
-            <div class="sap-content-header">
-                <h1 class="sap-page-title">Sales Orders (Pesanan Penjualan)</h1>
-                <div class="sap-header-actions">
-                    <button class="sap-btn-primary">+ Buat Baru</button>
-                </div>
-            </div>
-
-            <!-- 6. DATA TABLE CARD -->
-            <div class="sap-card">
-                <table class="sap-table">
-                    <thead>
-                        <tr>
-                            <th>No. Dokumen</th>
-                            <th>Kode Pelanggan</th>
-                            <th>Nama Pelanggan</th>
-                            <th>Tanggal Posting</th>
-                            <th>Total Dokumen</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color:var(--sap-interactive-color)">SO10001</td>
-                            <td>C20000</td>
-                            <td>PT. Teknologi Nusantara</td>
-                            <td>20/08/2026</td>
-                            <td>Rp 15.000.000</td>
-                            <td><span style="color:#188918">Open</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--sap-interactive-color)">SO10002</td>
-                            <td>C35000</td>
-                            <td>Globalindo Trading</td>
-                            <td>19/08/2026</td>
-                            <td>Rp 8.250.000</td>
-                            <td><span style="color:#188918">Open</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--sap-interactive-color)">SO10003</td>
-                            <td>C20000</td>
-                            <td>PT. Teknologi Nusantara</td>
-                            <td>15/08/2026</td>
-                            <td>Rp 22.000.000</td>
-                            <td><span style="color:#5b738b">Closed</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--sap-interactive-color)">SO10004</td>
-                            <td>C40000</td>
-                            <td>Cahaya Abadi Retail</td>
-                            <td>10/08/2026</td>
-                            <td>Rp 5.500.000</td>
-                            <td><span style="color:#5b738b">Closed</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="sap-card" style="margin-top: auto; font-size: 12px; color: var(--sap-secondary-text-color);">
-                Status Bar: Connected to Company "DEMO_ID" as Manager | 20/08/2026 14:30
-            </div>
-
-        </main>
     </div>
 
 </body>
