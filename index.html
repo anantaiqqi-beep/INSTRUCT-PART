@@ -18,7 +18,7 @@
             --sap-btn-hover: #f0f2f4;
             --sap-tree-hover: #eaf3fc;
             --sap-tree-selected: #d0e5fa;
-            --sap-folder-icon: #f4b400; /* Warna Folder Khas SAP */
+            --sap-folder-icon: #f4b400; /* Warna Folder Khas SAP Signature */
         }
 
         [data-theme="dark"] {
@@ -140,50 +140,8 @@
             display: flex;
             flex-direction: column;
             user-select: none;
-        }
-
-        /* TAB NAVIGATION (Modules vs Favorites) */
-        .sap-tab-header {
-            display: flex;
-            border-bottom: 1px solid var(--sap-border-color);
-            background-color: var(--sap-shell-color);
-        }
-
-        .sap-tab-btn {
-            flex: 1;
-            padding: 10px 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 12px;
-            color: var(--sap-text-secondary);
-            border: none;
-            background: none;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-
-        .sap-tab-btn.active {
-            color: var(--sap-interactive-color);
-            border-bottom-color: var(--sap-interactive-color);
-        }
-
-        .sap-tab-btn:hover:not(.active) {
-            background-color: var(--sap-btn-hover);
-        }
-
-        /* TAB CONTENT & TREE VIEW */
-        .sap-tab-content {
-            flex: 1;
             overflow-y: auto;
             padding: 8px 0;
-        }
-
-        .sap-tab-pane {
-            display: none;
-        }
-
-        .sap-tab-pane.active {
-            display: block;
         }
 
         /* SAP TREE MENU STYLES */
@@ -239,13 +197,6 @@
             flex-shrink: 0;
         }
 
-        .sap-doc-icon {
-            width: 16px;
-            height: 16px;
-            fill: var(--sap-text-secondary);
-            flex-shrink: 0;
-        }
-
         /* Sub-menu indentasi ala Tree */
         .sap-tree-children {
             display: none;
@@ -296,138 +247,83 @@
         
         <!-- 4. Sidebar Container (SAP Menu Panel) -->
         <aside class="sap-sidebar-container">
-            
-            <!-- Tab Headers: Modules vs Favorites -->
-            <div class="sap-tab-header">
-                <button class="sap-tab-btn active" onclick="switchTab(event, 'tab-modules')">Modules</button>
-                <button class="sap-tab-btn" onclick="switchTab(event, 'tab-favorites')">Favorites</button>
-            </div>
-
-            <!-- Tab Content -->
-            <div class="sap-tab-content">
+            <ul class="sap-tree-list">
                 
-                <!-- TAB 1: SYSTEM MODULES -->
-                <div id="tab-modules" class="sap-tab-pane active">
-                    <ul class="sap-tree-list">
+                <!-- ROOT 1: FAVORITES (KOSONG) -->
+                <li class="sap-tree-item">
+                    <div class="sap-tree-row" onclick="toggleFolder(this)">
+                        <span class="sap-tree-arrow">▶</span>
+                        <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                        <span>Favorites</span>
+                    </div>
+                    <ul class="sap-tree-children">
+                        <!-- Kosong sesuai permintaan -->
+                    </ul>
+                </li>
+
+                <!-- ROOT 2: MODULES (DENGAN SUB-FOLDER) -->
+                <li class="sap-tree-item">
+                    <div class="sap-tree-row" onclick="toggleFolder(this)">
+                        <span class="sap-tree-arrow open">▶</span>
+                        <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                        <span>Modules</span>
+                    </div>
+                    <ul class="sap-tree-children open">
                         
-                        <!-- Folder: Administration -->
+                        <!-- Sub-Folder 1: Office -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
                                 <span class="sap-tree-arrow">▶</span>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                                <span>Administration</span>
+                                <span>Office</span>
                             </div>
-                            <ul class="sap-tree-children">
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>System Initialization</span>
-                                    </div>
-                                </li>
-                            </ul>
+                            <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Folder: Financials -->
+                        <!-- Sub-Folder 2: Accounting -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
                                 <span class="sap-tree-arrow">▶</span>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                                <span>Financials</span>
+                                <span>Accounting</span>
                             </div>
-                            <ul class="sap-tree-children">
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>Chart of Accounts</span>
-                                    </div>
-                                </li>
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>Journal Entry</span>
-                                    </div>
-                                </li>
-                            </ul>
+                            <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Folder: Sales - A/R -->
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row" onclick="toggleFolder(this)">
-                                <span class="sap-tree-arrow open">▶</span>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                                <span>Sales - A/R</span>
-                            </div>
-                            <ul class="sap-tree-children open">
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>Sales Quotation</span>
-                                    </div>
-                                </li>
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row selected">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>Sales Order</span>
-                                    </div>
-                                </li>
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>A/R Invoice</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <!-- Folder: Purchasing - A/P -->
+                        <!-- Sub-Folder 3: Logistic -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" onclick="toggleFolder(this)">
                                 <span class="sap-tree-arrow">▶</span>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                                <span>Purchasing - A/P</span>
+                                <span>Logistic</span>
                             </div>
-                            <ul class="sap-tree-children">
-                                <li class="sap-tree-item">
-                                    <div class="sap-tree-row">
-                                        <span class="sap-tree-arrow empty">▶</span>
-                                        <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                        <span>Purchase Order</span>
-                                    </div>
-                                </li>
-                            </ul>
+                            <ul class="sap-tree-children"></ul>
+                        </li>
+
+                        <!-- Sub-Folder 4: HR -->
+                        <li class="sap-tree-item">
+                            <div class="sap-tree-row" onclick="toggleFolder(this)">
+                                <span class="sap-tree-arrow">▶</span>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <span>HR</span>
+                            </div>
+                            <ul class="sap-tree-children"></ul>
+                        </li>
+
+                        <!-- Sub-Folder 5: Tools -->
+                        <li class="sap-tree-item">
+                            <div class="sap-tree-row" onclick="toggleFolder(this)">
+                                <span class="sap-tree-arrow">▶</span>
+                                <svg class="sap-folder-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                                <span>Tools</span>
+                            </div>
+                            <ul class="sap-tree-children"></ul>
                         </li>
 
                     </ul>
-                </div>
+                </li>
 
-                <!-- TAB 2: FAVORITES MENU -->
-                <div id="tab-favorites" class="sap-tab-pane">
-                    <ul class="sap-tree-list">
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row">
-                                <span class="sap-tree-arrow empty">▶</span>
-                                <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                <span>Sales Order</span>
-                            </div>
-                        </li>
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row">
-                                <span class="sap-tree-arrow empty">▶</span>
-                                <svg class="sap-doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                                <span>A/R Invoice</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
+            </ul>
         </aside>
 
         <!-- 5. Main Content Container -->
@@ -435,7 +331,7 @@
 
     </div>
 
-    <!-- JAVASCRIPT: TOGGLE THEME, TAB, & TREE EXPAND/COLLAPSE -->
+    <!-- JAVASCRIPT: TOGGLE THEME & TREE EXPAND/COLLAPSE -->
     <script>
         // Switch Theme (Light/Dark)
         function toggleTheme() {
@@ -448,15 +344,6 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
-        // Switch Tab (Modules vs Favorites)
-        function switchTab(event, tabId) {
-            document.querySelectorAll('.sap-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.sap-tab-pane').forEach(pane => pane.classList.remove('active'));
-
-            event.currentTarget.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-
         // Expand / Collapse Folder Tree
         function toggleFolder(element) {
             const children = element.nextElementSibling;
@@ -464,7 +351,9 @@
             
             if (children && children.classList.contains('sap-tree-children')) {
                 children.classList.toggle('open');
-                arrow.classList.toggle('open');
+                if (arrow) {
+                    arrow.classList.toggle('open');
+                }
             }
         }
     </script>
