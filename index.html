@@ -19,6 +19,7 @@
             --sap-tree-hover: #eaf3fc;
             --sap-tree-selected: #d0e5fa;
             --sap-arrow-color: #6a6d70;
+            --sap-dot-color: #0070f2;
             
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #ffffff;
@@ -43,6 +44,7 @@
             --sap-tree-hover: #25313d;
             --sap-tree-selected: #1d3954;
             --sap-arrow-color: #a2b4c7;
+            --sap-dot-color: #4db2ff;
 
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #1d232a;
@@ -205,7 +207,7 @@
             background-color: var(--sap-tree-hover);
         }
 
-        /* ICON PANAH TOGGLE TREE (HANYA MENGGUNAKAN PANAH) */
+        /* ICON PANAH TOGGLE TREE */
         .sap-arrow-icon {
             width: 14px;
             height: 14px;
@@ -220,6 +222,24 @@
 
         .sap-tree-row.is-open .sap-arrow-icon {
             transform: rotate(90deg);
+        }
+
+        /* ICON DOT / TRANSAKSI UNTUK SUB-MENU AKHIR */
+        .sap-dot-icon {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sap-dot-icon::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background-color: var(--sap-dot-color);
+            border-radius: 50%;
         }
 
         /* INDENTASI ANAK MENU TREE */
@@ -294,7 +314,7 @@
             box-shadow: var(--sap-card-shadow);
             padding: 8px;
             display: flex;
-            flex-direction: column; /* SUSUNAN VERTIKAL */
+            flex-direction: column;
             gap: 6px;
             opacity: 0;
             visibility: hidden;
@@ -303,7 +323,6 @@
             z-index: 20;
         }
 
-        /* TAMPILKAN FLOATING CARD SAAT TOGGLE DIAKTIFKAN */
         .sap-status-card.show {
             opacity: 1;
             visibility: visible;
@@ -441,13 +460,44 @@
 
                         <!-- Sub-Folder 3: Logistic -->
                         <li class="sap-tree-item">
-                            <div class="sap-tree-row" ondblclick="toggleFolder(this)">
+                            <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
                                 <svg class="sap-arrow-icon" viewBox="0 0 24 24">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                                 <span>Logistic</span>
                             </div>
-                            <ul class="sap-tree-children"></ul>
+                            <ul class="sap-tree-children open">
+                                
+                                <!-- Sub-Menu level 2: Master Data -->
+                                <li class="sap-tree-item">
+                                    <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
+                                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                        <span>Master Data</span>
+                                    </div>
+                                    <ul class="sap-tree-children open">
+                                        
+                                        <!-- Leaf Item 1: Warehouse (Icon DOT) -->
+                                        <li class="sap-tree-item">
+                                            <div class="sap-tree-row">
+                                                <span class="sap-dot-icon"></span>
+                                                <span>Warehouse</span>
+                                            </div>
+                                        </li>
+
+                                        <!-- Leaf Item 2: Material (Icon DOT) -->
+                                        <li class="sap-tree-item">
+                                            <div class="sap-tree-row">
+                                                <span class="sap-dot-icon"></span>
+                                                <span>Material</span>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                            </ul>
                         </li>
 
                         <!-- Sub-Folder 4: HR -->
