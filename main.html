@@ -54,7 +54,7 @@
             padding: 0 16px;
             gap: 12px;
             flex-shrink: 0;
-            overflow: hidden;
+            position: relative; /* Anchor untuk positioning Floating Card */
         }
 
         .action-icon {
@@ -63,6 +63,13 @@
             cursor: pointer;
             object-fit: contain;
             flex-shrink: 0;
+            padding: 2px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .action-icon:hover {
+            background-color: #f0f0f0;
         }
 
         .header-title {
@@ -74,12 +81,69 @@
             text-overflow: ellipsis;
         }
 
+        /* Floating Card Popover */
+        .floating-card {
+            position: absolute;
+            top: 50px;
+            left: 12px;
+            width: 180px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e8e8e8;
+            padding: 6px 0;
+            z-index: 1000;
+            display: none; /* Default tersembunyi */
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .floating-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .floating-card ul {
+            list-style: none;
+        }
+
+        .floating-card li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #333333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .floating-card li a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .floating-card li.divider {
+            height: 1px;
+            background-color: #e8e8e8;
+            margin: 4px 0;
+        }
+
+        .floating-card li a.logout {
+            color: #ff4d4f;
+        }
+
+        .floating-card li a.logout:hover {
+            background-color: #fff1f0;
+        }
+
         /* Menu Tree Container */
         #file-list {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 10px 8px; /* Memberikan ruang samping untuk efek rounded */
+            padding: 10px 8px;
         }
 
         .tree-menu, .tree-submenu {
@@ -98,7 +162,7 @@
             cursor: pointer;
             font-size: 14px;
             color: #333333;
-            border-radius: 10px; /* Efek Rounded saat Hover */
+            border-radius: 10px;
             transition: background-color 0.2s, border-radius 0.2s;
         }
 
@@ -123,7 +187,6 @@
             transform: rotate(0deg);
         }
 
-        /* Rotasi 90 derajat saat expanded */
         .tree-item.expanded > .tree-header .arrow-img {
             transform: rotate(90deg);
         }
@@ -157,7 +220,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            border-radius: 8px; /* Efek Rounded untuk Submenu saat Hover */
+            border-radius: 8px;
             transition: background-color 0.2s, color 0.2s;
         }
 
@@ -193,15 +256,38 @@
     <!-- Container Kiri -->
     <div id="left-container">
         <div id="left-header">
-            <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" alt="Action Menu" class="action-icon">
+            <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" alt="Action Menu" class="action-icon" id="actionBtn">
             <span class="header-title">Ananta Business One</span>
+
+            <!-- Floating Card Dropdown -->
+            <div class="floating-card" id="actionCard">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)" onclick="alert('Buka Profile')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="alert('Buka Settings')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="javascript:void(0)" class="logout" onclick="alert('Proses Logout')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         
         <!-- Menu Tree Container -->
         <div id="file-list">
             <ul class="tree-menu">
-                
-                <!-- Office -->
                 <li class="tree-item">
                     <div class="tree-header">
                         <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
@@ -213,7 +299,6 @@
                     </ul>
                 </li>
 
-                <!-- Accounting -->
                 <li class="tree-item">
                     <div class="tree-header">
                         <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
@@ -225,7 +310,6 @@
                     </ul>
                 </li>
 
-                <!-- Logistic -->
                 <li class="tree-item">
                     <div class="tree-header">
                         <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
@@ -237,7 +321,6 @@
                     </ul>
                 </li>
 
-                <!-- HR -->
                 <li class="tree-item">
                     <div class="tree-header">
                         <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
@@ -249,7 +332,6 @@
                     </ul>
                 </li>
 
-                <!-- Tools -->
                 <li class="tree-item">
                     <div class="tree-header">
                         <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="arrow" class="arrow-img">
@@ -260,7 +342,6 @@
                         <li><a href="about:blank" target="content-frame">Submenu Tools 2</a></li>
                     </ul>
                 </li>
-
             </ul>
         </div>
     </div>
@@ -273,9 +354,25 @@
         <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
-    <!-- Script Toggle & Resizer Handle -->
+    <!-- Script Handling -->
     <script>
-        // Toggle Accordion Menu
+        // Toggle Floating Card Popover
+        const actionBtn = document.getElementById('actionBtn');
+        const actionCard = document.getElementById('actionCard');
+
+        actionBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            actionCard.classList.toggle('active');
+        });
+
+        // Tutup Floating Card jika mengklik area luar
+        document.addEventListener('click', (e) => {
+            if (!actionCard.contains(e.target) && e.target !== actionBtn) {
+                actionCard.classList.remove('active');
+            }
+        });
+
+        // Toggle Accordion Menu Tree
         document.querySelectorAll('.tree-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.parentElement;
@@ -288,7 +385,7 @@
         const resizer = document.getElementById('resizer');
         let isResizing = false;
 
-        resizer.addEventListener('mousedown', (e) => {
+        resizer.addEventListener('mousedown', () => {
             isResizing = true;
             document.body.classList.add('is-dragging');
             resizer.classList.add('is-dragging');
@@ -299,7 +396,6 @@
 
             const minWidth = 50;
             const maxWidth = window.innerWidth - 50;
-            
             let newWidth = e.clientX;
 
             if (newWidth < minWidth) newWidth = minWidth;
