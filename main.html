@@ -54,22 +54,31 @@
             padding: 0 16px;
             gap: 12px;
             flex-shrink: 0;
-            position: relative; /* Anchor wajib untuk posisi Floating Card */
+        }
+
+        /* Button Action Wrapper */
+        .action-btn-wrapper {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            outline: none;
+        }
+
+        .action-btn-wrapper:hover {
+            background-color: #f0f0f0;
         }
 
         .action-icon {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
-            flex-shrink: 0;
-            padding: 2px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .action-icon:hover {
-            background-color: #f0f0f0;
+            display: block;
         }
 
         .header-title {
@@ -81,31 +90,28 @@
             text-overflow: ellipsis;
         }
 
-        /* Floating Card Dropdown Menu (Perbaikan CSS) */
+        /* Floating Card Dropdown Menu (Fixed Positioning) */
         .floating-card {
-            position: absolute;
-            top: 52px;
-            left: 12px;
+            position: fixed;
+            top: 55px;
+            left: 16px;
             width: 180px;
             background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e8e8e8;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+            border: 1px solid #e0e0e0;
             padding: 6px 0;
-            z-index: 9999;
+            z-index: 99999;
             
-            /* Menggunakan visibility agar transisi opacity bekerja mulus */
-            visibility: hidden;
+            display: none; /* Menggunakan display block/none langsung via kelas active */
             opacity: 0;
-            pointer-events: none;
             transform: translateY(-8px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            transition: opacity 0.15s ease, transform 0.15s ease;
         }
 
         .floating-card.active {
-            visibility: visible;
+            display: block;
             opacity: 1;
-            pointer-events: auto;
             transform: translateY(0);
         }
 
@@ -258,33 +264,40 @@
     <!-- Container Kiri -->
     <div id="left-container">
         <div id="left-header">
-            <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" alt="Action Menu" class="action-icon" id="actionBtn">
-            <span class="header-title">Ananta Business One</span>
+            <!-- Button Wrapper agar area klik terjamin -->
+            <button class="action-btn-wrapper" id="actionBtn" title="Menu Options">
+                <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" 
+                     alt="Action Menu" 
+                     class="action-icon"
+                     onerror="this.onerror=null; this.remove(); document.getElementById('actionBtn').innerHTML='&#9776;';">
+            </button>
 
-            <!-- Floating Card Menu -->
-            <div class="floating-card" id="actionCard">
-                <ul>
-                    <li>
-                        <a href="javascript:void(0)" onclick="alert('Buka Profile')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" onclick="alert('Buka Settings')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                            Settings
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="javascript:void(0)" class="logout" onclick="alert('Proses Logout')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <span class="header-title">Ananta Business One</span>
+        </div>
+
+        <!-- Floating Card Menu (Ditaruh diluar left-header untuk mencegah overflow clipping) -->
+        <div class="floating-card" id="actionCard">
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" onclick="alert('Profile Klik');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="alert('Settings Klik');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Settings
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0)" class="logout" onclick="alert('Logout Klik');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        Logout
+                    </a>
+                </li>
+            </ul>
         </div>
         
         <!-- Menu Tree Container -->
@@ -367,9 +380,9 @@
             actionCard.classList.toggle('active');
         });
 
-        // Tutup Floating Card jika mengeklik area di luar card
-        document.addEventListener('click', (e) => {
-            if (!actionCard.contains(e.target) && e.target !== actionBtn) {
+        // Tutup Floating Card jika mengeklik area mana pun di luar card
+        window.addEventListener('click', (e) => {
+            if (!actionCard.contains(e.target) && !actionBtn.contains(e.target)) {
                 actionCard.classList.remove('active');
             }
         });
