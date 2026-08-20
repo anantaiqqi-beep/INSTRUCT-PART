@@ -21,9 +21,11 @@
             --sap-arrow-color: #6a6d70;
             --sap-dot-color: #0070f2;
             
-            /* Form & Input */
+            /* Form & Grid */
             --sap-input-bg: #ffffff;
             --sap-input-border: #899eb3;
+            --sap-table-header-bg: #eaeef2;
+            --sap-table-row-hover: #f0f4f8;
 
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #ffffff;
@@ -50,9 +52,11 @@
             --sap-arrow-color: #a2b4c7;
             --sap-dot-color: #4db2ff;
 
-            /* Form & Input */
+            /* Form & Grid */
             --sap-input-bg: #12171c;
             --sap-input-border: #4d5d6d;
+            --sap-table-header-bg: #222b35;
+            --sap-table-row-hover: #1a232c;
 
             /* Status Bar & Floating Card */
             --sap-statusbar-bg: #1d232a;
@@ -265,7 +269,6 @@
             font-weight: 600;
         }
 
-        /* ICON PANAH TOGGLE TREE */
         .sap-arrow-icon {
             width: 14px;
             height: 14px;
@@ -282,7 +285,6 @@
             transform: rotate(90deg);
         }
 
-        /* ICON DOT / TRANSAKSI */
         .sap-dot-icon {
             width: 14px;
             height: 14px;
@@ -300,7 +302,6 @@
             border-radius: 50%;
         }
 
-        /* INDENTASI ANAK MENU TREE */
         .sap-tree-children {
             list-style: none;
             display: none;
@@ -415,6 +416,97 @@
             background-color: var(--sap-btn-hover);
         }
 
+        /* --- DATA GRID STYLES --- */
+        .sap-grid-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sap-grid-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sap-grid-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--sap-text-secondary);
+        }
+
+        .sap-grid-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--sap-border-color);
+            border-radius: 4px;
+            background-color: var(--sap-shell-color);
+        }
+
+        .sap-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .sap-table th {
+            background-color: var(--sap-table-header-bg);
+            color: var(--sap-text-primary);
+            font-weight: 600;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--sap-border-color);
+            border-right: 1px solid var(--sap-border-color);
+            white-space: nowrap;
+        }
+
+        .sap-table th:last-child {
+            border-right: none;
+        }
+
+        .sap-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--sap-border-color);
+            border-right: 1px solid var(--sap-border-color);
+            color: var(--sap-text-primary);
+            white-space: nowrap;
+        }
+
+        .sap-table td:last-child {
+            border-right: none;
+        }
+
+        .sap-table tbody tr:hover {
+            background-color: var(--sap-table-row-hover);
+        }
+
+        /* Loading Indicator */
+        .sap-loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            gap: 12px;
+            color: var(--sap-text-secondary);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--sap-border-color);
+            border-top: 3px solid var(--sap-interactive-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* FOOTER STATUS BAR CONTAINER */
         .sap-status-bar-wrapper {
             position: relative;
@@ -453,7 +545,6 @@
             flex-shrink: 0;
         }
 
-        /* FLOATING CARD POPOVER */
         .sap-status-card {
             position: absolute;
             bottom: 32px;
@@ -543,7 +634,6 @@
                 <span>Ananta</span> Business One
             </div>
             
-            <!-- Dynamic Divider & Screen Title -->
             <div class="sap-header-divider" id="headerDivider" style="display: none;"></div>
             <div class="sap-screen-title" id="screenTitle"></div>
         </div>
@@ -561,9 +651,8 @@
         </div>
     </header>
 
-    <!-- 2. Menu / Function Bar Container -->
+    <!-- 2. Function Bar -->
     <nav class="sap-menu-bar-container">
-        <!-- Back Button (Pojok Kiri Atas Function Bar) -->
         <button class="sap-back-btn" id="backBtn" disabled onclick="resetMainContent()" title="Kembali">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -576,92 +665,70 @@
     <!-- 3. Body Container -->
     <div class="sap-body-container">
         
-        <!-- 4. Sidebar Container (SAP Menu Panel) -->
+        <!-- 4. Sidebar Container -->
         <aside class="sap-sidebar-container" id="sidebar">
             <ul class="sap-tree-list">
                 
-                <!-- ROOT 1: FAVORITES -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+                        <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         <span>Favorites</span>
                     </div>
                     <ul class="sap-tree-children"></ul>
                 </li>
 
-                <!-- ROOT 2: MODULES (DEFAULT OPEN) -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
-                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+                        <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         <span>Modules</span>
                     </div>
                     <ul class="sap-tree-children open">
                         
-                        <!-- Sub-Folder 1: Office -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <span>Office</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Sub-Folder 2: Accounting -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <span>Accounting</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Sub-Folder 3: Logistic -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <span>Logistic</span>
                             </div>
                             <ul class="sap-tree-children open">
                                 
-                                <!-- Sub-Menu level 2: Master Data -->
                                 <li class="sap-tree-item">
                                     <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
-                                        <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
+                                        <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                         <span>Master Data</span>
                                     </div>
                                     <ul class="sap-tree-children open">
                                         
-                                        <!-- Sub-Folder Level 3: Warehouse (Folder Menu) -->
                                         <li class="sap-tree-item">
                                             <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
-                                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                                </svg>
+                                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                                 <span>Warehouse</span>
                                             </div>
                                             <ul class="sap-tree-children open">
                                                 
-                                                <!-- Transaksi Baru: Data Warehouse -->
+                                                <!-- Transaksi: Data Warehouse -->
                                                 <li class="sap-tree-item">
-                                                    <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Data Warehouse Master Data')">
+                                                    <div class="sap-tree-row" onclick="loadDataWarehouseGrid(this)">
                                                         <span class="sap-dot-icon"></span>
                                                         <span>Data Warehouse</span>
                                                     </div>
                                                 </li>
 
-                                                <!-- Transaksi 1: Create Warehouse (Buka Form Master Data) -->
                                                 <li class="sap-tree-item">
                                                     <div class="sap-tree-row" onclick="openCreateWarehouseForm(this)">
                                                         <span class="sap-dot-icon"></span>
@@ -669,7 +736,6 @@
                                                     </div>
                                                 </li>
 
-                                                <!-- Transaksi 2: Change Warehouse -->
                                                 <li class="sap-tree-item">
                                                     <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Change Warehouse Master Data')">
                                                         <span class="sap-dot-icon"></span>
@@ -677,7 +743,6 @@
                                                     </div>
                                                 </li>
 
-                                                <!-- Transaksi 3: Delete Warehouse -->
                                                 <li class="sap-tree-item">
                                                     <div class="sap-tree-row" onclick="openWarehouseTransaction(this, 'Delete Warehouse Master Data')">
                                                         <span class="sap-dot-icon"></span>
@@ -688,7 +753,6 @@
                                             </ul>
                                         </li>
 
-                                        <!-- Leaf Item 2: Material -->
                                         <li class="sap-tree-item">
                                             <div class="sap-tree-row">
                                                 <span class="sap-dot-icon"></span>
@@ -702,23 +766,17 @@
                             </ul>
                         </li>
 
-                        <!-- Sub-Folder 4: HR -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <span>HR</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Sub-Folder 5: Tools -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <span>Tools</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
@@ -740,29 +798,12 @@
 
     <!-- 6. Footer Status Bar -->
     <div class="sap-status-bar-wrapper">
-        
-        <!-- FLOATING CARD ITEMS -->
         <div class="sap-status-card" id="statusCard">
-            <div class="sap-status-field-item">
-                <span class="sap-status-label">System</span>
-                <span class="sap-status-value">PRD</span>
-            </div>
-            <div class="sap-status-field-item">
-                <span class="sap-status-label">Client</span>
-                <span class="sap-status-value">100</span>
-            </div>
-            <div class="sap-status-field-item">
-                <span class="sap-status-label">User</span>
-                <span class="sap-status-value">ANANTA</span>
-            </div>
-            <div class="sap-status-field-item">
-                <span class="sap-status-label">Server</span>
-                <span class="sap-status-value">sap-app-01</span>
-            </div>
-            <div class="sap-status-field-item">
-                <span class="sap-status-label">Latency</span>
-                <span class="sap-status-value" id="latencyValue">INS (1) 23ms</span>
-            </div>
+            <div class="sap-status-field-item"><span class="sap-status-label">System</span><span class="sap-status-value">PRD</span></div>
+            <div class="sap-status-field-item"><span class="sap-status-label">Client</span><span class="sap-status-value">100</span></div>
+            <div class="sap-status-field-item"><span class="sap-status-label">User</span><span class="sap-status-value">ANANTA</span></div>
+            <div class="sap-status-field-item"><span class="sap-status-label">Server</span><span class="sap-status-value">sap-app-01</span></div>
+            <div class="sap-status-field-item"><span class="sap-status-label">Latency</span><span class="sap-status-value" id="latencyValue">INS (1) 23ms</span></div>
         </div>
 
         <footer class="sap-status-bar">
@@ -771,18 +812,16 @@
                 <span id="statusText">Ready</span>
             </div>
 
-            <!-- Tombol Panah Toggle Popover Card -->
             <button class="status-toggle-btn" id="statusToggleBtn" onclick="toggleStatusCard()" title="Tampilkan/Sembunyikan Informasi Sistem">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 8l-6 6h12z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12z"/></svg>
             </button>
         </footer>
     </div>
 
     <!-- JAVASCRIPT -->
     <script>
-        // Switch Theme (Light/Dark)
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwARJAXmtGqvlV4-oicW_HBUiBz_JvYHxLMjl23LoxtFOSvAk0EUxpYIJvPC_OYaI0n/exec";
+
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -793,7 +832,6 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
-        // Expand / Collapse Folder Tree
         function toggleFolder(element) {
             const children = element.nextElementSibling;
             if (children && children.classList.contains('sap-tree-children')) {
@@ -802,7 +840,74 @@
             }
         }
 
-        // Fungsi Generik untuk Buka Layar Transaksi General
+        // --- FUNGSI MENGAMBIL & MENAMPILKAN DATA GRID WAREHOUSE FROM GOOGLE SHEETS ---
+        function loadDataWarehouseGrid(element) {
+            document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('headerDivider').style.display = 'block';
+            document.getElementById('screenTitle').textContent = 'Data Warehouse Master Data';
+            document.getElementById('backBtn').disabled = false;
+
+            const mainContent = document.getElementById('mainContent');
+            
+            // Tampilkan Indicator Loading
+            mainContent.innerHTML = `
+                <div class="sap-loading-spinner">
+                    <div class="spinner"></div>
+                    <span>Mengambil data dari Google Sheets WH_DATA...</span>
+                </div>
+            `;
+            document.getElementById('statusText').textContent = 'Fetching data...';
+
+            // Fetch Data dari Apps Script Web App
+            fetch(APPS_SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        renderGridView(data.headers, data.rows);
+                        document.getElementById('statusText').textContent = `Berhasil memuat ${data.rows.length} baris data.`;
+                    } else {
+                        mainContent.innerHTML = `<div style="color:#d93b3b; padding:16px;">Error: ${data.message}</div>`;
+                        document.getElementById('statusText').textContent = 'Error loading data';
+                    }
+                })
+                .catch(err => {
+                    mainContent.innerHTML = `<div style="color:#d93b3b; padding:16px;">Gagal memuat data. Pastikan URL AppScript benar dan di-deploy dengan akses "Anyone".</div>`;
+                    document.getElementById('statusText').textContent = 'Connection error';
+                });
+        }
+
+        // Render Data Table / Grid View
+        function renderGridView(headers, rows) {
+            const mainContent = document.getElementById('mainContent');
+
+            let headerHTML = headers.map(h => `<th>${h || '-'}</th>`).join('');
+            
+            let rowsHTML = rows.map(row => {
+                let colsHTML = row.map(col => `<td>${col !== null && col !== undefined ? col : ''}</td>`).join('');
+                return `<tr>${colsHTML}</tr>`;
+            }).join('');
+
+            mainContent.innerHTML = `
+                <div class="sap-grid-container">
+                    <div class="sap-grid-toolbar">
+                        <span class="sap-grid-title">Sheet: WH_DATA (Kolom A - F)</span>
+                    </div>
+                    <div class="sap-grid-wrapper">
+                        <table class="sap-table">
+                            <thead>
+                                <tr>${headerHTML}</tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML.length > 0 ? rowsHTML : '<tr><td colspan="6" style="text-align:center;">Data Kosong</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
         function openWarehouseTransaction(element, titleText) {
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
@@ -817,26 +922,18 @@
             document.getElementById('statusText').textContent = `${titleText} Opened`;
         }
 
-        // Fungsi Membuka Form Transaction "Create Warehouse"
         function openCreateWarehouseForm(element) {
-            // Highlight item di Tree
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
 
-            // Set Header Title & Line Pemisah
             document.getElementById('headerDivider').style.display = 'block';
             document.getElementById('screenTitle').textContent = 'Create Warehouse Master Data';
-
-            // Enable Back Button
             document.getElementById('backBtn').disabled = false;
 
-            // Render Form Elemen Input langsung ke Container Utama (tanpa panel card)
             const mainContent = document.getElementById('mainContent');
             mainContent.innerHTML = `
                 <form class="sap-direct-form" onsubmit="event.preventDefault();">
                     <div class="sap-form-grid">
-                        
-                        <!-- 1. Plant -->
                         <div class="sap-form-group">
                             <label class="sap-form-label" for="plant">Plant <span>*</span></label>
                             <select class="sap-form-control" id="plant">
@@ -846,28 +943,19 @@
                                 <option value="3000">3000 - Medan Plant</option>
                             </select>
                         </div>
-
-                        <!-- 2. Warehouse Code -->
                         <div class="sap-form-group">
                             <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
                             <input type="text" class="sap-form-control" id="whCode" placeholder="e.g. WH-001" maxlength="10" />
                         </div>
-
-                        <!-- 3. Warehouse Name -->
                         <div class="sap-form-group full-width">
                             <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
                             <input type="text" class="sap-form-control" id="whName" placeholder="e.g. Main Finished Goods Warehouse" />
                         </div>
-
-                        <!-- 4. Location -->
                         <div class="sap-form-group full-width">
                             <label class="sap-form-label" for="location">Location <span>*</span></label>
                             <textarea class="sap-form-control" id="location" rows="3" placeholder="Enter detailed location/address..."></textarea>
                         </div>
-
                     </div>
-
-                    <!-- Form Action Buttons -->
                     <div class="sap-form-actions">
                         <button type="button" class="sap-btn sap-btn-secondary" onclick="resetMainContent()">Cancel</button>
                         <button type="submit" class="sap-btn sap-btn-primary">Save Data</button>
@@ -875,30 +963,18 @@
                 </form>
             `;
 
-            // Status message
             document.getElementById('statusText').textContent = 'Create Warehouse Master Data Opened';
         }
 
-        // Fungsi Reset / Back ke Layar Kosong
         function resetMainContent() {
-            // Clear Main Content
             document.getElementById('mainContent').innerHTML = '';
-
-            // Hide Header Title & Line Pemisah
             document.getElementById('headerDivider').style.display = 'none';
             document.getElementById('screenTitle').textContent = '';
-
-            // Disable Back Button
             document.getElementById('backBtn').disabled = true;
-
-            // Remove Selection dari Tree
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
-
-            // Status message
             document.getElementById('statusText').textContent = 'Ready';
         }
 
-        // Toggle Floating Card Popover
         function toggleStatusCard() {
             const card = document.getElementById('statusCard');
             const btn = document.getElementById('statusToggleBtn');
@@ -906,14 +982,12 @@
             btn.classList.toggle('active');
         }
 
-        // Realtime Latency Counter
         setInterval(() => {
             const latencyValue = document.getElementById('latencyValue');
             const randomLatency = Math.floor(Math.random() * (45 - 20 + 1)) + 20;
             latencyValue.textContent = `INS (1) ${randomLatency}ms`;
         }, 1000);
 
-        // Resizable Sidebar
         const sidebar = document.getElementById('sidebar');
         const resizer = document.getElementById('resizer');
         let isResizing = false;
