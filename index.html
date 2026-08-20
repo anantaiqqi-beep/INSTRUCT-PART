@@ -398,6 +398,13 @@
             box-shadow: 0 0 0 2px rgba(0, 112, 242, 0.2);
         }
 
+        .sap-form-actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
         .sap-btn {
             height: 36px;
             padding: 0 20px;
@@ -643,7 +650,7 @@
         </form>
     </div>
 
-    <!-- UTAMA SYTEM APP (Hidden Sebelum Login) -->
+    <!-- UTAMA SYSTEM APP -->
     <div class="sap-app-container" id="appContainer" style="display: none;">
         
         <!-- Header Container -->
@@ -780,9 +787,9 @@
         let MATH = ""; 
         let activeUser = "";
         let idleTimer = null;
-        const TIMEOUT_LIMIT = 15 * 60 * 1000; // 15 Menit dalam milidetik
+        const TIMEOUT_LIMIT = 15 * 60 * 1000;
 
-        // --- FUNGSI LOGIN & DEKLARASI MATH VARIABLE ---
+        // --- LOGIN & VALIDASI MATH ---
         function handleLogin(e) {
             e.preventDefault();
             const userIn = document.getElementById('loginUsername').value.trim();
@@ -792,10 +799,8 @@
             loginBtn.disabled = true;
             loginBtn.textContent = 'Authenticating...';
 
-            // VARIABEL MATH: Gabungan Username & Password
             MATH = userIn + passIn;
 
-            // Request Validasi ke Apps Script
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -810,7 +815,6 @@
                 if (data.status === "success") {
                     activeUser = data.username;
                     
-                    // Sembunyikan Overlay Login & Tampilkan Sistem Utama
                     document.getElementById('loginOverlay').style.display = 'none';
                     document.getElementById('appContainer').style.display = 'flex';
                     
@@ -818,7 +822,6 @@
                     document.getElementById('statusMathVal').textContent = MATH;
                     document.getElementById('userIcon').textContent = activeUser.charAt(0).toUpperCase();
 
-                    // Inisialisasi Idle Auto Logout Listener
                     startIdleTimer();
                 } else {
                     alert("Login Gagal: " + data.message);
@@ -833,10 +836,9 @@
             });
         }
 
-        // --- AUTO LOGOUT IDLE TIMEOUT (15 MENIT) ---
+        // --- TIMEOUT SYSTEM ---
         function startIdleTimer() {
             resetIdleTimer();
-            // Pasang Listener aktivitas user
             window.onload = resetIdleTimer;
             window.onmousemove = resetIdleTimer;
             window.onmousedown = resetIdleTimer;
@@ -888,7 +890,7 @@
             }
         }
 
-        // --- FETCH DATA WAREHOUSE ---
+        // --- FETCH & LOAD DATA WAREHOUSE (KOLOM A - G) ---
         function loadDataWarehouseGrid(element) {
             if (element) {
                 document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
@@ -936,18 +938,19 @@
             mainContent.innerHTML = `
                 <div class="sap-grid-container">
                     <div class="sap-grid-toolbar">
-                        <span class="sap-grid-title">Sheet: WH_DATA (Kolom A - F)</span>
+                        <span class="sap-grid-title">Sheet: WH_DATA (Kolom A - G)</span>
                     </div>
                     <div class="sap-grid-wrapper">
                         <table class="sap-table">
                             <thead><tr>${headerHTML}</tr></thead>
-                            <tbody>${rowsHTML.length > 0 ? rowsHTML : '<tr><td colspan="6" style="text-align:center;">Data Kosong</td></tr>'}</tbody>
+                            <tbody>${rowsHTML.length > 0 ? rowsHTML : '<tr><td colspan="7" style="text-align:center;">Data Kosong</td></tr>'}</tbody>
                         </table>
                     </div>
                 </div>
             `;
         }
 
+        // --- FORM CREATE WAREHOUSE (SESUAI STRUKTUR BARU) ---
         function openCreateWarehouseForm(element) {
             document.querySelectorAll('.sap-tree-row').forEach(row => row.classList.remove('selected'));
             element.classList.add('selected');
@@ -973,9 +976,19 @@
                             <label class="sap-form-label" for="whCode">Warehouse Code <span>*</span></label>
                             <input type="text" class="sap-form-control" id="whCode" placeholder="e.g. WH-001" maxlength="10" required />
                         </div>
-                        <div class="sap-form-group full-width">
+                        <div class="sap-form-group">
                             <label class="sap-form-label" for="whName">Warehouse Name <span>*</span></label>
                             <input type="text" class="sap-form-control" id="whName" placeholder="e.g. Main Finished Goods Warehouse" required />
+                        </div>
+                        <div class="sap-form-group">
+                            <label class="sap-form-label" for="whType">Warehouse Type <span>*</span></label>
+                            <select class="sap-form-control" id="whType" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="Raw Material">Raw Material</option>
+                                <option value="Finished Goods">Finished Goods</option>
+                                <option value="Sparepart">Sparepart</option>
+                                <option value="Transit">Transit</option>
+                            </select>
                         </div>
                         <div class="sap-form-group full-width">
                             <label class="sap-form-label" for="location">Location <span>*</span></label>
@@ -992,6 +1005,7 @@
             document.getElementById('statusText').textContent = 'Create Warehouse Master Data Opened';
         }
 
+        // --- SIMPAN WAREHOUSE KE APPS SCRIPT ---
         function submitCreateWarehouseForm(event) {
             event.preventDefault();
 
@@ -1004,8 +1018,8 @@
                 plant: document.getElementById('plant').value,
                 whCode: document.getElementById('whCode').value,
                 whName: document.getElementById('whName').value,
+                whType: document.getElementById('whType').value,
                 location: document.getElementById('location').value,
-                createdDate: new Date().toLocaleString('id-ID'),
                 createdBy: activeUser || 'ANANTA'
             };
 
