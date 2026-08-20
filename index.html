@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ananta Business One</title>
     <style>
-        /* --- VARIABEL WARNA (SAP Horizon Light & Dark) --- */
+        /* --- VARIABEL WARNA (SAP Horizon Light, Dark & Signature Blue Status Bar) --- */
         [data-theme="light"] {
             --sap-background-color: #f5f6f7;
             --sap-shell-color: #ffffff;
@@ -18,9 +18,16 @@
             --sap-btn-hover: #f0f2f4;
             --sap-tree-hover: #eaf3fc;
             --sap-tree-selected: #d0e5fa;
-            --sap-folder-back: #e59312; /* Warna lipatan belakang */
-            --sap-folder-front: #f3b738; /* Warna lipatan depan */
+            --sap-folder-back: #e59312;
+            --sap-folder-front: #f3b738;
             --sap-arrow-color: #6a6d70;
+            
+            /* Status Bar Signature Blue Theme */
+            --sap-statusbar-bg: #dbe5f1;
+            --sap-statusbar-border: #abb8c7;
+            --sap-statusbar-text: #1e395b;
+            --sap-statusbar-field-bg: #ffffff;
+            --sap-statusbar-field-border: #b1c1d8;
         }
 
         [data-theme="dark"] {
@@ -38,6 +45,13 @@
             --sap-folder-back: #f0a828;
             --sap-folder-front: #ffcc00;
             --sap-arrow-color: #a2b4c7;
+
+            /* Status Bar Signature Dark */
+            --sap-statusbar-bg: #1c2733;
+            --sap-statusbar-border: #2e3d4e;
+            --sap-statusbar-text: #d0e1f9;
+            --sap-statusbar-field-bg: #111822;
+            --sap-statusbar-field-border: #32455a;
         }
 
         * {
@@ -134,18 +148,35 @@
             flex: 1;
             overflow: hidden;
             width: 100%;
+            position: relative;
         }
 
         /* 4. SIDEBAR CONTAINER (SAP MENU PANEL) */
         .sap-sidebar-container {
             width: 280px;
+            min-width: 180px;
+            max-width: 600px;
             background-color: var(--sap-sidebar-color);
-            border-right: 1px solid var(--sap-border-color);
             display: flex;
             flex-direction: column;
             user-select: none;
             overflow-y: auto;
             padding: 8px 0;
+            position: relative;
+        }
+
+        /* RESIZER BAR (DRAG TO RESIZE PANEL) */
+        .sap-resizer {
+            width: 5px;
+            background-color: var(--sap-border-color);
+            cursor: col-resize;
+            height: 100%;
+            z-index: 5;
+            transition: background-color 0.2s ease;
+        }
+
+        .sap-resizer:hover, .sap-resizer.is-resizing {
+            background-color: var(--sap-interactive-color);
         }
 
         .sap-tree-list {
@@ -167,13 +198,14 @@
             cursor: pointer;
             gap: 6px;
             color: var(--sap-text-primary);
+            white-space: nowrap;
         }
 
         .sap-tree-row:hover {
             background-color: var(--sap-tree-hover);
         }
 
-        /* ICON PANAH (ARROW TOGGLE) */
+        /* ICON PANAH TOGGLE */
         .sap-arrow-icon {
             width: 14px;
             height: 14px;
@@ -186,7 +218,6 @@
             transition: transform 0.2s ease;
         }
 
-        /* Rotasi panah saat terisi kelas is-open ( > menjadi v ) */
         .sap-tree-row.is-open .sap-arrow-icon {
             transform: rotate(90deg);
         }
@@ -228,6 +259,64 @@
             flex-direction: column;
             gap: 16px;
         }
+
+        /* 6. FOOTER STATUS BAR (SAP SIGNATURE BLUE THEME) */
+        .sap-status-bar {
+            height: 26px;
+            background: var(--sap-statusbar-bg);
+            border-top: 1px solid var(--sap-statusbar-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            font-size: 11px;
+            color: var(--sap-statusbar-text);
+            user-select: none;
+            z-index: 10;
+        }
+
+        .sap-status-message-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .sap-status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #2b7d2b; /* Indicator OK / Ready */
+            flex-shrink: 0;
+        }
+
+        .sap-status-info-fields {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 100%;
+        }
+
+        .sap-status-field {
+            background-color: var(--sap-statusbar-field-bg);
+            border: 1px solid var(--sap-statusbar-field-border);
+            padding: 2px 8px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Consolas, monospace;
+            font-size: 11px;
+            border-radius: 2px;
+            color: var(--sap-statusbar-text);
+        }
+
+        .sap-status-field.system-id {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -258,24 +347,19 @@
     <div class="sap-body-container">
         
         <!-- 4. Sidebar Container (SAP Menu Panel) -->
-        <aside class="sap-sidebar-container">
+        <aside class="sap-sidebar-container" id="sidebar">
             <ul class="sap-tree-list">
                 
                 <!-- ROOT 1: FAVORITES -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                        <!-- Icon Panah ( > ) -->
                         <svg class="sap-arrow-icon" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
-
-                        <!-- Icon Folder Dual-Layer -->
                         <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                            <!-- Tertutup -->
                             <g class="folder-closed-path">
                                 <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
                             </g>
-                            <!-- Terbuka (Sesuai Foto) -->
                             <g class="folder-open-path">
                                 <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
                                 <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
@@ -291,12 +375,9 @@
                 <!-- ROOT 2: MODULES (DEFAULT OPEN) -->
                 <li class="sap-tree-item">
                     <div class="sap-tree-row is-open" ondblclick="toggleFolder(this)">
-                        <!-- Icon Panah -->
                         <svg class="sap-arrow-icon" viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
-
-                        <!-- Icon Folder Dual-Layer -->
                         <svg class="sap-folder-icon" viewBox="0 0 24 24">
                             <g class="folder-closed-path">
                                 <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
@@ -416,13 +497,32 @@
             </ul>
         </aside>
 
+        <!-- RESIZER BAR -->
+        <div class="sap-resizer" id="resizer"></div>
+
         <!-- 5. Main Content Container -->
         <main class="sap-main-content-container"></main>
 
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- 6. Footer Status Bar (SAP Logon Signature Blue) -->
+    <footer class="sap-status-bar">
+        <div class="sap-status-message-area">
+            <span class="sap-status-icon"></span>
+            <span>Ready</span>
+        </div>
+        <div class="sap-status-info-fields">
+            <div class="sap-status-field system-id" title="System ID">PRD</div>
+            <div class="sap-status-field" title="Client">100</div>
+            <div class="sap-status-field" title="User">ANANTA</div>
+            <div class="sap-status-field" title="Server">sap-app-01</div>
+            <div class="sap-status-field" title="Response Time">INS (1) 23ms</div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: THEME, FOLDER TOGGLE, & RESIZABLE SIDEBAR -->
     <script>
+        // Switch Theme
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -433,6 +533,7 @@
             document.getElementById('themeText').textContent = newTheme === 'light' ? 'Dark' : 'Light';
         }
 
+        // Expand / Collapse Folder
         function toggleFolder(element) {
             const children = element.nextElementSibling;
             
@@ -441,6 +542,37 @@
                 element.classList.toggle('is-open');
             }
         }
+
+        // Resizable Sidebar Functionality
+        const sidebar = document.getElementById('sidebar');
+        const resizer = document.getElementById('resizer');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', function (e) {
+            isResizing = true;
+            resizer.classList.add('is-resizing');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isResizing) return;
+            let newWidth = e.clientX - sidebar.getBoundingClientRect().left;
+            
+            // Batas minimal dan maksimal lebar panel
+            if (newWidth >= 180 && newWidth <= 600) {
+                sidebar.style.width = newWidth + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (isResizing) {
+                isResizing = false;
+                resizer.classList.remove('is-resizing');
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = 'auto';
+            }
+        });
     </script>
 
 </body>
