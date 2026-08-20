@@ -22,10 +22,12 @@
             --sap-folder-front: #f3b738;
             --sap-arrow-color: #6a6d70;
             
-            /* Status Bar & Fields (Disinkronkan dengan tema UI) */
+            /* Status Bar & Floating Card */
             --sap-statusbar-bg: #ffffff;
             --sap-statusbar-border: #d5dadd;
             --sap-statusbar-text: #223548;
+            --sap-card-bg: #ffffff;
+            --sap-card-shadow: 0 4px 16px rgba(0,0,0,0.15);
             --sap-statusbar-field-bg: #f5f6f7;
             --sap-statusbar-field-border: #d5dadd;
         }
@@ -46,10 +48,12 @@
             --sap-folder-front: #ffcc00;
             --sap-arrow-color: #a2b4c7;
 
-            /* Status Bar & Fields (Disinkronkan dengan tema UI) */
+            /* Status Bar & Floating Card */
             --sap-statusbar-bg: #1d232a;
             --sap-statusbar-border: #2e3742;
             --sap-statusbar-text: #f5f6f7;
+            --sap-card-bg: #1d232a;
+            --sap-card-shadow: 0 4px 16px rgba(0,0,0,0.5);
             --sap-statusbar-field-bg: #12171c;
             --sap-statusbar-field-border: #2e3742;
         }
@@ -72,7 +76,7 @@
             font-size: 13px;
         }
 
-        /* 1. HEADER CONTAINER */
+        /* HEADER CONTAINER */
         .sap-header-container {
             background-color: var(--sap-shell-color);
             height: 48px;
@@ -134,7 +138,7 @@
             border: none;
         }
 
-        /* 2. MENU BAR CONTAINER */
+        /* MENU BAR CONTAINER */
         .sap-menu-bar-container {
             background-color: var(--sap-toolbar-color);
             height: 36px;
@@ -142,7 +146,7 @@
             width: 100%;
         }
 
-        /* 3. BODY CONTAINER */
+        /* BODY CONTAINER */
         .sap-body-container {
             display: flex;
             flex: 1;
@@ -151,7 +155,7 @@
             position: relative;
         }
 
-        /* 4. SIDEBAR CONTAINER (SAP MENU PANEL) */
+        /* SIDEBAR CONTAINER (SAP MENU PANEL) */
         .sap-sidebar-container {
             width: 280px;
             min-width: 180px;
@@ -250,7 +254,7 @@
             display: block;
         }
 
-        /* 5. MAIN CONTENT CONTAINER */
+        /* MAIN CONTENT CONTAINER */
         .sap-main-content-container {
             flex: 1;
             padding: 24px;
@@ -260,7 +264,7 @@
             gap: 16px;
         }
 
-        /* 6. FOOTER STATUS BAR CONTAINER & FLOATING TOGGLE BUTTON */
+        /* FOOTER STATUS BAR CONTAINER */
         .sap-status-bar-wrapper {
             position: relative;
             width: 100%;
@@ -274,21 +278,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 36px 0 8px; /* Padding kanan untuk menyisakan ruang tombol */
+            padding: 0 12px;
             font-size: 11px;
             color: var(--sap-statusbar-text);
             user-select: none;
-            transition: height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
-            overflow: hidden;
-        }
-
-        /* Sembunyikan Status Bar */
-        .sap-status-bar-wrapper.collapsed .sap-status-bar {
-            height: 0;
-            padding-top: 0;
-            padding-bottom: 0;
-            opacity: 0;
-            border-top: none;
         }
 
         .sap-status-message-area {
@@ -309,18 +302,38 @@
             flex-shrink: 0;
         }
 
-        .sap-status-info-fields {
+        /* FLOATING CARD POPOVER UNTUK STATUS ITEMS */
+        .sap-status-card {
+            position: absolute;
+            bottom: 32px;
+            right: 8px;
+            background-color: var(--sap-card-bg);
+            border: 1px solid var(--sap-statusbar-border);
+            border-radius: 4px;
+            box-shadow: var(--sap-card-shadow);
+            padding: 6px;
             display: flex;
             align-items: center;
-            gap: 2px;
-            height: 100%;
+            gap: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            z-index: 20;
+        }
+
+        /* TAMPILKAN FLOATING CARD SAAT TOGGLE DIAKTIFKAN */
+        .sap-status-card.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .sap-status-field {
             background-color: var(--sap-statusbar-field-bg);
             border: 1px solid var(--sap-statusbar-field-border);
-            padding: 2px 8px;
-            height: 20px;
+            padding: 3px 8px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -328,29 +341,26 @@
             font-size: 11px;
             border-radius: 2px;
             color: var(--sap-statusbar-text);
+            white-space: nowrap;
         }
 
         .sap-status-field.system-id {
             font-weight: bold;
         }
 
-        /* TOMBOL TOGGLE PANAH DI POJOK KANAN BAWAH */
+        /* TOMBOL PANAH TOGGLE DI STATUS BAR */
         .status-toggle-btn {
-            position: absolute;
-            right: 6px;
-            bottom: 3px;
-            width: 20px;
-            height: 20px;
             background-color: var(--sap-statusbar-field-bg);
             border: 1px solid var(--sap-statusbar-field-border);
             border-radius: 3px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--sap-text-primary);
-            z-index: 15;
-            transition: background-color 0.15s ease, bottom 0.2s ease;
+            transition: background-color 0.15s ease, transform 0.2s ease;
         }
 
         .status-toggle-btn:hover {
@@ -365,13 +375,8 @@
             transition: transform 0.2s ease;
         }
 
-        /* Rotasi panah saat status bar tersembunyi */
-        .sap-status-bar-wrapper.collapsed .status-toggle-btn svg {
+        .status-toggle-btn.active svg {
             transform: rotate(180deg);
-        }
-
-        .sap-status-bar-wrapper.collapsed .status-toggle-btn {
-            bottom: 6px;
         }
     </style>
 </head>
@@ -423,9 +428,7 @@
                         </svg>
                         <span>Favorites</span>
                     </div>
-                    <ul class="sap-tree-children">
-                        <!-- Kosong -->
-                    </ul>
+                    <ul class="sap-tree-children"></ul>
                 </li>
 
                 <!-- ROOT 2: MODULES (DEFAULT OPEN) -->
@@ -447,102 +450,26 @@
                     </div>
                     <ul class="sap-tree-children open">
                         
-                        <!-- Sub-Folder 1: Office -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <g class="folder-closed-path">
-                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </g>
-                                    <g class="folder-open-path">
-                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
-                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
-                                    </g>
+                                    <g class="folder-closed-path"><path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></g>
+                                    <g class="folder-open-path"><path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/><path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/></g>
                                 </svg>
                                 <span>Office</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
                         </li>
 
-                        <!-- Sub-Folder 2: Accounting -->
                         <li class="sap-tree-item">
                             <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
+                                <svg class="sap-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <g class="folder-closed-path">
-                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </g>
-                                    <g class="folder-open-path">
-                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
-                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
-                                    </g>
+                                    <g class="folder-closed-path"><path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></g>
+                                    <g class="folder-open-path"><path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/><path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/></g>
                                 </svg>
                                 <span>Accounting</span>
-                            </div>
-                            <ul class="sap-tree-children"></ul>
-                        </li>
-
-                        <!-- Sub-Folder 3: Logistic -->
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <g class="folder-closed-path">
-                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </g>
-                                    <g class="folder-open-path">
-                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
-                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
-                                    </g>
-                                </svg>
-                                <span>Logistic</span>
-                            </div>
-                            <ul class="sap-tree-children"></ul>
-                        </li>
-
-                        <!-- Sub-Folder 4: HR -->
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <g class="folder-closed-path">
-                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </g>
-                                    <g class="folder-open-path">
-                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
-                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
-                                    </g>
-                                </svg>
-                                <span>HR</span>
-                            </div>
-                            <ul class="sap-tree-children"></ul>
-                        </li>
-
-                        <!-- Sub-Folder 5: Tools -->
-                        <li class="sap-tree-item">
-                            <div class="sap-tree-row" ondblclick="toggleFolder(this)">
-                                <svg class="sap-arrow-icon" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                                <svg class="sap-folder-icon" viewBox="0 0 24 24">
-                                    <g class="folder-closed-path">
-                                        <path class="folder-front" d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </g>
-                                    <g class="folder-open-path">
-                                        <path class="folder-back" d="M4 4h5.17l2 2H20c1.1 0 2 .9 2 2v2H4V4z"/>
-                                        <path class="folder-front" d="M21.77 10H6.23c-.93 0-1.74.64-1.94 1.55L2.2 20.05A1.5 1.5 0 0 0 3.66 22h16.68c.93 0 1.74-.64 1.94-1.55l2.09-8.5A1.5 1.5 0 0 0 21.77 10z"/>
-                                    </g>
-                                </svg>
-                                <span>Tools</span>
                             </div>
                             <ul class="sap-tree-children"></ul>
                         </li>
@@ -561,28 +488,31 @@
 
     </div>
 
-    <!-- 6. Footer Status Bar Container & Toggle Button -->
-    <div class="sap-status-bar-wrapper" id="statusBarWrapper">
+    <!-- 6. Footer Status Bar dengan Floating Card Popover -->
+    <div class="sap-status-bar-wrapper">
+        
+        <!-- FLOATING CARD ITEMS -->
+        <div class="sap-status-card" id="statusCard">
+            <div class="sap-status-field system-id" title="System ID">PRD</div>
+            <div class="sap-status-field" title="Client">100</div>
+            <div class="sap-status-field" title="User">ANANTA</div>
+            <div class="sap-status-field" title="Server">sap-app-01</div>
+            <div class="sap-status-field" title="Latency Realtime" id="latencyField">INS (1) 23ms</div>
+        </div>
+
         <footer class="sap-status-bar">
             <div class="sap-status-message-area">
                 <span class="sap-status-icon"></span>
                 <span>Ready</span>
             </div>
-            <div class="sap-status-info-fields">
-                <div class="sap-status-field system-id" title="System ID">PRD</div>
-                <div class="sap-status-field" title="Client">100</div>
-                <div class="sap-status-field" title="User">ANANTA</div>
-                <div class="sap-status-field" title="Server">sap-app-01</div>
-                <div class="sap-status-field" title="Response Time">INS (1) 23ms</div>
-            </div>
-        </footer>
 
-        <!-- Tombol Panah Toggle Toggle Status Bar -->
-        <button class="status-toggle-btn" id="statusToggleBtn" onclick="toggleStatusBar()" title="Sembunyikan/Tampilkan Status Bar">
-            <svg viewBox="0 0 24 24">
-                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
-            </svg>
-        </button>
+            <!-- Tombol Panah Toggle Popover Card -->
+            <button class="status-toggle-btn" id="statusToggleBtn" onclick="toggleStatusCard()" title="Tampilkan/Sembunyikan Informasi Sistem">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 8l-6 6h12z"/>
+                </svg>
+            </button>
+        </footer>
     </div>
 
     <!-- JAVASCRIPT -->
@@ -601,18 +531,26 @@
         // Expand / Collapse Folder Tree
         function toggleFolder(element) {
             const children = element.nextElementSibling;
-            
             if (children && children.classList.contains('sap-tree-children')) {
                 children.classList.toggle('open');
                 element.classList.toggle('is-open');
             }
         }
 
-        // Toggle Expand/Collapse Status Bar
-        function toggleStatusBar() {
-            const wrapper = document.getElementById('statusBarWrapper');
-            wrapper.classList.toggle('collapsed');
+        // Toggle Floating Card Popover
+        function toggleStatusCard() {
+            const card = document.getElementById('statusCard');
+            const btn = document.getElementById('statusToggleBtn');
+            card.classList.toggle('show');
+            btn.classList.toggle('active');
         }
+
+        // Realtime Latency Counter
+        setInterval(() => {
+            const latencyField = document.getElementById('latencyField');
+            const randomLatency = Math.floor(Math.random() * (45 - 20 + 1)) + 20;
+            latencyField.textContent = `INS (1) ${randomLatency}ms`;
+        }, 1000);
 
         // Resizable Sidebar
         const sidebar = document.getElementById('sidebar');
