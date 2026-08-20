@@ -29,7 +29,7 @@
             background-color: #ffffff;
         }
 
-        /* Header Kiri dengan Icon & Title */
+        /* Header Kiri */
         #left-header {
             height: 60px;
             border-bottom: 1px solid #d0d0d0;
@@ -37,10 +37,10 @@
             display: flex;
             align-items: center;
             padding: 0 16px;
-            gap: 12px; /* Jarak antara ikon dan teks */
+            gap: 12px;
+            flex-shrink: 0;
         }
 
-        /* Styling Icon Action */
         .action-icon {
             width: 24px;
             height: 24px;
@@ -49,7 +49,6 @@
             flex-shrink: 0;
         }
 
-        /* Styling Judul */
         .header-title {
             font-size: 15px;
             font-weight: 600;
@@ -59,12 +58,74 @@
             text-overflow: ellipsis;
         }
 
+        /* Menu Tree Style */
         #file-list {
             flex: 1;
             overflow-y: auto;
+            padding: 10px 0;
         }
 
-        /* Container Kanan (Polos) */
+        .tree-menu, .tree-submenu {
+            list-style: none;
+        }
+
+        .tree-item {
+            user-select: none;
+        }
+
+        .tree-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333333;
+            transition: background-color 0.2s;
+        }
+
+        .tree-header:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Arrow Icon Styling ( > saat collapse, v saat expanded ) */
+        .tree-arrow {
+            font-size: 11px;
+            font-weight: bold;
+            color: #666666;
+            margin-right: 10px;
+            display: inline-block;
+            width: 12px;
+            text-align: center;
+            transition: transform 0.15s ease;
+        }
+
+        /* Submenu Container (Default Hidden) */
+        .tree-submenu {
+            display: none;
+            padding-left: 20px;
+            background-color: #fafafa;
+        }
+
+        .tree-submenu li a {
+            display: block;
+            padding: 8px 16px 8px 20px;
+            font-size: 13px;
+            color: #555555;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .tree-submenu li a:hover {
+            background-color: #e8e8e8;
+            color: #000000;
+        }
+
+        /* State Expanded */
+        .tree-item.expanded > .tree-submenu {
+            display: block;
+        }
+
+        /* Container Kanan */
         #right-container {
             flex: 1;
             height: 100%;
@@ -90,7 +151,73 @@
             <img src="https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/b64e616a85485b020a9f3aaa8279ef745e41a39e/icon/system_menu.bmp" alt="Action Menu" class="action-icon">
             <span class="header-title">Ananta Business One</span>
         </div>
-        <div id="file-list"></div>
+        
+        <!-- Menu Tree Container -->
+        <div id="file-list">
+            <ul class="tree-menu">
+                
+                <!-- Office -->
+                <li class="tree-item">
+                    <div class="tree-header">
+                        <span class="tree-arrow">&gt;</span>
+                        <span class="tree-title">Office</span>
+                    </div>
+                    <ul class="tree-submenu">
+                        <li><a href="about:blank" target="content-frame">Submenu Office 1</a></li>
+                        <li><a href="about:blank" target="content-frame">Submenu Office 2</a></li>
+                    </ul>
+                </li>
+
+                <!-- Accounting -->
+                <li class="tree-item">
+                    <div class="tree-header">
+                        <span class="tree-arrow">&gt;</span>
+                        <span class="tree-title">Accounting</span>
+                    </div>
+                    <ul class="tree-submenu">
+                        <li><a href="about:blank" target="content-frame">Submenu Accounting 1</a></li>
+                        <li><a href="about:blank" target="content-frame">Submenu Accounting 2</a></li>
+                    </ul>
+                </li>
+
+                <!-- Logistic -->
+                <li class="tree-item">
+                    <div class="tree-header">
+                        <span class="tree-arrow">&gt;</span>
+                        <span class="tree-title">Logistic</span>
+                    </div>
+                    <ul class="tree-submenu">
+                        <li><a href="about:blank" target="content-frame">Submenu Logistic 1</a></li>
+                        <li><a href="about:blank" target="content-frame">Submenu Logistic 2</a></li>
+                    </ul>
+                </li>
+
+                <!-- HR -->
+                <li class="tree-item">
+                    <div class="tree-header">
+                        <span class="tree-arrow">&gt;</span>
+                        <span class="tree-title">HR</span>
+                    </div>
+                    <ul class="tree-submenu">
+                        <li><a href="about:blank" target="content-frame">Submenu HR 1</a></li>
+                        <li><a href="about:blank" target="content-frame">Submenu HR 2</a></li>
+                    </ul>
+                </li>
+
+                <!-- Tools -->
+                <li class="tree-item">
+                    <div class="tree-header">
+                        <span class="tree-arrow">&gt;</span>
+                        <span class="tree-title">Tools</span>
+                    </div>
+                    <ul class="tree-submenu">
+                        <li><a href="about:blank" target="content-frame">Submenu Tools 1</a></li>
+                        <li><a href="about:blank" target="content-frame">Submenu Tools 2</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
     </div>
 
     <!-- Container Kanan -->
@@ -98,5 +225,24 @@
         <iframe id="content-frame" name="content-frame" src="about:blank"></iframe>
     </div>
 
+    <!-- Script Interaktivitas Arrow & Expand/Collapse -->
+    <script>
+        document.querySelectorAll('.tree-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const arrow = header.querySelector('.tree-arrow');
+                
+                // Toggle kelas expanded
+                item.classList.toggle('expanded');
+                
+                // Ubah panah > menjadi v saat expanded
+                if (item.classList.contains('expanded')) {
+                    arrow.textContent = 'v';
+                } else {
+                    arrow.textContent = '>';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
