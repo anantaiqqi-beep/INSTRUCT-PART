@@ -10,8 +10,6 @@
     body.resizing-active, body.resizing-active * {
       user-select: none !important;
       -webkit-user-select: none !important;
-      -moz-user-select: none !important;
-      -ms-user-select: none !important;
     }
 
     body {
@@ -305,7 +303,7 @@
     </div>
   </div>
 
-  <!-- 4. INSTANCE WINDOW: MR LIST DATA (EDITION ENHANCED) -->
+  <!-- 4. INSTANCE WINDOW: MR LIST DATA -->
   <div class="window app-instance-window" id="mrListWindow">
     <div class="resize-handle top"></div><div class="resize-handle bottom"></div>
     <div class="resize-handle left"></div><div class="resize-handle right"></div>
@@ -330,7 +328,6 @@
             </div>
             <div style="display: flex; gap: 8px;">
               <button type="button" class="btn-action btn-add-row" id="btnRefreshList">Refresh Data</button>
-              <!-- BUTTON BARU: UPDATE MR DATA -->
               <button type="button" class="btn-action btn-update-data" id="btnUpdateMRData">Update MR Data</button>
             </div>
           </div>
@@ -688,7 +685,7 @@
         });
 
         if (!isValid) {
-          alert('Harap lengkapi Tanggal MR, Kode Barang, Nama Barang, dan Purpose untuk semua baris!');
+          alert('Harap lengkapi Tanggal MR, Kode Barang, Nama Barang, dan Purpose!');
           return;
         }
 
@@ -705,14 +702,14 @@
           const result = await response.json();
 
           if (result.success) {
-            alert('Data MR Berhasil disimpan ke Google Sheets (MR_DATA)!');
+            alert('Data MR Berhasil disimpan!');
             gridBody.innerHTML = '';
             addRow();
           } else {
             alert('Gagal menyimpan: ' + result.message);
           }
         } catch (err) {
-          alert('Terjadi kesalahan jaringan/CORS saat menyimpan data.');
+          alert('Terjadi kesalahan koneksi.');
           console.error(err);
         } finally {
           btnSubmit.disabled = false;
@@ -721,10 +718,9 @@
       });
     }
 
-    // --- READ & EDITABLE GRIDVIEW PADA MR LIST DATA ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
-      tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getMRData`);
@@ -740,7 +736,6 @@
           result.data.forEach((row, idx) => {
             const tr = document.createElement('tr');
             tr.setAttribute('data-row-num', row.rowNum);
-            tr.setAttribute('data-harga', row.harga || 0);
 
             let formattedDate = row.tanggalMR || '';
             if (formattedDate && formattedDate.includes('T')) {
@@ -757,18 +752,13 @@
               <td style="padding: 6px 10px;">${formattedDate}</td>
               <td style="padding: 6px 10px;">${row.kodeBarang || ''}</td>
               <td style="padding: 6px 10px;">${row.namaBarang || ''}</td>
-              
-              <!-- EDITABLE QUANTITY -->
               <td class="editable-cell">
                 <input type="number" class="list-inp-qty" min="1" value="${currentQty}">
               </td>
-              
               <td style="padding: 6px 10px;">${row.satuan || ''}</td>
               <td style="padding: 6px 10px;">Rp ${currentPrice.toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px; font-weight: 600;" class="list-cell-total">Rp ${currentTotal.toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px;">${row.purpose || ''}</td>
-              
-              <!-- EDITABLE STATUS (APPROVED, PENDING, REJECTED) -->
               <td class="editable-cell">
                 <select class="list-inp-status">
                   <option value="Pending" ${currentStatus==='Pending'?'selected':''}>Pending</option>
@@ -780,7 +770,6 @@
 
             tbody.appendChild(tr);
 
-            // Bind Event Listener pada elemen input di Grid
             const inpQty = tr.querySelector('.list-inp-qty');
             inpQty.addEventListener('input', () => {
               const qty = parseFloat(inpQty.value) || 0;
@@ -796,7 +785,7 @@
       }
     }
 
-    // --- PROSES UPDATE DATA KE GOOGLE SHEETS ---
+    // --- BUTTON UPDATE MR DATA & UPDATE STOK ---
     document.getElementById('btnUpdateMRData').addEventListener('click', async () => {
       const tbody = document.getElementById('mrListBody');
       const rows = tbody.querySelectorAll('tr');
@@ -837,13 +826,14 @@
 
         const result = await response.json();
         if (result.success) {
-          alert('Data MR (Quantity & Status) berhasil di-update ke Google Sheets!');
-          fetchMRListData(); // Reload fresh data
+          alert('MR_DATA & STOCK_DATA berhasil di-update!');
+          fetchMRListData(); // Refresh MR list
+          fetchStockData();  // Refresh Stock data apabila window stok dibuka
         } else {
-          alert('Gagal meng-update data: ' + result.message);
+          alert('Gagal update: ' + result.message);
         }
       } catch (err) {
-        alert('Terjadi kesalahan koneksi saat memperbarui data.');
+        alert('Terjadi kesalahan koneksi.');
         console.error(err);
       } finally {
         btnUpdate.disabled = false;
@@ -853,7 +843,7 @@
 
     async function fetchStockData() {
       const tbody = document.getElementById('stockListBody');
-      tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets (STOCK_DATA)...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Memuat data STOCK_DATA...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getStockData`);
@@ -893,17 +883,14 @@
       win.style.zIndex = activeZIndex;
     }
 
-    document.getElementById('btnOpenMrForm').addEventListener('click', () => {
-      openInstanceWindow('mrFormWindow');
-    });
-
+    document.getElementById('btnOpenMrForm').addEventListener('click', () => openInstanceWindow('mrFormWindow'));
     document.getElementById('btnOpenMrList').addEventListener('click', () => {
       openInstanceWindow('mrListWindow');
       fetchMRListData();
     });
-
     document.getElementById('btnOpenStock').addEventListener('click', () => {
       openInstanceWindow('stockWindow');
+      fetchStockData();
     });
 
     document.getElementById('btnRefreshList').addEventListener('click', fetchMRListData);
