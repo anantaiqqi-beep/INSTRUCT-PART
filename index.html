@@ -20,7 +20,7 @@
       position: relative;
     }
 
-    /* Mencegah Teks Ter-select Saat Sedang Resize / Drag Panel */
+    /* Prevent Select All During Resize/Drag */
     body.resizing-active, 
     body.resizing-active * {
       user-select: none !important;
@@ -57,7 +57,7 @@
       transition: none !important;
     }
 
-    /* Login Window Size */
+    /* Window Sizes */
     #loginWindow {
       top: 20%;
       left: 35%;
@@ -68,13 +68,12 @@
       z-index: 100;
     }
 
-    /* Home Window Size */
     #homeWindow {
       top: 15%;
       left: 25%;
-      width: 500px;
-      height: 400px;
-      min-width: 320px;
+      width: 520px;
+      height: 420px;
+      min-width: 360px;
       min-height: 250px;
       display: none;
       z-index: 101;
@@ -98,15 +97,14 @@
 
     /* Window Header */
     .window-header {
-      height: 40px;
+      height: 44px;
       user-select: none;
       -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-left: 16px;
+      padding-left: 12px;
+      position: relative;
     }
 
     .window-title {
@@ -121,8 +119,49 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      user-select: none;
-      -webkit-user-select: none;
+    }
+
+    /* Custom Header User Badge for HOME Panel */
+    .user-header-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 20px;
+      transition: background-color 0.2s ease;
+    }
+
+    .user-header-badge:hover {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    .user-avatar-small {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(0,0,0,0.15);
+      background-color: #ffd166;
+    }
+
+    .user-header-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.1;
+    }
+
+    .user-display-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1c1b1f;
+    }
+
+    .user-handle-name {
+      font-size: 10px;
+      color: #666;
+      font-family: monospace;
     }
 
     /* Control Buttons */
@@ -156,29 +195,12 @@
       stroke-linejoin: round;
     }
 
-    .win-btn:hover {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-
-    .win-btn.close-btn:hover {
-      background-color: #c42b1c;
-    }
-
-    .win-btn.close-btn:hover svg {
-      stroke: #ffffff;
-    }
-
-    .win-btn.close-btn {
-      border-top-right-radius: 12px;
-    }
-
-    .win-btn.logout-btn:hover {
-      background-color: rgba(196, 43, 28, 0.1);
-    }
-
-    .win-btn.logout-btn svg {
-      stroke: #c42b1c;
-    }
+    .win-btn:hover { background-color: rgba(0, 0, 0, 0.06); }
+    .win-btn.close-btn:hover { background-color: #c42b1c; }
+    .win-btn.close-btn:hover svg { stroke: #ffffff; }
+    .win-btn.close-btn { border-top-right-radius: 12px; }
+    .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.1); }
+    .win-btn.logout-btn svg { stroke: #c42b1c; }
 
     /* Window Body */
     .window-body {
@@ -192,6 +214,7 @@
       margin: 0 8px 8px 8px;
       border-radius: 8px;
       border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
     }
 
     .login-title {
@@ -202,10 +225,7 @@
       text-align: center;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
-
+    .form-group { margin-bottom: 16px; }
     .form-group label {
       display: block;
       font-size: 12px;
@@ -223,12 +243,9 @@
       font-size: 13px;
       outline: none;
       background-color: #ffffff;
-      transition: border-color 0.2s;
     }
 
-    .form-group input:focus {
-      border-bottom-color: #005fb8;
-    }
+    .form-group input:focus { border-bottom-color: #005fb8; }
 
     .btn-submit {
       width: 100%;
@@ -241,18 +258,9 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
-      transition: background-color 0.2s;
     }
 
-    .btn-submit:hover {
-      background: #004e98;
-    }
-
-    .btn-submit:disabled {
-      background: #a0a0a0;
-      cursor: not-allowed;
-    }
-
+    .btn-submit:hover { background: #004e98; }
     #error-message {
       color: #c42b1c;
       font-size: 12px;
@@ -268,7 +276,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       padding: 10px 20px;
-      border-radius: 50px; /* Bentuk Kapsul */
+      border-radius: 50px;
       background: #005fb8;
       color: #ffffff;
       border: none;
@@ -288,7 +296,6 @@
     #openHomeBtn:hover {
       background: #004e98;
       transform: translate(-50%, -50%) scale(1.05);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
     }
 
     #openHomeBtn svg {
@@ -300,6 +307,93 @@
       stroke-linecap: round;
     }
 
+    /* Hugging Face Style Popup Profile Card */
+    #hfProfileCard {
+      position: absolute;
+      top: 48px;
+      left: 12px;
+      width: 310px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: none;
+      z-index: 2000;
+      animation: fadeInPopup 0.2s ease-out forwards;
+    }
+
+    @keyframes fadeInPopup {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hf-banner {
+      height: 70px;
+      background: linear-gradient(135deg, #fce38a 0%, #38302e 100%);
+    }
+
+    .hf-body {
+      padding: 0 16px 16px 16px;
+      position: relative;
+    }
+
+    .hf-avatar-wrapper {
+      position: relative;
+      margin-top: -36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .hf-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      object-fit: cover;
+      background-color: #ffd166;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .hf-like-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: background 0.15s ease;
+    }
+
+    .hf-like-btn:hover { background: #f9fafb; }
+    .hf-like-btn svg { width: 14px; height: 14px; fill: #ef4444; }
+
+    .hf-display-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.2;
+    }
+
+    .hf-username-tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 8px;
+      background: #f3f4f6;
+      color: #4b5563;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+    }
+
     /* Minimized Style */
     .window.minimized {
       position: relative !important;
@@ -308,12 +402,12 @@
       width: 220px !important;
       height: 40px !important;
       min-height: 40px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
     }
 
     .window.minimized .window-body,
-    .window.minimized .resize-handle {
+    .window.minimized .resize-handle,
+    .window.minimized #hfProfileCard {
       display: none !important;
     }
 
@@ -326,9 +420,7 @@
       border-radius: 0;
     }
 
-    .window.maximized .resize-handle {
-      display: none !important;
-    }
+    .window.maximized .resize-handle { display: none !important; }
   </style>
 </head>
 <body>
@@ -381,7 +473,17 @@
     <div class="resize-handle bottom-right"></div>
 
     <div class="window-header">
-      <div class="window-title" id="homeTitle" ondragstart="return false;">Home</div>
+      <!-- Header Diganti Dengan Profile Badge -->
+      <div class="window-title" id="homeHeaderTitle" ondragstart="return false;">
+        <div class="user-header-badge" id="userBadgeToggle">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=AntIllustrious" alt="User Avatar" class="user-avatar-small" id="headerAvatarImg">
+          <div class="user-header-info">
+            <span class="user-display-name" id="headerDisplayName">Bayu Adi Ananta</span>
+            <span class="user-handle-name" id="headerUsername">@AnantaXLLustrious</span>
+          </div>
+        </div>
+      </div>
+
       <div class="win-controls">
         <button class="win-btn logout-btn" id="btnLogout" title="Logout">
           <svg viewBox="0 0 12 12">
@@ -394,13 +496,30 @@
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
       </div>
+
+      <!-- Hugging Face Popup Card -->
+      <div id="hfProfileCard">
+        <div class="hf-banner"></div>
+        <div class="hf-body">
+          <div class="hf-avatar-wrapper">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=AntIllustrious" alt="Avatar" class="hf-avatar" id="cardAvatarImg">
+            <button class="hf-like-btn" id="btnLikeCard">
+              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span id="likeCount">1</span>
+            </button>
+          </div>
+          <div class="hf-display-name" id="cardDisplayName">AntIllustrious</div>
+          <div class="hf-username-tag" id="cardUsernameTag">AnantaXLIllustrious</div>
+        </div>
+      </div>
     </div>
+
     <div class="window-body">
-      <!-- Area Kosong -->
+      <!-- Area Konten Utama -->
     </div>
   </div>
 
-  <!-- Tombol Kapsul + Home -->
+  <!-- Tombol Kapsul Home -->
   <button id="openHomeBtn" title="Buka Window HOME">
     <svg viewBox="0 0 24 24">
       <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -422,7 +541,7 @@
 
     let activeZIndex = 100;
 
-    // --- LOGIKA SETIAP WINDOW PANEL ---
+    // --- WINDOW CONTROLS LOGIC ---
     document.querySelectorAll('.window').forEach(win => {
       const header = win.querySelector('.window-title');
       const btnMin = win.querySelector('.btn-minimize');
@@ -445,7 +564,9 @@
 
       header.addEventListener('mousedown', (e) => {
         if (isMaximized || isMinimized) return;
-        e.preventDefault(); // Mencegah highlight teks
+        if (e.target.closest('#userBadgeToggle') || e.target.closest('#hfProfileCard')) return;
+
+        e.preventDefault();
         document.body.classList.add('resizing-active');
 
         isDragging = true;
@@ -474,7 +595,6 @@
         }
       });
 
-      // CONTROLS LOGIC
       function saveCurrentState() {
         if (!isMaximized && !isMinimized) {
           prevRect = {
@@ -539,14 +659,15 @@
         } else if (win.id === 'homeWindow') {
           win.style.display = 'none';
           document.getElementById('openHomeBtn').style.display = 'flex';
+          document.getElementById('hfProfileCard').style.display = 'none';
         }
       });
 
-      header.addEventListener('click', () => {
-        if (isMinimized) restoreWindow();
+      header.addEventListener('click', (e) => {
+        if (isMinimized && !e.target.closest('#userBadgeToggle')) restoreWindow();
       });
 
-      // RESIZE LOGIC (DENGAN PENANGANAN AGAR TIDAK SELECT ALL)
+      // RESIZE LOGIC
       let isResizing = false;
       let currentHandle = null;
       let startX = 0, startY = 0;
@@ -557,10 +678,9 @@
       win.querySelectorAll('.resize-handle').forEach(handle => {
         handle.addEventListener('mousedown', (e) => {
           if (isMaximized || isMinimized) return;
-          e.preventDefault(); // Mencegah default browser select/drag
+          e.preventDefault();
           e.stopPropagation();
 
-          // Matikan seleksi teks global
           document.body.classList.add('resizing-active');
           window.getSelection()?.removeAllRanges();
 
@@ -579,8 +699,6 @@
 
       document.addEventListener('mousemove', (e) => {
         if (!isResizing || !currentHandle) return;
-        
-        // Memastikan tidak ada teks ter-highlight saat di-drag
         window.getSelection()?.removeAllRanges();
 
         const dx = e.clientX - startX;
@@ -623,25 +741,75 @@
     const errorMessage = document.getElementById('error-message');
     const loginWindow = document.getElementById('loginWindow');
     const homeWindow = document.getElementById('homeWindow');
-    const homeTitle = document.getElementById('homeTitle');
     const openHomeBtn = document.getElementById('openHomeBtn');
     const btnLogout = document.getElementById('btnLogout');
 
-    function showHomeWindow(displayName) {
+    const userBadgeToggle = document.getElementById('userBadgeToggle');
+    const hfProfileCard = document.getElementById('hfProfileCard');
+    const headerDisplayName = document.getElementById('headerDisplayName');
+    const headerUsername = document.getElementById('headerUsername');
+    const headerAvatarImg = document.getElementById('headerAvatarImg');
+
+    const cardDisplayName = document.getElementById('cardDisplayName');
+    const cardUsernameTag = document.getElementById('cardUsernameTag');
+    const cardAvatarImg = document.getElementById('cardAvatarImg');
+    const btnLikeCard = document.getElementById('btnLikeCard');
+    const likeCount = document.getElementById('likeCount');
+
+    let likes = 1;
+
+    // --- POPUP CARD TOGGLE ---
+    userBadgeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = hfProfileCard.style.display === 'block';
+      hfProfileCard.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Tutup popup jika klik di luar area profil
+    document.addEventListener('click', (e) => {
+      if (!hfProfileCard.contains(e.target) && !userBadgeToggle.contains(e.target)) {
+        hfProfileCard.style.display = 'none';
+      }
+    });
+
+    // Interaksi Like Counter
+    btnLikeCard.addEventListener('click', (e) => {
+      e.stopPropagation();
+      likes++;
+      likeCount.innerText = likes;
+    });
+
+    // --- UPDATE PROFIL USER ---
+    function updateUserData(displayName, username) {
+      const uname = username || 'User';
+      const dName = displayName || uname;
+      const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(uname)}`;
+
+      headerDisplayName.innerText = dName;
+      headerUsername.innerText = `@${uname}`;
+      headerAvatarImg.src = avatarUrl;
+
+      cardDisplayName.innerText = dName;
+      cardUsernameTag.innerText = uname;
+      cardAvatarImg.src = avatarUrl;
+    }
+
+    function showHomeWindow(displayName, username) {
       loginWindow.style.display = 'none';
       homeWindow.style.display = 'flex';
       openHomeBtn.style.display = 'none';
       activeZIndex++;
       homeWindow.style.zIndex = activeZIndex;
-      homeTitle.innerText = `Home - Welcome ${displayName}`;
+
+      updateUserData(displayName, username);
     }
 
-    // --- AUTO LOGIN CHECK ---
+    // --- CHECK SESSION LOCALSTORAGE ---
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = localStorage.getItem('userSession');
       if (savedUser) {
         const userData = JSON.parse(savedUser);
-        showHomeWindow(userData.displayName);
+        showHomeWindow(userData.displayName, userData.username);
       }
     });
 
@@ -670,7 +838,7 @@
             displayName: fullName
           }));
 
-          showHomeWindow(fullName);
+          showHomeWindow(fullName, userVal);
         } else {
           errorMessage.style.color = '#c42b1c';
           errorMessage.innerText = result.message || 'Username atau Password salah.';
@@ -684,7 +852,7 @@
       }
     });
 
-    // --- KLIK TOMBOL KAPSUL HOME ---
+    // --- OPEN HOME FROM CAPSULE BUTTON ---
     openHomeBtn.addEventListener('click', () => {
       homeWindow.style.display = 'flex';
       openHomeBtn.style.display = 'none';
@@ -698,6 +866,7 @@
 
       homeWindow.style.display = 'none';
       openHomeBtn.style.display = 'none';
+      hfProfileCard.style.display = 'none';
 
       loginWindow.style.display = 'flex';
       document.getElementById('username').value = '';
