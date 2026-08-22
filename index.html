@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Window Login Panel</title>
+  <title>Windows OS Style Floating Login</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,64 +12,101 @@
     }
 
     body {
-      background-color: #f0f2f5;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #202020;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
       position: relative;
     }
 
-    /* Window Container */
+    /* Container untuk Menampung Window yang di-Minimize/Close di Pojok Kiri Bawah */
+    #taskbar-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 6px;
+      z-index: 9999;
+    }
+
+    /* Floating Window Main Structure */
     .window {
       position: absolute;
       top: 20%;
       left: 35%;
-      width: 320px;
-      height: 380px;
+      width: 340px;
+      height: 420px;
       min-width: 280px;
-      min-height: 300px;
+      min-height: 250px;
       background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      border: 1px solid #e0e0e0;
+      border: 1px solid #1f1f1f;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
       resize: both;
       overflow: hidden;
+      transition: top 0.2s ease, left 0.2s ease, width 0.2s ease, height 0.2s ease;
     }
 
-    /* Window Header / Title Bar */
+    .window.dragging, .window.resizing {
+      transition: none; /* Hilangkan transisi saat di-drag/resize agar responsif */
+    }
+
+    /* Header Window ala Windows OS */
     .window-header {
-      background: #2c3e50;
-      color: #ffffff;
-      padding: 10px 14px;
-      cursor: move;
+      background: #f3f3f3;
+      height: 32px;
       user-select: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 14px;
-      font-weight: 600;
+      border-bottom: 1px solid #e5e5e5;
     }
 
-    /* Window Control Buttons */
-    .window-controls {
+    .window-title {
+      padding-left: 12px;
+      font-size: 12px;
+      color: #1a1a1a;
+      cursor: move;
+      flex: 1;
+      height: 100%;
       display: flex;
-      gap: 6px;
+      align-items: center;
     }
 
-    .control-btn {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
+    /* Control Buttons (Minimize, Maximize, Close) */
+    .win-controls {
+      display: flex;
+      height: 100%;
     }
 
-    .close-btn { background-color: #ff5f56; }
-    .minimize-btn { background-color: #ffbd2e; }
-    .maximize-btn { background-color: #27c93f; }
+    .win-btn {
+      width: 46px;
+      height: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: Segoe MDL2 Assets, "Segoe UI", sans-serif;
+      font-size: 11px;
+      color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
 
-    /* Window Body / Content */
+    .win-btn:hover {
+      background-color: #e5e5e5;
+    }
+
+    .win-btn.close-btn:hover {
+      background-color: #e81123;
+      color: #ffffff;
+    }
+
+    /* Body/Content */
     .window-body {
       padding: 24px;
       flex: 1;
@@ -77,67 +114,97 @@
       flex-direction: column;
       justify-content: center;
       overflow-y: auto;
+      background-color: #fafafa;
     }
 
     .login-title {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 600;
       margin-bottom: 20px;
-      color: #333;
+      color: #1a1a1a;
       text-align: center;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .form-group label {
       display: block;
       font-size: 12px;
-      margin-bottom: 6px;
-      color: #666;
+      margin-bottom: 4px;
+      color: #333333;
     }
 
     .form-group input {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
+      padding: 8px 10px;
+      border: 1px solid #8a8a8a;
+      border-radius: 2px;
+      font-size: 13px;
       outline: none;
+      background-color: #ffffff;
     }
 
     .form-group input:focus {
-      border-color: #3498db;
+      border-color: #0067c0;
+      box-shadow: 0 0 0 1px #0067c0;
     }
 
     .btn-submit {
       width: 100%;
-      padding: 10px;
-      background: #3498db;
+      padding: 8px;
+      background: #0067c0;
       color: white;
       border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
     }
 
     .btn-submit:hover {
-      background: #2980b9;
+      background: #005fb8;
+    }
+
+    /* Style Ketika Window Di-Minimize ke Pojok Kiri Bawah */
+    .window.minimized {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      width: 220px !important;
+      height: 36px !important;
+      min-height: 36px !important;
+      resize: none !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .window.minimized .window-body {
+      display: none;
+    }
+
+    /* Style Ketika Window Di-Maximize */
+    .window.maximized {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      resize: none !important;
+      border-radius: 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- Floating Window Panel -->
+  <!-- Floating Window -->
   <div class="window" id="loginWindow">
-    <div class="window-header" id="windowHeader">
-      <span>Login</span>
-      <div class="window-controls">
-        <span class="control-btn minimize-btn"></span>
-        <span class="control-btn maximize-btn"></span>
-        <span class="control-btn close-btn"></span>
+    <div class="window-header">
+      <div class="window-title" id="windowHeader">Login Panel</div>
+      <div class="win-controls">
+        <button class="win-btn" id="btnMinimize" title="Minimize">&#xE921; &#8722;</button>
+        <button class="win-btn" id="btnMaximize" title="Maximize">&#9633;</button>
+        <button class="win-btn close-btn" id="btnClose" title="Close">&#10005;</button>
       </div>
     </div>
     <div class="window-body">
@@ -145,7 +212,7 @@
       <form onsubmit="event.preventDefault();">
         <div class="form-group">
           <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Masukkan username">
+          <input type="text" id="username" placeholder="Masukkan username" autocomplete="off">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -156,41 +223,151 @@
     </div>
   </div>
 
-  <script>
-    // Drag / Move Functionality
-    const windowPanel = document.getElementById("loginWindow");
-    const windowHeader = document.getElementById("windowHeader");
+  <!-- Container untuk menampung window yang minimised di pojok bawah -->
+  <div id="taskbar-container"></div>
 
+  <script>
+    const win = document.getElementById("loginWindow");
+    const winHeader = document.getElementById("windowHeader");
+    const taskbarContainer = document.getElementById("taskbar-container");
+
+    const btnMinimize = document.getElementById("btnMinimize");
+    const btnMaximize = document.getElementById("btnMaximize");
+    const btnClose = document.getElementById("btnClose");
+
+    // Menyimpan posisi dan ukuran sebelum di-maximize atau di-minimize
+    let prevRect = {
+      top: win.offsetTop + "px",
+      left: win.offsetLeft + "px",
+      width: win.offsetWidth + "px",
+      height: win.offsetHeight + "px"
+    };
+
+    let isMaximized = false;
+    let isMinimized = false;
+
+    // --- DRAG / MOVE LOGIC ---
     let isDragging = false;
     let offsetX = 0, offsetY = 0;
 
-    windowHeader.addEventListener("mousedown", (e) => {
+    winHeader.addEventListener("mousedown", (e) => {
+      if (isMaximized || isMinimized) return; // Mencegah drag saat maximize/minimize
       isDragging = true;
-      offsetX = e.clientX - windowPanel.offsetLeft;
-      offsetY = e.clientY - windowPanel.offsetTop;
+      win.classList.add("dragging");
+      offsetX = e.clientX - win.offsetLeft;
+      offsetY = e.clientY - win.offsetTop;
       document.body.style.userSelect = "none";
     });
 
     document.addEventListener("mousemove", (e) => {
       if (!isDragging) return;
-      
+
       let newX = e.clientX - offsetX;
       let newY = e.clientY - offsetY;
 
-      // Mencegah jendela keluar dari layar
-      const maxX = window.innerWidth - windowPanel.offsetWidth;
-      const maxY = window.innerHeight - windowPanel.offsetHeight;
+      // Batasi agar tidak melampaui batas layar
+      const maxX = window.innerWidth - win.offsetWidth;
+      const maxY = window.innerHeight - win.offsetHeight;
 
       newX = Math.max(0, Math.min(newX, maxX));
       newY = Math.max(0, Math.min(newY, maxY));
 
-      windowPanel.style.left = `${newX}px`;
-      windowPanel.style.top = `${newY}px`;
+      win.style.left = `${newX}px`;
+      win.style.top = `${newY}px`;
     });
 
     document.addEventListener("mouseup", () => {
       isDragging = false;
+      win.classList.remove("dragging");
       document.body.style.userSelect = "auto";
+    });
+
+    // --- WINDOW CONTROL BUTTONS LOGIC ---
+
+    // Save posisi saat ini sebelum berpindah status
+    function saveCurrentState() {
+      if (!isMaximized && !isMinimized) {
+        prevRect = {
+          top: win.style.top || win.offsetTop + "px",
+          left: win.style.left || win.offsetLeft + "px",
+          width: win.style.width || win.offsetWidth + "px",
+          height: win.style.height || win.offsetHeight + "px"
+        };
+      }
+    }
+
+    // MINIMIZE
+    function minimizeWindow() {
+      if (isMinimized) {
+        restoreWindow();
+        return;
+      }
+      saveCurrentState();
+      
+      isMinimized = true;
+      isMaximized = false;
+      
+      win.classList.remove("maximized");
+      win.classList.add("minimized");
+      
+      // Pindahkan elemen window ke container di pojok kiri bawah
+      taskbarContainer.appendChild(win);
+      btnMaximize.innerHTML = "&#9633;";
+    }
+
+    // MAXIMIZE / RESTORE
+    function toggleMaximize() {
+      if (isMinimized) {
+        restoreWindow();
+      }
+
+      if (isMaximized) {
+        // Restore ke ukuran biasa
+        win.classList.remove("maximized");
+        win.style.top = prevRect.top;
+        win.style.left = prevRect.left;
+        win.style.width = prevRect.width;
+        win.style.height = prevRect.height;
+        btnMaximize.innerHTML = "&#9633;"; // Simbol kotak tunggal
+        isMaximized = false;
+      } else {
+        // Maximize
+        saveCurrentState();
+        win.classList.add("maximized");
+        btnMaximize.innerHTML = "&#10064;"; // Simbol Restore (dua kotak bertumpuk)
+        isMaximized = true;
+      }
+    }
+
+    // RESTORE WINDOW (Mengembalikan dari state Minimize ke posisi semula)
+    function restoreWindow() {
+      if (!isMinimized) return;
+      
+      isMinimized = false;
+      win.classList.remove("minimized");
+      
+      // Kembalikan window ke root body
+      document.body.appendChild(win);
+      
+      win.style.top = prevRect.top;
+      win.style.left = prevRect.left;
+      win.style.width = prevRect.width;
+      win.style.height = prevRect.height;
+    }
+
+    // CLOSE (Mengirim ke Pojok Kiri Bawah sebagai Minimized)
+    function closeWindow() {
+      minimizeWindow();
+    }
+
+    // Event Listeners
+    btnMinimize.addEventListener("click", minimizeWindow);
+    btnMaximize.addEventListener("click", toggleMaximize);
+    btnClose.addEventListener("click", closeWindow);
+
+    // Klik pada header saat minimized akan memulihkan window (Restore)
+    winHeader.addEventListener("click", () => {
+      if (isMinimized) restoreWindow();
     });
   </script>
 
