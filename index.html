@@ -399,6 +399,7 @@
               <thead>
                 <tr>
                   <th style="width: 40px; text-align: center;">No<div class="col-resizer"></div></th>
+                  <th style="width: 130px;">Tanggal MR<div class="col-resizer"></div></th>
                   <th style="width: 130px;">Kode Barang<div class="col-resizer"></div></th>
                   <th style="width: 220px;">Nama Barang<div class="col-resizer"></div></th>
                   <th style="width: 80px;">Quantity<div class="col-resizer"></div></th>
@@ -454,6 +455,7 @@
               <thead>
                 <tr>
                   <th style="width: 40px; text-align: center;">No<div class="col-resizer"></div></th>
+                  <th style="width: 120px;">Tanggal MR<div class="col-resizer"></div></th>
                   <th style="width: 120px;">Kode Barang<div class="col-resizer"></div></th>
                   <th style="width: 200px;">Nama Barang<div class="col-resizer"></div></th>
                   <th style="width: 80px;">Quantity<div class="col-resizer"></div></th>
@@ -465,7 +467,7 @@
                 </tr>
               </thead>
               <tbody id="mrListBody">
-                <tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>
+                <tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>
               </tbody>
             </table>
           </div>
@@ -654,10 +656,14 @@
       const gridBody = document.getElementById('excelGridBody');
       const btnAddRow = document.getElementById('btnAddRow');
 
-      function addRow(sku = '', name = '', qty = 1, unit = 'Unit', price = 0, purpose = '', status = 'Pending') {
+      function addRow(tanggalMR = '', sku = '', name = '', qty = 1, unit = 'Unit', price = 0, purpose = '', status = 'Pending') {
+        const todayStr = new Date().toISOString().split('T')[0];
+        const dateVal = tanggalMR || todayStr;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align: center; font-weight: 600; color: #64748b;" class="row-num">1</td>
+          <td><input type="date" class="inp-tanggal" value="${dateVal}"></td>
           <td><input type="text" class="inp-sku" placeholder="SKU-1001" value="${sku}"></td>
           <td><input type="text" class="inp-name" placeholder="Nama barang..." value="${name}"></td>
           <td><input type="number" class="inp-qty" min="1" value="${qty}"></td>
@@ -720,7 +726,8 @@
       btnAddRow.addEventListener('click', () => addRow());
 
       // Row Default Initial
-      addRow('SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
+      const todayStr = new Date().toISOString().split('T')[0];
+      addRow(todayStr, 'SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
 
       // Submit Data ke Google Sheets
       document.getElementById('btnSubmitMR').addEventListener('click', async () => {
@@ -734,6 +741,7 @@
         let isValid = true;
 
         rows.forEach(tr => {
+          const tanggalMR = tr.querySelector('.inp-tanggal').value;
           const sku = tr.querySelector('.inp-sku').value.trim();
           const name = tr.querySelector('.inp-name').value.trim();
           const qty = parseFloat(tr.querySelector('.inp-qty').value) || 0;
@@ -743,13 +751,23 @@
           const status = tr.querySelector('.inp-status').value;
           const total = qty * price;
 
-          if (!sku || !name || !purpose) isValid = false;
+          if (!tanggalMR || !sku || !name || !purpose) isValid = false;
 
-          items.push({ kodeBarang: sku, namaBarang: name, quantity: qty, satuan: unit, harga: price, total: total, purpose: purpose, status: status });
+          items.push({ 
+            tanggalMR: tanggalMR,
+            kodeBarang: sku, 
+            namaBarang: name, 
+            quantity: qty, 
+            satuan: unit, 
+            harga: price, 
+            total: total, 
+            purpose: purpose, 
+            status: status 
+          });
         });
 
         if (!isValid) {
-          alert('Harap lengkapi Kode Barang, Nama Barang, dan Purpose untuk semua baris!');
+          alert('Harap lengkapi Tanggal MR, Kode Barang, Nama Barang, dan Purpose untuk semua baris!');
           return;
         }
 
@@ -760,6 +778,9 @@
         try {
           const response = await fetch(APP_SCRIPT_URL, {
             method: 'POST',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
             body: JSON.stringify({ items: items })
           });
           const result = await response.json();
@@ -784,7 +805,7 @@
     // --- Fetch MR List Data ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
-      tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getMRData`);
@@ -792,7 +813,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di MR_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di MR_DATA</td></tr>`;
             return;
           }
 
@@ -805,8 +826,14 @@
             if (statusVal.toLowerCase() === 'approved') statusClass = 'status-approved';
             if (statusVal.toLowerCase() === 'rejected') statusClass = 'status-rejected';
 
+            let formattedDate = row.tanggalMR || '';
+            if (formattedDate && formattedDate.includes('T')) {
+              formattedDate = formattedDate.split('T')[0];
+            }
+
             tr.innerHTML = `
               <td style="text-align: center; padding: 6px; font-weight: 600;">${row.no || (idx + 1)}</td>
+              <td style="padding: 6px 10px;">${formattedDate}</td>
               <td style="padding: 6px 10px;">${row.kodeBarang || ''}</td>
               <td style="padding: 6px 10px;">${row.namaBarang || ''}</td>
               <td style="padding: 6px 10px;">${row.quantity || 0}</td>
@@ -821,10 +848,10 @@
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
       }
     }
 
