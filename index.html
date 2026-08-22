@@ -5,15 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamics AX 2012 - Material Request (MR)</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Mencegah Teks Terpilih Saat Resize / Drag Window */
-    body.resizing-active, 
-    body.resizing-active * {
+    body.resizing-active, body.resizing-active * {
       user-select: none !important;
       -webkit-user-select: none !important;
       -moz-user-select: none !important;
@@ -23,93 +17,44 @@
     body {
       background-color: #f0f2f5;
       font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      position: relative;
+      height: 100vh; width: 100vw; overflow: hidden; position: relative;
     }
 
-    /* Window Base */
     .window {
-      position: absolute;
-      background: #ece7f8;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      position: absolute; background: #ece7f8; border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+      display: flex; flex-direction: column; overflow: hidden;
     }
 
-    .window.dragging, .window.resizing {
-      transition: none !important;
-    }
+    .window.dragging, .window.resizing { transition: none !important; }
 
-    #loginWindow {
-      top: 15%; left: 35%;
-      width: 380px; height: 430px;
-      min-width: 300px; min-height: 320px;
-      z-index: 100;
-    }
+    #loginWindow { top: 15%; left: 35%; width: 380px; height: 430px; min-width: 300px; min-height: 320px; z-index: 100; }
+    #homeWindow { top: 4%; left: 5%; width: 1100px; height: 680px; min-width: 800px; min-height: 480px; display: none; z-index: 101; }
 
-    #homeWindow {
-      top: 4%; left: 5%;
-      width: 1100px; height: 680px;
-      min-width: 800px; min-height: 480px;
-      display: none; z-index: 101;
-    }
-
-    /* Instance Windows (MR Form & MR List) */
-    .app-instance-window {
-      width: 950px; height: 600px;
-      min-width: 700px; min-height: 400px;
-      display: none;
-    }
-
+    .app-instance-window { width: 950px; height: 600px; min-width: 700px; min-height: 400px; display: none; }
     #mrFormWindow { top: 8%; left: 15%; z-index: 102; }
     #mrListWindow { top: 12%; left: 20%; z-index: 103; }
+    #stockWindow  { top: 16%; left: 25%; z-index: 104; }
 
-    /* Resize Handles untuk Window Panel */
     .resize-handle { position: absolute; z-index: 99; }
-    .resize-handle.top    { top: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
+    .resize-handle.top { top: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
     .resize-handle.bottom { bottom: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
-    .resize-handle.left   { top: 10px; bottom: 10px; left: 0; width: 6px; cursor: ew-resize; }
-    .resize-handle.right  { top: 10px; bottom: 10px; right: 0; width: 6px; cursor: ew-resize; }
-    .resize-handle.top-left     { top: 0; left: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
-    .resize-handle.top-right    { top: 0; right: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
-    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
+    .resize-handle.left { top: 10px; bottom: 10px; left: 0; width: 6px; cursor: ew-resize; }
+    .resize-handle.right { top: 10px; bottom: 10px; right: 0; width: 6px; cursor: ew-resize; }
+    .resize-handle.top-left { top: 0; left: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
+    .resize-handle.top-right { top: 0; right: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
+    .resize-handle.bottom-left { bottom: 0; left: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
     .resize-handle.bottom-right { bottom: 0; right: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
 
-    /* Header Window */
-    .window-header {
-      height: 42px; user-select: none;
-      display: flex; justify-content: space-between; align-items: center;
-      padding-left: 12px; position: relative; z-index: 10; background: transparent;
-    }
-
-    .window-title {
-      font-size: 13px; font-weight: 600; color: #1c1b1f; cursor: move;
-      flex: 1; height: 100%; display: flex; align-items: center;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    .user-header-badge {
-      display: flex; align-items: center; gap: 8px; cursor: pointer;
-      padding: 4px 10px; border-radius: 20px; transition: background-color 0.2s ease;
-    }
+    .window-header { height: 42px; user-select: none; display: flex; justify-content: space-between; align-items: center; padding-left: 12px; position: relative; z-index: 10; background: transparent; }
+    .window-title { font-size: 13px; font-weight: 600; color: #1c1b1f; cursor: move; flex: 1; height: 100%; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-header-badge { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 10px; border-radius: 20px; transition: background-color 0.2s ease; }
     .user-header-badge:hover { background-color: rgba(0, 0, 0, 0.08); }
-    .user-avatar-small {
-      width: 26px; height: 26px; border-radius: 50%; object-fit: cover;
-      border: 1px solid rgba(0,0,0,0.15); background-color: #ffd166;
-    }
+    .user-avatar-small { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(0,0,0,0.15); background-color: #ffd166; }
     .user-display-name { font-size: 13px; font-weight: 700; color: #0f172a; }
 
     .win-controls { display: flex; height: 100%; align-items: center; z-index: 12; }
-    .win-btn {
-      width: 44px; height: 100%; border: none; background: transparent;
-      outline: none; display: flex; justify-content: center; align-items: center;
-      cursor: pointer; transition: background-color 0.15s ease;
-    }
+    .win-btn { width: 44px; height: 100%; border: none; background: transparent; outline: none; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.15s ease; }
     .win-btn svg { width: 12px; height: 12px; stroke: #1c1b1f; stroke-width: 1.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .win-btn:hover { background-color: rgba(0, 0, 0, 0.08); }
     .win-btn.close-btn:hover { background-color: #c42b1c; }
@@ -117,49 +62,28 @@
     .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.12); }
     .win-btn.logout-btn svg { stroke: #c42b1c; }
 
-    /* Window Body */
-    .window-body {
-      flex: 1; display: flex; overflow: hidden; background: #ffffff;
-      margin: 0 6px 6px 6px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08);
-      position: relative; z-index: 8;
-    }
+    .window-body { flex: 1; display: flex; overflow: hidden; background: #ffffff; margin: 0 6px 6px 6px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08); position: relative; z-index: 8; }
 
-    /* LOGIN STYLES */
     #loginWindow .window-body { padding: 24px; flex-direction: column; justify-content: center; background: #fcfbfe; }
     .login-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #1a1a1a; text-align: center; }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    .form-group input, .form-group select {
-      width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;
-      font-size: 13px; outline: none; background-color: #ffffff; font-family: inherit; color: #0f172a;
-    }
+    .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; background-color: #ffffff; font-family: inherit; color: #0f172a; }
     .form-group input:focus, .form-group select:focus { border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15); }
-    .btn-submit {
-      width: 100%; padding: 10px; background: #0284c7; color: white; border: none;
-      border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px;
-    }
+    .btn-submit { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
     .btn-submit:hover { background: #0369a1; }
     #error-message { color: #c42b1c; font-size: 12px; margin-top: 10px; text-align: center; min-height: 16px; }
 
-    #openHomeBtn {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      padding: 10px 24px; border-radius: 50px; background: #0284c7; color: #ffffff;
-      border: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); display: none; align-items: center;
-      gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; z-index: 50;
-    }
+    #openHomeBtn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 24px; border-radius: 50px; background: #0284c7; color: #ffffff; border: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); display: none; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; z-index: 50; }
 
     .window.maximized { top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0; }
     .window.maximized .resize-handle { display: none !important; }
 
-    /* DYNAMICS AX WORKSPACE */
     .ax-layout { display: flex; width: 100%; height: 100%; background: #f8fafc; }
     .ax-sidebar { width: 240px; background: #0f172a; color: #94a3b8; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #1e293b; }
     .ax-sidebar-header { padding: 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; border-bottom: 1px solid #1e293b; }
     .ax-module-list { list-style: none; overflow-y: auto; flex: 1; }
-    .ax-module-item {
-      display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 13px; font-weight: 600;
-      color: #94a3b8; cursor: pointer; border-left: 4px solid transparent; transition: all 0.15s ease;
-    }
+    .ax-module-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; border-left: 4px solid transparent; transition: all 0.15s ease; }
     .ax-module-item:hover { background: #1e293b; color: #f8fafc; }
     .ax-module-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 
@@ -168,13 +92,9 @@
     .ax-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; }
     .ax-breadcrumb-current { font-weight: 600; color: #0f172a; }
 
-    .ax-content-placeholder {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #94a3b8; gap: 12px; font-size: 14px; text-align: center; padding: 20px;
-    }
+    .ax-content-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; gap: 12px; font-size: 14px; text-align: center; padding: 20px; }
     .ax-content-placeholder svg { width: 64px; height: 64px; stroke: #cbd5e1; fill: none; stroke-width: 1.5; }
 
-    /* CONTENT CONTAINERS FOR INSTANCE WINDOWS */
     .window-content-inner { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #f8fafc; }
 
     .mr-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
@@ -183,72 +103,32 @@
     .mr-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
 
     .budget-type-wrapper { display: flex; gap: 10px; align-items: center; margin-top: 2px; }
-    .radio-badge {
-      display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px;
-      border: 1px solid #cbd5e1; cursor: pointer; font-size: 12px; font-weight: 600; color: #475569;
-    }
+    .radio-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; font-size: 12px; font-weight: 600; color: #475569; }
     .radio-badge:has(input:checked) { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
 
-    /* EXCEL STYLE GRIDVIEW */
-    .excel-grid-container {
-      overflow: auto; border: 1px solid #d1d5db; background: #ffffff; border-radius: 4px;
-      box-shadow: inset 0 0 4px rgba(0,0,0,0.05); position: relative; flex: 1;
-    }
-    .excel-table {
-      border-collapse: collapse; width: 100%; font-family: "Segoe UI", Arial, sans-serif;
-      font-size: 12px; table-layout: fixed;
-    }
-    .excel-table th {
-      background: #f3f4f6; color: #374151; font-weight: 600; text-align: left;
-      padding: 6px 10px; border: 1px solid #d1d5db; position: relative; user-select: none;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .excel-table td {
-      border: 1px solid #e5e7eb; padding: 0; background: #ffffff; position: relative;
-    }
-    .excel-table td input, .excel-table td select {
-      width: 100%; height: 100%; border: none; outline: none; padding: 6px 10px;
-      font-family: inherit; font-size: 12px; background: transparent; color: #1f2937;
-    }
-    .excel-table td input:focus, .excel-table td select:focus {
-      box-shadow: inset 0 0 0 2px #0284c7; background: #f0f9ff;
-    }
+    .excel-grid-container { overflow: auto; border: 1px solid #d1d5db; background: #ffffff; border-radius: 4px; box-shadow: inset 0 0 4px rgba(0,0,0,0.05); position: relative; flex: 1; }
+    .excel-table { border-collapse: collapse; width: 100%; font-family: "Segoe UI", Arial, sans-serif; font-size: 12px; table-layout: fixed; }
+    .excel-table th { background: #f3f4f6; color: #374151; font-weight: 600; text-align: left; padding: 6px 10px; border: 1px solid #d1d5db; position: relative; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .excel-table td { border: 1px solid #e5e7eb; padding: 0; background: #ffffff; position: relative; }
+    .excel-table td input, .excel-table td select { width: 100%; height: 100%; border: none; outline: none; padding: 6px 10px; font-family: inherit; font-size: 12px; background: transparent; color: #1f2937; }
+    .excel-table td input:focus, .excel-table td select:focus { box-shadow: inset 0 0 0 2px #0284c7; background: #f0f9ff; }
     .excel-table tr:hover td { background-color: #f9fafb; }
 
-    /* Kolom Resizer Handle */
-    .col-resizer {
-      position: absolute; right: 0; top: 0; bottom: 0; width: 5px;
-      cursor: col-resize; user-select: none; z-index: 10;
-    }
+    .col-resizer { position: absolute; right: 0; top: 0; bottom: 0; width: 5px; cursor: col-resize; user-select: none; z-index: 10; }
     .col-resizer:hover, .col-resizer.resizing { background: #0284c7; }
 
-    .btn-action {
-      padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
-      border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-    }
+    .btn-action { padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-add-row { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
     .btn-add-row:hover { background: #bae6fd; }
     .btn-delete-row { background: transparent; color: #ef4444; border: none; font-size: 16px; cursor: pointer; width: 100%; height: 100%; }
     .btn-delete-row:hover { color: #dc2626; background: #fee2e2; }
 
-    /* Badge Status Styling */
-    .status-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      text-align: center;
-    }
+    .status-badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; }
     .status-pending { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
     .status-approved { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
     .status-rejected { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-    .ax-footer {
-      height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px; font-size: 11px; color: #64748b;
-    }
+    .ax-footer { height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 11px; color: #64748b; }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: #22c55e; }
   </style>
 </head>
@@ -311,10 +191,8 @@
       </div>
     </div>
 
-    <!-- WORKSPACE -->
     <div class="window-body">
       <div class="ax-layout">
-        <!-- Sidebar Navigation -->
         <div class="ax-sidebar">
           <div class="ax-sidebar-header">MODULES AX 2012</div>
           <ul class="ax-module-list">
@@ -325,6 +203,11 @@
             <li class="ax-module-item" id="btnOpenMrList">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
               <span>MR List Data</span>
+            </li>
+            <!-- MENU BARU: STOCK ON HANDS -->
+            <li class="ax-module-item" id="btnOpenStock">
+              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span>Stock On Hands</span>
             </li>
           </ul>
         </div>
@@ -476,6 +359,55 @@
     </div>
   </div>
 
+  <!-- 5. INSTANCE WINDOW BARU: STOCK ON HANDS -->
+  <div class="window app-instance-window" id="stockWindow">
+    <div class="resize-handle top"></div><div class="resize-handle bottom"></div>
+    <div class="resize-handle left"></div><div class="resize-handle right"></div>
+    <div class="resize-handle top-left"></div><div class="resize-handle top-right"></div>
+    <div class="resize-handle bottom-left"></div><div class="resize-handle bottom-right"></div>
+
+    <div class="window-header">
+      <div class="window-title">Stock On Hands</div>
+      <div class="win-controls">
+        <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
+        <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
+      </div>
+    </div>
+
+    <div class="window-body">
+      <div class="window-content-inner">
+        <div class="mr-card" style="flex: 1; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div class="mr-card-title" style="margin-bottom: 0;">
+              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span>Database STOCK_DATA (Google Sheets)</span>
+            </div>
+            <!-- BUTTON LOAD DATA -->
+            <button type="button" class="btn-action btn-add-row" id="btnLoadStockData">Load Data</button>
+          </div>
+
+          <!-- GRIDVIEW STOCK ON HANDS -->
+          <div class="excel-grid-container">
+            <table class="excel-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px; text-align: center;">No<div class="col-resizer"></div></th>
+                  <th style="width: 150px;">Kode Barang<div class="col-resizer"></div></th>
+                  <th style="width: 250px;">Nama Barang<div class="col-resizer"></div></th>
+                  <th style="width: 200px;">Departements<div class="col-resizer"></div></th>
+                  <th style="width: 120px;">Quantity<div class="col-resizer"></div></th>
+                </tr>
+              </thead>
+              <tbody id="stockListBody">
+                <tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Klik 'Load Data' untuk mengambil data dari Google Sheets.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <button id="openHomeBtn" title="Buka Window HOME">
     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Home</span>
@@ -489,7 +421,6 @@
 
     let activeZIndex = 100;
 
-    // --- Window Dragging & Resizing Engine ---
     function initWindowEvents(win) {
       const header = win.querySelector('.window-title');
       const btnMax = win.querySelector('.btn-maximize');
@@ -504,7 +435,6 @@
         win.style.zIndex = activeZIndex;
       });
 
-      // DRAGGING
       let isDragging = false, offsetX = 0, offsetY = 0;
       header.addEventListener('mousedown', (e) => {
         if (isMaximized || e.target.closest('#userBadgeToggle')) return;
@@ -516,7 +446,6 @@
         offsetY = e.clientY - win.offsetTop;
       });
 
-      // RESIZING
       let isResizing = false, currentHandle = null, startX = 0, startY = 0, startW = 0, startH = 0, startL = 0, startT = 0;
       win.querySelectorAll('.resize-handle').forEach(handle => {
         handle.addEventListener('mousedown', (e) => {
@@ -546,12 +475,8 @@
           const dx = e.clientX - startX;
           const dy = e.clientY - startY;
 
-          if (currentHandle.classList.contains('right')) {
-            win.style.width = Math.max(300, startW + dx) + 'px';
-          }
-          if (currentHandle.classList.contains('bottom')) {
-            win.style.height = Math.max(250, startH + dy) + 'px';
-          }
+          if (currentHandle.classList.contains('right')) win.style.width = Math.max(300, startW + dx) + 'px';
+          if (currentHandle.classList.contains('bottom')) win.style.height = Math.max(250, startH + dy) + 'px';
           if (currentHandle.classList.contains('left')) {
             const w = Math.max(300, startW - dx);
             if (w > 300) { win.style.width = w + 'px'; win.style.left = (startL + dx) + 'px'; }
@@ -617,7 +542,6 @@
       });
     }
 
-    // --- Column Resizing Engine ---
     function initColumnResizers() {
       document.querySelectorAll('.excel-table th').forEach(th => {
         const resizer = th.querySelector('.col-resizer');
@@ -651,7 +575,6 @@
       });
     }
 
-    // --- Excel Grid Logic ---
     function initExcelGrid() {
       const gridBody = document.getElementById('excelGridBody');
       const btnAddRow = document.getElementById('btnAddRow');
@@ -725,11 +648,9 @@
 
       btnAddRow.addEventListener('click', () => addRow());
 
-      // Row Default Initial
       const todayStr = new Date().toISOString().split('T')[0];
       addRow(todayStr, 'SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
 
-      // Submit Data ke Google Sheets
       document.getElementById('btnSubmitMR').addEventListener('click', async () => {
         const rows = gridBody.querySelectorAll('tr');
         if (rows.length === 0) {
@@ -778,9 +699,7 @@
         try {
           const response = await fetch(APP_SCRIPT_URL, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8'
-            },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ items: items })
           });
           const result = await response.json();
@@ -802,7 +721,6 @@
       });
     }
 
-    // --- Fetch MR List Data ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
       tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
@@ -820,7 +738,6 @@
           tbody.innerHTML = '';
           result.data.forEach((row, idx) => {
             const tr = document.createElement('tr');
-            
             const statusVal = row.status || 'Pending';
             let statusClass = 'status-pending';
             if (statusVal.toLowerCase() === 'approved') statusClass = 'status-approved';
@@ -855,17 +772,50 @@
       }
     }
 
-    // --- Helper Pembuka Instance Window ---
+    // --- FETCH STOCK DATA BARU ---
+    async function fetchStockData() {
+      const tbody = document.getElementById('stockListBody');
+      tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets (STOCK_DATA)...</td></tr>`;
+
+      try {
+        const response = await fetch(`${APP_SCRIPT_URL}?action=getStockData`);
+        const result = await response.json();
+
+        if (result.success) {
+          if (result.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di STOCK_DATA</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = '';
+          result.data.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td style="text-align: center; padding: 6px; font-weight: 600;">${row.no || (idx + 1)}</td>
+              <td style="padding: 6px 10px;">${row.kodeBarang || ''}</td>
+              <td style="padding: 6px 10px;">${row.namaBarang || ''}</td>
+              <td style="padding: 6px 10px;">${row.departements || ''}</td>
+              <td style="padding: 6px 10px; font-weight: 600;">${row.quantity || 0}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
+      }
+    }
+
     function openInstanceWindow(winId) {
       const win = document.getElementById(winId);
       if (!win) return;
-      
       win.style.display = 'flex';
       activeZIndex++;
       win.style.zIndex = activeZIndex;
     }
 
-    // Event Handler untuk Menu Sidebar (Membuka Window Terpisah)
+    // Handlers untuk Navigation Sidebar
     document.getElementById('btnOpenMrForm').addEventListener('click', () => {
       openInstanceWindow('mrFormWindow');
     });
@@ -875,9 +825,17 @@
       fetchMRListData();
     });
 
-    document.getElementById('btnRefreshList').addEventListener('click', fetchMRListData);
+    // OPEN STOCK ON HANDS WINDOW
+    document.getElementById('btnOpenStock').addEventListener('click', () => {
+      openInstanceWindow('stockWindow');
+    });
 
-    // --- Login Form Handler ---
+    document.getElementById('btnRefreshList').addEventListener('click', fetchMRListData);
+    
+    // ACTION BUTTON LOAD DATA STOCK
+    document.getElementById('btnLoadStockData').addEventListener('click', fetchStockData);
+
+    // Login logic
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const userVal = document.getElementById('username').value.trim();
@@ -921,7 +879,6 @@
       document.getElementById('loginWindow').style.display = 'flex';
     });
 
-    // Init Logic
     window.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.window').forEach(win => initWindowEvents(win));
       initExcelGrid();
