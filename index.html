@@ -236,14 +236,14 @@
     <div class="resize-handle bottom-left"></div><div class="resize-handle bottom-right"></div>
 
     <div class="window-header">
-      <div class="window-title">Login Panel</div>
+      <div class="window-title">Logon</div>
       <div class="win-controls">
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
       </div>
     </div>
     <div class="window-body">
-      <h2 class="login-title">Sign In</h2>
+      <h2 class="login-title">Hello, We can start now !</h2>
       <form id="loginForm">
         <div class="form-group">
           <label for="username">Username</label>
@@ -253,7 +253,7 @@
           <label for="password">Password</label>
           <input type="password" id="password" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn-submit" id="btnLogin">Sign In</button>
+        <button type="submit" class="btn-submit" id="btnLogin">Sign On</button>
         <div id="error-message"></div>
       </form>
     </div>
@@ -902,7 +902,7 @@
 
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
-      tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading data from MR_DATA...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading data from database ...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getMRData`);
@@ -910,7 +910,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">No records found in MR_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">Nothing Data</td></tr>`;
             return;
           }
 
@@ -1036,7 +1036,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">No records found in STOCK_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">Nothing Data</td></tr>`;
             return;
           }
 
