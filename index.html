@@ -1,235 +1,198 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login System</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Window Login Panel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    body {
+      background-color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-        .login-card {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 380px;
-            padding: 30px 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e0e0e0;
-        }
+    /* Window Container */
+    .window {
+      position: absolute;
+      top: 20%;
+      left: 35%;
+      width: 320px;
+      height: 380px;
+      min-width: 280px;
+      min-height: 300px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      resize: both;
+      overflow: hidden;
+    }
 
-        .login-card h2 {
-            font-size: 20px;
-            color: #333333;
-            margin-bottom: 24px;
-            text-align: center;
-        }
+    /* Window Header / Title Bar */
+    .window-header {
+      background: #2c3e50;
+      color: #ffffff;
+      padding: 10px 14px;
+      cursor: move;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+    /* Window Control Buttons */
+    .window-controls {
+      display: flex;
+      gap: 6px;
+    }
 
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #555555;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
+    .control-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 10px 14px;
-            font-size: 14px;
-            border: 1px solid #cccccc;
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+    .close-btn { background-color: #ff5f56; }
+    .minimize-btn { background-color: #ffbd2e; }
+    .maximize-btn { background-color: #27c93f; }
 
-        .form-group input:focus {
-            border-color: #1890ff;
-        }
+    /* Window Body / Content */
+    .window-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
 
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+    .login-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
 
-        .password-wrapper input {
-            padding-right: 40px;
-        }
+    .form-group {
+      margin-bottom: 16px;
+    }
 
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: #666;
+    }
 
-        .toggle-password svg {
-            width: 20px;
-            height: 20px;
-            fill: #777777;
-            transition: fill 0.2s;
-        }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
 
-        .toggle-password:hover svg {
-            fill: #333333;
-        }
+    .form-group input:focus {
+      border-color: #3498db;
+    }
 
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background-color: #1890ff;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-        }
+    .btn-submit {
+      width: 100%;
+      padding: 10px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-        .btn-login:hover {
-            background-color: #40a9ff;
-        }
-
-        .btn-login:disabled {
-            background-color: #bfbfbf;
-            cursor: not-allowed;
-        }
-
-        #message {
-            margin-top: 16px;
-            font-size: 13px;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
-            display: none;
-        }
-
-        #message.success {
-            display: block;
-            background-color: #e6f7ff;
-            color: #1890ff;
-            border: 1px solid #91d5ff;
-        }
-
-        #message.error {
-            display: block;
-            background-color: #fff1f0;
-            color: #ff4d4f;
-            border: 1px solid #ffa39e;
-        }
-    </style>
+    .btn-submit:hover {
+      background: #2980b9;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-card" id="loginCard">
-        <h2>System Login</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Masukkan Username" required autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" placeholder="Masukkan Password" required>
-                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
-                        <svg id="eyeIcon" viewBox="0 0 24 24">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-login" id="btnLogin">Login</button>
-            <div id="message"></div>
-        </form>
+  <!-- Floating Window Panel -->
+  <div class="window" id="loginWindow">
+    <div class="window-header" id="windowHeader">
+      <span>Login</span>
+      <div class="window-controls">
+        <span class="control-btn minimize-btn"></span>
+        <span class="control-btn maximize-btn"></span>
+        <span class="control-btn close-btn"></span>
+      </div>
     </div>
+    <div class="window-body">
+      <h2 class="login-title">Sign In</h2>
+      <form onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Masukkan username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Masukkan password">
+        </div>
+        <button type="submit" class="btn-submit">Masuk</button>
+      </form>
+    </div>
+  </div>
 
-    <script>
-        const passwordInput = document.getElementById('password');
-        const togglePasswordBtn = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const loginForm = document.getElementById('loginForm');
-        const btnLogin = document.getElementById('btnLogin');
-        const messageDiv = document.getElementById('message');
+  <script>
+    // Drag / Move Functionality
+    const windowPanel = document.getElementById("loginWindow");
+    const windowHeader = document.getElementById("windowHeader");
 
-        const eyeOpenPath = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
-        const eyeClosedPath = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.17c0-1.66-1.34-3-3-3l-.17.02z";
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
 
-        togglePasswordBtn.addEventListener('click', () => {
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            eyeIcon.querySelector('path').setAttribute('d', isPassword ? eyeClosedPath : eyeOpenPath);
-        });
+    windowHeader.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - windowPanel.offsetLeft;
+      offsetY = e.clientY - windowPanel.offsetTop;
+      document.body.style.userSelect = "none";
+    });
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      
+      let newX = e.clientX - offsetX;
+      let newY = e.clientY - offsetY;
 
-            const username = document.getElementById('username').value.trim();
-            const password = passwordInput.value.trim();
-            var MATH = username + password;
+      // Mencegah jendela keluar dari layar
+      const maxX = window.innerWidth - windowPanel.offsetWidth;
+      const maxY = window.innerHeight - windowPanel.offsetHeight;
 
-            btnLogin.disabled = true;
-            btnLogin.innerText = 'Memvalidasi...';
-            messageDiv.className = '';
-            messageDiv.style.display = 'none';
+      newX = Math.max(0, Math.min(newX, maxX));
+      newY = Math.max(0, Math.min(newY, maxY));
 
-            const webAppUrl = "https://script.google.com/macros/s/AKfycbwARJAXmtGqvlV4-oicW_HBUiBz_JvYHxLMjl23LoxtFOSvAk0EUxpYIJvPC_OYaI0n/exec";
-            const targetPageUrl = "https://raw.githubusercontent.com/anantaiqqi-beep/INSTRUCT-PART/65e510177b31fe7e154d640bb1ad7cf526a1392a/main.html";
+      windowPanel.style.left = `${newX}px`;
+      windowPanel.style.top = `${newY}px`;
+    });
 
-            try {
-                const response = await fetch(`${webAppUrl}?math=${encodeURIComponent(MATH)}`);
-                const result = await response.json();
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      document.body.style.userSelect = "auto";
+    });
+  </script>
 
-                if (result.status === 'success') {
-                    btnLogin.innerText = 'Memuat Halaman...';
-                    
-                    // Fetch HTML dari GitHub Repositori
-                    const htmlResponse = await fetch(targetPageUrl);
-                    const htmlContent = await htmlResponse.text();
-
-                    // Timpa & Muat Halaman Utama
-                    document.open();
-                    document.write(htmlContent);
-                    document.close();
-                } else {
-                    messageDiv.className = 'error';
-                    messageDiv.innerText = result.message;
-                    btnLogin.disabled = false;
-                    btnLogin.innerText = 'Login';
-                }
-            } catch (error) {
-                messageDiv.className = 'error';
-                messageDiv.innerText = 'Gagal terhubung ke server.';
-                btnLogin.disabled = false;
-                btnLogin.innerText = 'Login';
-            }
-        });
-    </script>
 </body>
 </html>
