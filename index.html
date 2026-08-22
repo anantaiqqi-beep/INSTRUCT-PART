@@ -12,7 +12,7 @@
     }
 
     body {
-      background-color: ButtonFace; /* Menggunakan warna bawaan sistem UI OS */
+      background-color: ButtonFace;
       font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
       height: 100vh;
       width: 100vw;
@@ -40,20 +40,35 @@
       height: 440px;
       min-width: 300px;
       min-height: 280px;
-      background: #ece7f8; /* Pastel lavender ala Windows 11 */
+      background: #ece7f8;
       border-radius: 12px;
       border: 1px solid rgba(0, 0, 0, 0.12);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
       display: flex;
       flex-direction: column;
-      resize: both;
       overflow: hidden;
       transition: top 0.2s ease, left 0.2s ease, width 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
     }
 
     .window.dragging, .window.resizing {
-      transition: none;
+      transition: none !important;
     }
+
+    /* Resize Handles (8 Sisi/Sudut) */
+    .resize-handle {
+      position: absolute;
+      z-index: 10;
+    }
+
+    .resize-handle.top    { top: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
+    .resize-handle.bottom { bottom: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
+    .resize-handle.left   { top: 8px; bottom: 8px; left: 0; width: 6px; cursor: ew-resize; }
+    .resize-handle.right  { top: 8px; bottom: 8px; right: 0; width: 6px; cursor: ew-resize; }
+
+    .resize-handle.top-left     { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+    .resize-handle.top-right    { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
+    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
+    .resize-handle.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; }
 
     /* Header Window */
     .window-header {
@@ -81,6 +96,7 @@
       display: flex;
       height: 100%;
       align-items: center;
+      z-index: 11;
     }
 
     .win-btn {
@@ -198,13 +214,13 @@
       width: 220px !important;
       height: 40px !important;
       min-height: 40px !important;
-      resize: none !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
     }
 
-    .window.minimized .window-body {
-      display: none;
+    .window.minimized .window-body,
+    .window.minimized .resize-handle {
+      display: none !important;
     }
 
     .window.minimized .win-btn.close-btn {
@@ -217,8 +233,11 @@
       left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      resize: none !important;
       border-radius: 0;
+    }
+
+    .window.maximized .resize-handle {
+      display: none !important;
     }
 
     .window.maximized .win-btn.close-btn {
@@ -230,6 +249,16 @@
 
   <!-- Floating Window -->
   <div class="window" id="loginWindow">
+    <!-- 8 Resize Handles -->
+    <div class="resize-handle top"></div>
+    <div class="resize-handle bottom"></div>
+    <div class="resize-handle left"></div>
+    <div class="resize-handle right"></div>
+    <div class="resize-handle top-left"></div>
+    <div class="resize-handle top-right"></div>
+    <div class="resize-handle bottom-left"></div>
+    <div class="resize-handle bottom-right"></div>
+
     <div class="window-header">
       <div class="window-title" id="windowHeader">Login Panel</div>
       <div class="win-controls">
@@ -242,7 +271,6 @@
         <!-- Maximize / Restore -->
         <button class="win-btn" id="btnMaximize" title="Maximize">
           <svg viewBox="0 0 12 12" id="iconMaximize">
-            <!-- Default Normal Window: Tampilkan ikon Maximize (kotak tunggal) -->
             <rect x="1.5" y="1.5" width="9" height="9" rx="2" />
           </svg>
         </button>
@@ -283,7 +311,6 @@
     const btnClose = document.getElementById("btnClose");
     const iconMaximize = document.getElementById("iconMaximize");
 
-    // Definition Ikon SVG
     const iconMaximizeSVG = `<rect x="1.5" y="1.5" width="9" height="9" rx="2" />`;
     const iconRestoreSVG = `
       <rect x="3.5" y="1.5" width="7" height="7" rx="1.5" />
@@ -300,7 +327,7 @@
     let isMaximized = false;
     let isMinimized = false;
 
-    // --- DRAG LOGIC ---
+    // --- DRAG / MOVE LOGIC ---
     let isDragging = false;
     let offsetX = 0, offsetY = 0;
 
@@ -313,25 +340,101 @@
       document.body.style.userSelect = "none";
     });
 
+    // --- RESIZE LOGIC (ALL SIDES & CORNERS) ---
+    let isResizing = false;
+    let currentHandle = null;
+    let startX = 0, startY = 0;
+    let startWidth = 0, startHeight = 0;
+    let startLeft = 0, startTop = 0;
+
+    const minWidth = 300;
+    const minHeight = 280;
+
+    document.querySelectorAll(".resize-handle").forEach(handle => {
+      handle.addEventListener("mousedown", (e) => {
+        if (isMaximized || isMinimized) return;
+        e.stopPropagation();
+        isResizing = true;
+        currentHandle = handle;
+        win.classList.add("resizing");
+
+        startX = e.clientX;
+        startY = e.clientY;
+        startWidth = win.offsetWidth;
+        startHeight = win.offsetHeight;
+        startLeft = win.offsetLeft;
+        startTop = win.offsetTop;
+
+        document.body.style.userSelect = "none";
+      });
+    });
+
     document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
+      // Handle Dragging
+      if (isDragging) {
+        let newX = e.clientX - offsetX;
+        let newY = e.clientY - offsetY;
 
-      let newX = e.clientX - offsetX;
-      let newY = e.clientY - offsetY;
+        const maxX = window.innerWidth - win.offsetWidth;
+        const maxY = window.innerHeight - win.offsetHeight;
 
-      const maxX = window.innerWidth - win.offsetWidth;
-      const maxY = window.innerHeight - win.offsetHeight;
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
 
-      newX = Math.max(0, Math.min(newX, maxX));
-      newY = Math.max(0, Math.min(newY, maxY));
+        win.style.left = `${newX}px`;
+        win.style.top = `${newY}px`;
+      }
 
-      win.style.left = `${newX}px`;
-      win.style.top = `${newY}px`;
+      // Handle Resizing
+      if (isResizing && currentHandle) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+        let newLeft = startLeft;
+        let newTop = startTop;
+
+        // Tentukan arah resize berdasarkan kelas handle
+        if (currentHandle.classList.contains("right") || currentHandle.classList.contains("top-right") || currentHandle.classList.contains("bottom-right")) {
+          newWidth = Math.max(minWidth, startWidth + dx);
+        }
+        if (currentHandle.classList.contains("bottom") || currentHandle.classList.contains("bottom-left") || currentHandle.classList.contains("bottom-right")) {
+          newHeight = Math.max(minHeight, startHeight + dy);
+        }
+        if (currentHandle.classList.contains("left") || currentHandle.classList.contains("top-left") || currentHandle.classList.contains("bottom-left")) {
+          const possibleWidth = startWidth - dx;
+          if (possibleWidth >= minWidth) {
+            newWidth = possibleWidth;
+            newLeft = startLeft + dx;
+          } else {
+            newWidth = minWidth;
+            newLeft = startLeft + (startWidth - minWidth);
+          }
+        }
+        if (currentHandle.classList.contains("top") || currentHandle.classList.contains("top-left") || currentHandle.classList.contains("top-right")) {
+          const possibleHeight = startHeight - dy;
+          if (possibleHeight >= minHeight) {
+            newHeight = possibleHeight;
+            newTop = startTop + dy;
+          } else {
+            newHeight = minHeight;
+            newTop = startTop + (startHeight - minHeight);
+          }
+        }
+
+        win.style.width = `${newWidth}px`;
+        win.style.height = `${newHeight}px`;
+        win.style.left = `${newLeft}px`;
+        win.style.top = `${newTop}px`;
+      }
     });
 
     document.addEventListener("mouseup", () => {
       isDragging = false;
-      win.classList.remove("dragging");
+      isResizing = false;
+      currentHandle = null;
+      win.classList.remove("dragging", "resizing");
       document.body.style.userSelect = "auto";
     });
 
@@ -370,19 +473,17 @@
       }
 
       if (isMaximized) {
-        // Restore ke normal
         win.classList.remove("maximized");
         win.style.top = prevRect.top;
         win.style.left = prevRect.left;
         win.style.width = prevRect.width;
         win.style.height = prevRect.height;
-        iconMaximize.innerHTML = iconMaximizeSVG; // Tampilkan ikon Maximize lagi
+        iconMaximize.innerHTML = iconMaximizeSVG;
         isMaximized = false;
       } else {
-        // Maximize
         saveCurrentState();
         win.classList.add("maximized");
-        iconMaximize.innerHTML = iconRestoreSVG; // Tampilkan ikon Restore (kotak bertumpuk)
+        iconMaximize.innerHTML = iconRestoreSVG;
         isMaximized = true;
       }
     }
