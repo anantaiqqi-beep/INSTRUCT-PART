@@ -20,7 +20,6 @@
       position: relative;
     }
 
-    /* Prevent Select All During Resize/Drag */
     body.resizing-active, 
     body.resizing-active * {
       user-select: none !important;
@@ -43,7 +42,7 @@
       pointer-events: auto;
     }
 
-    /* Window Structure */
+    /* Window Base */
     .window {
       position: absolute;
       background: #ece7f8;
@@ -60,7 +59,7 @@
       transition: none !important;
     }
 
-    /* Window Sizes */
+    /* Initial Window Dimensions */
     #loginWindow {
       top: 15%;
       left: 35%;
@@ -73,20 +72,17 @@
 
     #homeWindow {
       top: 4%;
-      left: 8%;
-      width: 1100px;
-      height: 700px;
-      min-width: 800px;
+      left: 6%;
+      width: 1180px;
+      height: 720px;
+      min-width: 850px;
       min-height: 500px;
       display: none;
       z-index: 101;
     }
 
-    /* Resize Handles (Point-events & Z-index Fix) */
-    .resize-handle {
-      position: absolute;
-      z-index: 5;
-    }
+    /* Resize Handles */
+    .resize-handle { position: absolute; z-index: 5; }
     .resize-handle.top    { top: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
     .resize-handle.bottom { bottom: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
     .resize-handle.left   { top: 10px; bottom: 10px; left: 0; width: 5px; cursor: ew-resize; }
@@ -96,7 +92,7 @@
     .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
     .resize-handle.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
 
-    /* Window Header */
+    /* Header */
     .window-header {
       height: 44px;
       user-select: none;
@@ -199,7 +195,7 @@
     .login-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #1a1a1a; text-align: center; }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    .form-group input, .form-group select, .form-group textarea {
+    .form-group input, .form-group select {
       width: 100%;
       padding: 8px 12px;
       border: 1px solid #cbd5e1;
@@ -210,7 +206,7 @@
       font-family: inherit;
       color: #0f172a;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    .form-group input:focus, .form-group select:focus {
       border-color: #0284c7;
       box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
     }
@@ -310,25 +306,23 @@
     /* DYNAMICS AX WORKSPACE STYLES */
     .ax-layout { display: flex; width: 100%; height: 100%; background: #f8fafc; }
 
-    /* Sidebar Navigation */
+    /* Single Menu Sidebar Navigation */
     .ax-sidebar {
-      width: 220px; background: #0f172a; color: #94a3b8;
+      width: 230px; background: #0f172a; color: #94a3b8;
       display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #1e293b;
     }
     .ax-sidebar-header {
-      padding: 14px 16px; font-size: 11px; font-weight: 700;
+      padding: 16px; font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;
       border-bottom: 1px solid #1e293b;
     }
     .ax-module-list { list-style: none; overflow-y: auto; flex: 1; }
     .ax-module-item {
       display: flex; align-items: center; gap: 12px;
-      padding: 11px 16px; font-size: 13px; font-weight: 500;
-      color: #cbd5e1; cursor: pointer; transition: all 0.15s ease;
-      border-left: 3px solid transparent;
+      padding: 12px 16px; font-size: 13px; font-weight: 600;
+      color: #38bdf8; background: #1e293b; cursor: pointer;
+      border-left: 4px solid #38bdf8;
     }
-    .ax-module-item:hover { background: #1e293b; color: #ffffff; }
-    .ax-module-item.active { background: #1e293b; color: #38bdf8; border-left-color: #38bdf8; font-weight: 600; }
     .ax-module-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
     /* Main Area */
@@ -343,22 +337,6 @@
 
     .ax-content { flex: 1; padding: 20px; overflow-y: auto; }
 
-    /* General AX Cards View */
-    .ax-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; align-content: start; }
-    .ax-group-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
-    .ax-group-header {
-      background: #f1f5f9; padding: 10px 14px; font-size: 12px; font-weight: 700;
-      color: #334155; text-transform: uppercase; letter-spacing: 0.5px;
-      border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
-    }
-    .ax-group-header svg { width: 14px; height: 14px; stroke: #0284c7; fill: none; stroke-width: 2; }
-    .ax-link-list { list-style: none; padding: 6px 0; }
-    .ax-link-item a {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 7px 14px; font-size: 13px; color: #475569; text-decoration: none; transition: all 0.15s ease;
-    }
-    .ax-link-item a:hover { background: #f8fafc; color: #0284c7; padding-left: 18px; }
-
     /* MATERIAL REQUEST (MR) STYLES */
     .mr-container { display: flex; flex-direction: column; gap: 16px; height: 100%; }
     .mr-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
@@ -369,9 +347,9 @@
     .mr-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
     
     /* OPEX & CAPEX Selector */
-    .budget-type-wrapper { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
+    .budget-type-wrapper { display: flex; gap: 12px; align-items: center; margin-top: 2px; }
     .radio-badge {
-      display: flex; align-items: center; gap: 6px; padding: 8px 16px;
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
       border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer;
       font-size: 12px; font-weight: 600; color: #475569; user-select: none;
       transition: all 0.15s;
@@ -382,7 +360,7 @@
     /* GridView Table */
     .gridview-container { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 8px; background: #ffffff; }
     .mr-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    .mr-table th { background: #f1f5f9; padding: 10px 12px; font-weight: 600; color: #334155; border-bottom: 1px solid #e2e8f0; }
+    .mr-table th { background: #f1f5f9; padding: 10px 12px; font-weight: 600; color: #334155; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
     .mr-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #475569; vertical-align: middle; }
     .mr-table input, .mr-table select {
       width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; outline: none;
@@ -504,31 +482,11 @@
     <div class="window-body">
       <div class="ax-layout">
         <div class="ax-sidebar">
-          <div class="ax-sidebar-header">Modules AX 2012</div>
-          <ul class="ax-module-list" id="axModuleList">
-            <li class="ax-module-item active" data-module="Material Request">
+          <div class="ax-sidebar-header">MODULES AX 2012</div>
+          <ul class="ax-module-list">
+            <li class="ax-module-item">
               <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
               <span>Material Request (MR)</span>
-            </li>
-            <li class="ax-module-item" data-module="General Ledger">
-              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-              <span>General Ledger</span>
-            </li>
-            <li class="ax-module-item" data-module="Accounts Receivable">
-              <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-              <span>Accounts Receivable</span>
-            </li>
-            <li class="ax-module-item" data-module="Accounts Payable">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <span>Accounts Payable</span>
-            </li>
-            <li class="ax-module-item" data-module="Procurement & Sourcing">
-              <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              <span>Procurement</span>
-            </li>
-            <li class="ax-module-item" data-module="Inventory Management">
-              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              <span>Inventory Management</span>
             </li>
           </ul>
         </div>
@@ -538,13 +496,105 @@
             <div class="ax-breadcrumb">
               <span>Dynamics AX</span>
               <span>/</span>
-              <span class="ax-breadcrumb-current" id="axCurrentModuleName">Material Request (MR)</span>
+              <span class="ax-breadcrumb-current">Material Request</span>
             </div>
             <div class="ax-company-tag">Company: DAT</div>
           </div>
 
-          <div class="ax-content" id="axContentArea">
-            <!-- Dynamic Content Load via JS -->
+          <div class="ax-content">
+            <div class="mr-container">
+              <!-- Header Info Card -->
+              <div class="mr-card">
+                <div class="mr-card-title">
+                  <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>Header Material Request (MR)</span>
+                </div>
+                
+                <form id="mrHeaderForm" onsubmit="return false;">
+                  <div class="mr-form-grid">
+                    <div class="form-group">
+                      <label>Jenis Anggaran (Budget Type)</label>
+                      <div class="budget-type-wrapper">
+                        <label class="radio-badge">
+                          <input type="radio" name="mrBudgetType" value="OPEX" checked>
+                          <span>OPEX</span>
+                        </label>
+                        <label class="radio-badge">
+                          <input type="radio" name="mrBudgetType" value="CAPEX">
+                          <span>CAPEX</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mrDepartment">Department</label>
+                      <select id="mrDepartment">
+                        <option value="IT">IT & Infrastructure</option>
+                        <option value="FINANCE">Finance & Accounting</option>
+                        <option value="HR">Human Resources</option>
+                        <option value="OPS">Operations & Supply Chain</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mrRequester">Requester</label>
+                      <input type="text" id="mrRequester" value="Bayu Adi Ananta">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mrPriority">Priority Level</label>
+                      <select id="mrPriority">
+                        <option value="Normal">Normal</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Items GridView Card -->
+              <div class="mr-card" style="flex: 1; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div class="mr-card-title" style="margin-bottom: 0;">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    <span>Item Lines (GridView)</span>
+                  </div>
+                  <button type="button" class="btn-action btn-add-row" id="btnAddMrRow">
+                    + Tambah Item
+                  </button>
+                </div>
+
+                <div class="gridview-container" style="flex: 1;">
+                  <table class="mr-table" id="mrGridTable">
+                    <thead>
+                      <tr>
+                        <th style="width: 40px;">#</th>
+                        <th style="min-width: 180px;">Nama / Deskripsi Barang</th>
+                        <th style="min-width: 200px;">Purpose / Justification</th>
+                        <th style="width: 80px;">Qty</th>
+                        <th style="width: 100px;">Satuan</th>
+                        <th style="width: 140px;">Est. Harga Satuan (Rp)</th>
+                        <th style="width: 150px;">Total (Rp)</th>
+                        <th style="width: 50px; text-align: center;">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mrGridBody"></tbody>
+                    <tfoot>
+                      <tr class="mr-summary-row">
+                        <td colspan="6" style="text-align: right; padding-right: 16px;">Grand Total Estimasi:</td>
+                        <td id="mrGrandTotal">Rp 0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+                  <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 10px 24px;">Submit Material Request</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="ax-footer">
@@ -577,149 +627,19 @@
 
     let activeZIndex = 100;
 
-    // AX Modules Data
-    const axMenuData = {
-      "General Ledger": [
-        { group: "Common", links: ["Main Accounts", "General Journals", "Chart of Accounts", "Trial Balance"] },
-        { group: "Inquiries & Reports", links: ["Voucher Transactions", "Ledger Statements"] },
-        { group: "Setup", links: ["Ledger Setup", "Posting Definitions"] }
-      ],
-      "Accounts Receivable": [
-        { group: "Common", links: ["All Customers", "Free Text Invoices", "Customer Payments"] },
-        { group: "Reports", links: ["Customer Aging Report", "Customer Statistics"] }
-      ],
-      "Accounts Payable": [
-        { group: "Common", links: ["All Vendors", "Vendor Invoices", "Payment Journals"] },
-        { group: "Reports", links: ["Vendor Aging Report"] }
-      ],
-      "Procurement & Sourcing": [
-        { group: "Common", links: ["All Purchase Orders", "Purchase Requisitions", "Requests for Quotations"] }
-      ],
-      "Inventory Management": [
-        { group: "Common", links: ["On-hand Inventory", "Item Master", "Transfer Orders"] }
-      ]
-    };
-
-    // Render Material Request (MR) Module
-    function renderMaterialRequestModule() {
-      const contentArea = document.getElementById('axContentArea');
-      const requesterDefault = document.getElementById('headerDisplayName').innerText || 'Bayu Adi Ananta';
-
-      contentArea.innerHTML = `
-        <div class="mr-container">
-          <!-- Header Info Card -->
-          <div class="mr-card">
-            <div class="mr-card-title">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <span>Header Material Request (MR)</span>
-            </div>
-            
-            <form id="mrHeaderForm" onsubmit="return false;">
-              <div class="mr-form-grid">
-                <div class="form-group">
-                  <label>Jenis Anggaran (Budget Type)</label>
-                  <div class="budget-type-wrapper">
-                    <label class="radio-badge">
-                      <input type="radio" name="mrBudgetType" value="OPEX" checked>
-                      <span>OPEX</span>
-                    </label>
-                    <label class="radio-badge">
-                      <input type="radio" name="mrBudgetType" value="CAPEX">
-                      <span>CAPEX</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="mrDepartment">Department</label>
-                  <select id="mrDepartment">
-                    <option value="IT">IT & Infrastructure</option>
-                    <option value="FINANCE">Finance & Accounting</option>
-                    <option value="HR">Human Resources</option>
-                    <option value="OPS">Operations & Supply Chain</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="mrRequester">Requester</label>
-                  <input type="text" id="mrRequester" value="${requesterDefault}">
-                </div>
-
-                <div class="form-group">
-                  <label for="mrPriority">Priority Level</label>
-                  <select id="mrPriority">
-                    <option value="Normal">Normal</option>
-                    <option value="High">High</option>
-                    <option value="Urgent">Urgent</option>
-                  </select>
-                </div>
-
-                <div class="form-group" style="grid-column: span 2;">
-                  <label for="mrDescription">Purpose / Justification</label>
-                  <input type="text" id="mrDescription" placeholder="Alasan kebutuhan material...">
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <!-- Items GridView Card -->
-          <div class="mr-card" style="flex: 1; display: flex; flex-direction: column;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <div class="mr-card-title" style="margin-bottom: 0;">
-                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                <span>Item Lines (GridView)</span>
-              </div>
-              <button type="button" class="btn-action btn-add-row" id="btnAddMrRow">
-                + Tambah Item
-              </button>
-            </div>
-
-            <div class="gridview-container" style="flex: 1;">
-              <table class="mr-table" id="mrGridTable">
-                <thead>
-                  <tr>
-                    <th style="width: 40px;">#</th>
-                    <th>Nama / Deskripsi Barang</th>
-                    <th style="width: 90px;">Qty</th>
-                    <th style="width: 110px;">Satuan</th>
-                    <th style="width: 160px;">Est. Harga Satuan (Rp)</th>
-                    <th style="width: 160px;">Total (Rp)</th>
-                    <th style="width: 60px; text-align: center;">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="mrGridBody"></tbody>
-                <tfoot>
-                  <tr class="mr-summary-row">
-                    <td colspan="5" style="text-align: right; padding-right: 16px;">Grand Total Estimasi:</td>
-                    <td id="mrGrandTotal">Rp 0</td>
-                    <td></td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
-            <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
-              <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 10px 24px;">Submit Material Request</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      initMrGridEvents();
-    }
-
     // GridView Logic
     function initMrGridEvents() {
       const gridBody = document.getElementById('mrGridBody');
       const btnAdd = document.getElementById('btnAddMrRow');
 
-      function addRow(itemName = '', qty = 1, unit = 'Pcs', price = 0) {
+      function addRow(itemName = '', purpose = '', qty = 1, unit = 'Pcs', price = 0) {
         const rowCount = gridBody.rows.length + 1;
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
           <td>${rowCount}</td>
           <td><input type="text" class="item-name" placeholder="Nama barang..." value="${itemName}"></td>
+          <td><input type="text" class="item-purpose" placeholder="Alasan kebutuhan..." value="${purpose}"></td>
           <td><input type="number" class="item-qty" min="1" value="${qty}"></td>
           <td>
             <select class="item-unit">
@@ -783,69 +703,33 @@
 
       btnAdd.addEventListener('click', () => addRow());
 
-      // Initial Rows
-      addRow('Laptop Workstation Core i7', 1, 'Unit', 15000000);
-      addRow('Kertas HVS A4 80gr', 5, 'Box', 250000);
+      // Row Awal
+      addRow('Laptop Workstation Core i7', 'Kebutuhan Project Developer', 5, 'Unit', 15000000);
 
-      // Submit Form
+      // Submit Form Validation
       document.getElementById('btnSubmitMR').addEventListener('click', () => {
         const budgetType = document.querySelector('input[name="mrBudgetType"]:checked').value;
-        const desc = document.getElementById('mrDescription').value.trim();
+        const rows = document.querySelectorAll('#mrGridBody tr');
 
-        if (!desc) {
-          alert('Mohon isi Purpose / Justification MR terlebih dahulu!');
+        if (rows.length === 0) {
+          alert('Harap tambahkan minimal 1 item kebutuhan!');
+          return;
+        }
+
+        let isPurposeFilled = true;
+        rows.forEach(r => {
+          const purposeVal = r.querySelector('.item-purpose').value.trim();
+          if (!purposeVal) isPurposeFilled = false;
+        });
+
+        if (!isPurposeFilled) {
+          alert('Mohon lengkapi Purpose / Justification untuk seluruh item pada tabel!');
           return;
         }
 
         alert(`Material Request (${budgetType}) berhasil disubmit!\nData telah diproses ke dalam antrean approval.`);
       });
     }
-
-    // Module Switcher
-    function renderAxModule(moduleName) {
-      document.getElementById('axCurrentModuleName').innerText = moduleName;
-
-      if (moduleName === "Material Request") {
-        renderMaterialRequestModule();
-        return;
-      }
-
-      const contentArea = document.getElementById('axContentArea');
-      const data = axMenuData[moduleName] || [];
-      
-      let html = `<div class="ax-grid-view">`;
-      data.forEach(sec => {
-        let linksHtml = sec.links.map(link => `
-          <li class="ax-link-item">
-            <a href="#" onclick="return false;"><span>${link}</span></a>
-          </li>
-        `).join('');
-
-        html += `
-          <div class="ax-group-card">
-            <div class="ax-group-header">
-              <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-              <span>${sec.group}</span>
-            </div>
-            <ul class="ax-link-list">${linksHtml}</ul>
-          </div>
-        `;
-      });
-      html += `</div>`;
-      contentArea.innerHTML = html;
-    }
-
-    // Sidebar Items Listener
-    document.querySelectorAll('#axModuleList .ax-module-item').forEach(item => {
-      item.addEventListener('click', () => {
-        document.querySelectorAll('#axModuleList .ax-module-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        renderAxModule(item.getAttribute('data-module'));
-      });
-    });
-
-    // Default Load Module
-    renderAxModule('Material Request');
 
     // Window Management & Resize/Drag Control
     document.querySelectorAll('.window').forEach(win => {
@@ -1037,7 +921,7 @@
       });
     });
 
-    // DOM Elements
+    // DOM Elements & Event Handlers
     const loginForm = document.getElementById('loginForm');
     const btnLogin = document.getElementById('btnLogin');
     const errorMessage = document.getElementById('error-message');
@@ -1060,7 +944,7 @@
 
     let likes = 1;
 
-    // Profile Card Toggle
+    // Toggle Profile Popup
     userBadgeToggle.addEventListener('click', (e) => {
       e.stopPropagation();
       const isVisible = hfProfileCard.style.display === 'block';
@@ -1079,7 +963,7 @@
       likeCount.innerText = likes;
     });
 
-    // Update User Profile
+    // Sync User Profile
     function updateUserData(displayName, username) {
       const uname = username || 'User';
       const dName = displayName || uname;
@@ -1092,6 +976,9 @@
       cardDisplayName.innerText = dName;
       cardUsernameTag.innerText = uname;
       cardAvatarImg.src = avatarUrl;
+
+      const mrReq = document.getElementById('mrRequester');
+      if (mrReq) mrReq.value = dName;
     }
 
     function showHomeWindow(displayName, username) {
@@ -1102,11 +989,11 @@
       homeWindow.style.zIndex = activeZIndex;
 
       updateUserData(displayName, username);
-      renderMaterialRequestModule(); // Reload MR dengan nama user baru
     }
 
-    // Auto Login Check
+    // Auto Login Session Check
     window.addEventListener('DOMContentLoaded', () => {
+      initMrGridEvents();
       const savedUser = localStorage.getItem('userSession');
       if (savedUser) {
         const userData = JSON.parse(savedUser);
@@ -1114,7 +1001,7 @@
       }
     });
 
-    // Submit Login
+    // Login Form
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
