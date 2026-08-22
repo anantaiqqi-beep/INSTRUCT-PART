@@ -11,6 +11,15 @@
       padding: 0;
     }
 
+    /* Mencegah Teks Terpilih Saat Resize / Drag Window */
+    body.resizing-active, 
+    body.resizing-active * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+
     body {
       background-color: #f0f2f5;
       font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
@@ -20,38 +29,16 @@
       position: relative;
     }
 
-    body.resizing-active, 
-    body.resizing-active * {
-      user-select: none !important;
-      -webkit-user-select: none !important;
-    }
-
-    #taskbar-container {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      display: flex;
-      flex-direction: column-reverse;
-      gap: 8px;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    #taskbar-container .window {
-      pointer-events: auto;
-    }
-
     /* Window Base */
     .window {
       position: absolute;
       background: #ece7f8;
-      border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: top 0.2s ease, left 0.2s ease, width 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
     }
 
     .window.dragging, .window.resizing {
@@ -60,32 +47,32 @@
 
     #loginWindow {
       top: 15%; left: 35%;
-      width: 380px; height: 450px;
-      min-width: 320px; min-height: 350px;
+      width: 380px; height: 430px;
+      min-width: 300px; min-height: 320px;
       z-index: 100;
     }
 
     #homeWindow {
       top: 4%; left: 5%;
-      width: 1240px; height: 750px;
-      min-width: 900px; min-height: 550px;
+      width: 1200px; height: 720px;
+      min-width: 850px; min-height: 500px;
       display: none; z-index: 101;
     }
 
-    /* Resize Handles */
-    .resize-handle { position: absolute; z-index: 5; }
-    .resize-handle.top    { top: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
-    .resize-handle.bottom { bottom: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
-    .resize-handle.left   { top: 10px; bottom: 10px; left: 0; width: 5px; cursor: ew-resize; }
-    .resize-handle.right  { top: 10px; bottom: 10px; right: 0; width: 5px; cursor: ew-resize; }
-    .resize-handle.top-left     { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
-    .resize-handle.top-right    { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
-    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
-    .resize-handle.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
+    /* Resize Handles untuk Window Panel */
+    .resize-handle { position: absolute; z-index: 99; }
+    .resize-handle.top    { top: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
+    .resize-handle.bottom { bottom: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
+    .resize-handle.left   { top: 10px; bottom: 10px; left: 0; width: 6px; cursor: ew-resize; }
+    .resize-handle.right  { top: 10px; bottom: 10px; right: 0; width: 6px; cursor: ew-resize; }
+    .resize-handle.top-left     { top: 0; left: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
+    .resize-handle.top-right    { top: 0; right: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
+    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 12px; height: 12px; cursor: nesw-resize; z-index: 100; }
+    .resize-handle.bottom-right { bottom: 0; right: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
 
-    /* Header */
+    /* Header Window */
     .window-header {
-      height: 44px; user-select: none;
+      height: 42px; user-select: none;
       display: flex; justify-content: space-between; align-items: center;
       padding-left: 12px; position: relative; z-index: 10; background: transparent;
     }
@@ -105,12 +92,11 @@
       width: 26px; height: 26px; border-radius: 50%; object-fit: cover;
       border: 1px solid rgba(0,0,0,0.15); background-color: #ffd166;
     }
-    .user-header-info { display: flex; flex-direction: column; line-height: 1.1; }
     .user-display-name { font-size: 13px; font-weight: 700; color: #0f172a; }
 
     .win-controls { display: flex; height: 100%; align-items: center; z-index: 12; }
     .win-btn {
-      width: 46px; height: 100%; border: none; background: transparent;
+      width: 44px; height: 100%; border: none; background: transparent;
       outline: none; display: flex; justify-content: center; align-items: center;
       cursor: pointer; transition: background-color 0.15s ease;
     }
@@ -118,20 +104,19 @@
     .win-btn:hover { background-color: rgba(0, 0, 0, 0.08); }
     .win-btn.close-btn:hover { background-color: #c42b1c; }
     .win-btn.close-btn:hover svg { stroke: #ffffff; }
-    .win-btn.close-btn { border-top-right-radius: 12px; }
     .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.12); }
     .win-btn.logout-btn svg { stroke: #c42b1c; }
 
-    /* Window Body Base */
+    /* Window Body */
     .window-body {
       flex: 1; display: flex; overflow: hidden; background: #ffffff;
-      margin: 0 8px 8px 8px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.08);
+      margin: 0 6px 6px 6px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08);
       position: relative; z-index: 8;
     }
 
     /* LOGIN STYLES */
     #loginWindow .window-body { padding: 24px; flex-direction: column; justify-content: center; background: #fcfbfe; }
-    .login-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #1a1a1a; text-align: center; }
+    .login-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #1a1a1a; text-align: center; }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
     .form-group input, .form-group select {
@@ -150,23 +135,9 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       padding: 10px 24px; border-radius: 50px; background: #0284c7; color: #ffffff;
       border: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); display: none; align-items: center;
-      gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; z-index: 50;
+      gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; z-index: 50;
     }
 
-    /* PROFILE POPUP CARD */
-    #hfProfileCard {
-      position: absolute; top: 48px; left: 12px; width: 280px; background: #ffffff;
-      border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); border: 1px solid rgba(0,0,0,0.1);
-      overflow: hidden; display: none; z-index: 2000;
-    }
-    .hf-banner { height: 50px; background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
-    .hf-body { padding: 0 16px 16px 16px; position: relative; }
-    .hf-avatar-wrapper { position: relative; margin-top: -25px; margin-bottom: 8px; }
-    .hf-avatar { width: 50px; height: 50px; border-radius: 50%; border: 3px solid #ffffff; background-color: #ffd166; }
-    .hf-display-name { font-size: 15px; font-weight: 700; color: #0f172a; }
-
-    .window.minimized { position: relative !important; top: auto !important; left: auto !important; width: 220px !important; height: 40px !important; border-radius: 8px; }
-    .window.minimized .window-body, .window.minimized .resize-handle, .window.minimized #hfProfileCard { display: none !important; }
     .window.maximized { top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0; }
     .window.maximized .resize-handle { display: none !important; }
 
@@ -231,7 +202,7 @@
     }
     .excel-table tr:hover td { background-color: #f9fafb; }
 
-    /* Column Resizer Handle */
+    /* Kolom Resizer Handle */
     .col-resizer {
       position: absolute; right: 0; top: 0; bottom: 0; width: 5px;
       cursor: col-resize; user-select: none; z-index: 10;
@@ -267,7 +238,6 @@
     <div class="window-header">
       <div class="window-title">Login Panel</div>
       <div class="win-controls">
-        <button class="win-btn btn-minimize" title="Minimize"><svg viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6"/></svg></button>
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
       </div>
@@ -299,9 +269,9 @@
     <div class="window-header">
       <div class="window-title" id="homeHeaderTitle">
         <div class="user-header-badge" id="userBadgeToggle">
-          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=ConsoleAX" alt="User Avatar" class="user-avatar-small" id="headerAvatarImg">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=ConsoleAX" alt="User Avatar" class="user-avatar-small">
           <div class="user-header-info">
-            <span class="user-display-name" id="headerDisplayName">Console AX 2012</span>
+            <span class="user-display-name">Console AX 2012</span>
           </div>
         </div>
       </div>
@@ -310,19 +280,8 @@
         <button class="win-btn logout-btn" id="btnLogout" title="Logout">
           <svg viewBox="0 0 12 12"><path d="M 4.5 1.5 L 2 1.5 C 1.5 1.5 1 2 1 2.5 L 1 9.5 C 1 10 1.5 10.5 2 10.5 L 4.5 10.5" /><line x1="5.5" y1="6" x2="11" y2="6" /><polyline points="8.5 3.5 11 6 8.5 8.5" /></svg>
         </button>
-        <button class="win-btn btn-minimize" title="Minimize"><svg viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6"/></svg></button>
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
-      </div>
-
-      <div id="hfProfileCard">
-        <div class="hf-banner"></div>
-        <div class="hf-body">
-          <div class="hf-avatar-wrapper">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=ConsoleAX" alt="Avatar" class="hf-avatar" id="cardAvatarImg">
-          </div>
-          <div class="hf-display-name" id="cardDisplayName">Console AX 2012</div>
-        </div>
       </div>
     </div>
 
@@ -453,11 +412,9 @@
   </div>
 
   <button id="openHomeBtn" title="Buka Window HOME">
-    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Home</span>
   </button>
-
-  <div id="taskbar-container"></div>
 
   <script>
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwARJAXmtGqvlV4-oicW_HBUiBz_JvYHxLMjl23LoxtFOSvAk0EUxpYIJvPC_OYaI0n/exec";
@@ -466,6 +423,136 @@
     const iconRestoreSVG = `<rect x="3.5" y="1.5" width="7" height="7" rx="1.5" /><rect x="1.5" y="3.5" width="7" height="7" rx="1.5" style="fill: #ece7f8;" />`;
 
     let activeZIndex = 100;
+
+    // --- Window Dragging & Resizing Engine (Tanpa Select All) ---
+    function initWindowEvents(win) {
+      const header = win.querySelector('.window-title');
+      const btnMax = win.querySelector('.btn-maximize');
+      const btnClose = win.querySelector('.btn-close');
+      const iconMax = win.querySelector('.icon-max');
+
+      let prevRect = {};
+      let isMaximized = false;
+
+      win.addEventListener('mousedown', () => {
+        activeZIndex++;
+        win.style.zIndex = activeZIndex;
+      });
+
+      // DRAGGING
+      let isDragging = false, offsetX = 0, offsetY = 0;
+      header.addEventListener('mousedown', (e) => {
+        if (isMaximized || e.target.closest('#userBadgeToggle')) return;
+        e.preventDefault();
+        document.body.classList.add('resizing-active');
+        isDragging = true;
+        win.classList.add('dragging');
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+      });
+
+      // RESIZING
+      let isResizing = false, currentHandle = null, startX = 0, startY = 0, startW = 0, startH = 0, startL = 0, startT = 0;
+      win.querySelectorAll('.resize-handle').forEach(handle => {
+        handle.addEventListener('mousedown', (e) => {
+          if (isMaximized) return;
+          e.preventDefault();
+          e.stopPropagation();
+          document.body.classList.add('resizing-active');
+          isResizing = true;
+          win.classList.add('resizing');
+          currentHandle = handle;
+
+          startX = e.clientX; startY = e.clientY;
+          startW = win.offsetWidth; startH = win.offsetHeight;
+          startL = win.offsetLeft; startT = win.offsetTop;
+        });
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          e.preventDefault();
+          let newX = e.clientX - offsetX;
+          let newY = e.clientY - offsetY;
+          win.style.left = `${Math.max(0, Math.min(newX, window.innerWidth - win.offsetWidth))}px`;
+          win.style.top = `${Math.max(0, Math.min(newY, window.innerHeight - win.offsetHeight))}px`;
+        } else if (isResizing && currentHandle) {
+          e.preventDefault();
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+
+          if (currentHandle.classList.contains('right')) {
+            win.style.width = Math.max(300, startW + dx) + 'px';
+          }
+          if (currentHandle.classList.contains('bottom')) {
+            win.style.height = Math.max(250, startH + dy) + 'px';
+          }
+          if (currentHandle.classList.contains('left')) {
+            const w = Math.max(300, startW - dx);
+            if (w > 300) { win.style.width = w + 'px'; win.style.left = (startL + dx) + 'px'; }
+          }
+          if (currentHandle.classList.contains('top')) {
+            const h = Math.max(250, startH - dy);
+            if (h > 250) { win.style.height = h + 'px'; win.style.top = (startT + dy) + 'px'; }
+          }
+          if (currentHandle.classList.contains('bottom-right')) {
+            win.style.width = Math.max(300, startW + dx) + 'px';
+            win.style.height = Math.max(250, startH + dy) + 'px';
+          }
+          if (currentHandle.classList.contains('bottom-left')) {
+            const w = Math.max(300, startW - dx);
+            if (w > 300) { win.style.width = w + 'px'; win.style.left = (startL + dx) + 'px'; }
+            win.style.height = Math.max(250, startH + dy) + 'px';
+          }
+          if (currentHandle.classList.contains('top-right')) {
+            win.style.width = Math.max(300, startW + dx) + 'px';
+            const h = Math.max(250, startH - dy);
+            if (h > 250) { win.style.height = h + 'px'; win.style.top = (startT + dy) + 'px'; }
+          }
+          if (currentHandle.classList.contains('top-left')) {
+            const w = Math.max(300, startW - dx);
+            if (w > 300) { win.style.width = w + 'px'; win.style.left = (startL + dx) + 'px'; }
+            const h = Math.max(250, startH - dy);
+            if (h > 250) { win.style.height = h + 'px'; win.style.top = (startT + dy) + 'px'; }
+          }
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDragging || isResizing) {
+          isDragging = false;
+          isResizing = false;
+          currentHandle = null;
+          win.classList.remove('dragging', 'resizing');
+          document.body.classList.remove('resizing-active');
+        }
+      });
+
+      function saveCurrentState() {
+        if (!isMaximized) {
+          prevRect = { top: win.style.top || win.offsetTop + "px", left: win.style.left || win.offsetLeft + "px", width: win.style.width || win.offsetWidth + "px", height: win.style.height || win.offsetHeight + "px" };
+        }
+      }
+
+      if (btnMax) btnMax.addEventListener('click', () => {
+        if (isMaximized) {
+          win.classList.remove('maximized'); win.style.top = prevRect.top; win.style.left = prevRect.left; win.style.width = prevRect.width; win.style.height = prevRect.height;
+          if (iconMax) iconMax.innerHTML = iconMaximizeSVG; isMaximized = false;
+        } else {
+          saveCurrentState(); win.classList.add('maximized');
+          if (iconMax) iconMax.innerHTML = iconRestoreSVG; isMaximized = true;
+        }
+      });
+
+      if (btnClose) btnClose.addEventListener('click', () => {
+        if (win.id === 'loginWindow') {
+          win.style.display = 'none';
+        } else {
+          win.style.display = 'none';
+          document.getElementById('openHomeBtn').style.display = 'flex';
+        }
+      });
+    }
 
     // --- Column Resizing Engine ---
     function initColumnResizers() {
@@ -476,6 +563,7 @@
         let startX, startWidth;
 
         resizer.addEventListener('mousedown', (e) => {
+          e.preventDefault();
           e.stopPropagation();
           startX = e.clientX;
           startWidth = th.offsetWidth;
@@ -682,71 +770,7 @@
 
     document.getElementById('btnRefreshList').addEventListener('click', fetchMRListData);
 
-    // --- Window Controls & Dragging ---
-    document.querySelectorAll('.window').forEach(win => {
-      const header = win.querySelector('.window-title');
-      const btnMin = win.querySelector('.btn-minimize');
-      const btnMax = win.querySelector('.btn-maximize');
-      const btnClose = win.querySelector('.btn-close');
-      const iconMax = win.querySelector('.icon-max');
-
-      let prevRect = {};
-      let isMaximized = false, isMinimized = false;
-
-      win.addEventListener('mousedown', () => {
-        activeZIndex++; win.style.zIndex = activeZIndex;
-      });
-
-      let isDragging = false, offsetX = 0, offsetY = 0;
-      header.addEventListener('mousedown', (e) => {
-        if (isMaximized || isMinimized || e.target.closest('#userBadgeToggle')) return;
-        e.preventDefault();
-        document.body.classList.add('resizing-active');
-        isDragging = true; win.classList.add('dragging');
-        offsetX = e.clientX - win.offsetLeft; offsetY = e.clientY - win.offsetTop;
-      });
-
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        let newX = e.clientX - offsetX; let newY = e.clientY - offsetY;
-        win.style.left = `${Math.max(0, Math.min(newX, window.innerWidth - win.offsetWidth))}px`;
-        win.style.top = `${Math.max(0, Math.min(newY, window.innerHeight - win.offsetHeight))}px`;
-      });
-
-      document.addEventListener('mouseup', () => {
-        if (isDragging) { isDragging = false; win.classList.remove('dragging'); document.body.classList.remove('resizing-active'); }
-      });
-
-      function saveCurrentState() {
-        if (!isMaximized && !isMinimized) {
-          prevRect = { top: win.style.top || win.offsetTop + "px", left: win.style.left || win.offsetLeft + "px", width: win.style.width || win.offsetWidth + "px", height: win.style.height || win.offsetHeight + "px" };
-        }
-      }
-
-      if(btnMin) btnMin.addEventListener('click', () => {
-        saveCurrentState(); isMinimized = true; isMaximized = false;
-        win.classList.remove('maximized'); win.classList.add('minimized');
-        document.getElementById('taskbar-container').appendChild(win);
-      });
-
-      if(btnMax) btnMax.addEventListener('click', () => {
-        if (isMinimized) { isMinimized = false; win.classList.remove('minimized'); document.body.appendChild(win); }
-        if (isMaximized) {
-          win.classList.remove('maximized'); win.style.top = prevRect.top; win.style.left = prevRect.left; win.style.width = prevRect.width; win.style.height = prevRect.height;
-          if(iconMax) iconMax.innerHTML = iconMaximizeSVG; isMaximized = false;
-        } else {
-          saveCurrentState(); win.classList.add('maximized');
-          if(iconMax) iconMax.innerHTML = iconRestoreSVG; isMaximized = true;
-        }
-      });
-
-      if(btnClose) btnClose.addEventListener('click', () => {
-        if (win.id === 'loginWindow') win.classList.add('minimized');
-        else { win.style.display = 'none'; document.getElementById('openHomeBtn').style.display = 'flex'; }
-      });
-    });
-
-    // Login Form Processing
+    // --- Login Form Handler ---
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const userVal = document.getElementById('username').value.trim();
@@ -759,7 +783,7 @@
       btnLogin.disabled = true;
 
       try {
-        const response = await fetch(`${APP_SCRIPT_URL}?action=login&token=${encodeURIComponent(userVal + passVal)}`);
+        const response = await fetch(`${APP_SCRIPT_URL}?action=login&username=${encodeURIComponent(userVal)}&password=${encodeURIComponent(passVal)}`);
         const result = await response.json();
 
         if (result.success) {
@@ -790,8 +814,9 @@
       document.getElementById('loginWindow').style.display = 'flex';
     });
 
-    // Init Logic on Load
+    // Init Logic
     window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.window').forEach(win => initWindowEvents(win));
       initExcelGrid();
       initColumnResizers();
     });
