@@ -218,6 +218,19 @@
     .btn-delete-row { background: transparent; color: #ef4444; border: none; font-size: 16px; cursor: pointer; width: 100%; height: 100%; }
     .btn-delete-row:hover { color: #dc2626; background: #fee2e2; }
 
+    /* Badge Status Styling */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .status-pending { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+    .status-approved { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .status-rejected { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
     .ax-footer {
       height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0;
       display: flex; align-items: center; justify-content: space-between;
@@ -738,6 +751,13 @@
           tbody.innerHTML = '';
           result.data.forEach((row, idx) => {
             const tr = document.createElement('tr');
+            
+            // Format Badge Status berdasarkan nilainya
+            const statusVal = row.status || 'Pending';
+            let statusClass = 'status-pending';
+            if (statusVal.toLowerCase() === 'approved') statusClass = 'status-approved';
+            if (statusVal.toLowerCase() === 'rejected') statusClass = 'status-rejected';
+
             tr.innerHTML = `
               <td style="text-align: center; padding: 6px; font-weight: 600;">${row.no || (idx + 1)}</td>
               <td style="padding: 6px 10px;">${row.kodeBarang || ''}</td>
@@ -747,7 +767,9 @@
               <td style="padding: 6px 10px;">Rp ${(parseFloat(row.harga)||0).toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px; font-weight: 600;">Rp ${(parseFloat(row.total)||0).toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px;">${row.purpose || ''}</td>
-              <td style="padding: 6px 10px;">${row.status || 'Pending'}</td>
+              <td style="padding: 6px 10px; text-align: center;">
+                <span class="status-badge ${statusClass}">${statusVal}</span>
+              </td>
             `;
             tbody.appendChild(tr);
           });
