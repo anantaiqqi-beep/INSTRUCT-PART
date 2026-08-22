@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +7,60 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg-body: #f0f2f5;
+      --win-bg: #ece7f8;
+      --win-border: rgba(0, 0, 0, 0.2);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: #94a3b8;
+      --table-header-bg: #f3f4f6;
+      --table-border: #d1d5db;
+      --table-cell-border: #e5e7eb;
+      --table-bg: #ffffff;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --topbar-bg: #ffffff;
+    }
+
+    body.dark-theme {
+      --bg-body: #0f172a;
+      --win-bg: #1e293b;
+      --win-border: rgba(255, 255, 255, 0.1);
+      --card-bg: #334155;
+      --card-border: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --sidebar-bg: #020617;
+      --sidebar-text: #94a3b8;
+      --table-header-bg: #1e293b;
+      --table-border: #475569;
+      --table-cell-border: #334155;
+      --table-bg: #1e293b;
+      --input-bg: #0f172a;
+      --input-border: #475569;
+      --topbar-bg: #1e293b;
+    }
+
     body.resizing-active, body.resizing-active * {
       user-select: none !important;
       -webkit-user-select: none !important;
     }
 
     body {
-      background-color: #f0f2f5;
+      background-color: var(--bg-body);
       font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
       height: 100vh; width: 100vw; overflow: hidden; position: relative;
+      color: var(--text-main);
+      transition: background-color 0.3s ease;
     }
 
     .window {
-      position: absolute; background: #ece7f8; border-radius: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+      position: absolute; background: var(--win-bg); border-radius: 10px;
+      border: 1px solid var(--win-border); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
       display: flex; flex-direction: column; overflow: hidden;
     }
 
@@ -45,28 +85,28 @@
     .resize-handle.bottom-right { bottom: 0; right: 0; width: 12px; height: 12px; cursor: nwse-resize; z-index: 100; }
 
     .window-header { height: 42px; user-select: none; display: flex; justify-content: space-between; align-items: center; padding-left: 12px; position: relative; z-index: 10; background: transparent; }
-    .window-title { font-size: 13px; font-weight: 600; color: #1c1b1f; cursor: move; flex: 1; height: 100%; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .window-title { font-size: 13px; font-weight: 600; color: var(--text-main); cursor: move; flex: 1; height: 100%; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-header-badge { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 10px; border-radius: 20px; transition: background-color 0.2s ease; }
-    .user-header-badge:hover { background-color: rgba(0, 0, 0, 0.08); }
+    .user-header-badge:hover { background-color: rgba(150, 150, 150, 0.15); }
     .user-avatar-small { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(0,0,0,0.15); background-color: #ffd166; }
-    .user-display-name { font-size: 13px; font-weight: 700; color: #0f172a; }
+    .user-display-name { font-size: 13px; font-weight: 700; color: var(--text-main); }
 
     .win-controls { display: flex; height: 100%; align-items: center; z-index: 12; }
     .win-btn { width: 44px; height: 100%; border: none; background: transparent; outline: none; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.15s ease; }
-    .win-btn svg { width: 12px; height: 12px; stroke: #1c1b1f; stroke-width: 1.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .win-btn:hover { background-color: rgba(0, 0, 0, 0.08); }
+    .win-btn svg { width: 14px; height: 14px; stroke: var(--text-main); stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .win-btn:hover { background-color: rgba(150, 150, 150, 0.15); }
     .win-btn.close-btn:hover { background-color: #c42b1c; }
     .win-btn.close-btn:hover svg { stroke: #ffffff; }
-    .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.12); }
+    .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.15); }
     .win-btn.logout-btn svg { stroke: #c42b1c; }
 
-    .window-body { flex: 1; display: flex; overflow: hidden; background: #ffffff; margin: 0 6px 6px 6px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08); position: relative; z-index: 8; }
+    .window-body { flex: 1; display: flex; overflow: hidden; background: var(--card-bg); margin: 0 6px 6px 6px; border-radius: 6px; border: 1px solid var(--card-border); position: relative; z-index: 8; }
 
-    #loginWindow .window-body { padding: 24px; flex-direction: column; justify-content: center; background: #fcfbfe; }
-    .login-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #1a1a1a; text-align: center; }
+    #loginWindow .window-body { padding: 24px; flex-direction: column; justify-content: center; background: var(--card-bg); }
+    .login-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: var(--text-main); text-align: center; }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; background-color: #ffffff; font-family: inherit; color: #0f172a; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+    .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: 6px; font-size: 13px; outline: none; background-color: var(--input-bg); font-family: inherit; color: var(--text-main); }
     .form-group input:focus, .form-group select:focus { border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15); }
     .btn-submit { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
     .btn-submit:hover { background: #0369a1; }
@@ -77,40 +117,40 @@
     .window.maximized { top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0; }
     .window.maximized .resize-handle { display: none !important; }
 
-    .ax-layout { display: flex; width: 100%; height: 100%; background: #f8fafc; }
-    .ax-sidebar { width: 240px; background: #0f172a; color: #94a3b8; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #1e293b; }
-    .ax-sidebar-header { padding: 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; border-bottom: 1px solid #1e293b; }
+    .ax-layout { display: flex; width: 100%; height: 100%; background: var(--bg-body); }
+    .ax-sidebar { width: 240px; background: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--card-border); }
+    .ax-sidebar-header { padding: 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .ax-module-list { list-style: none; overflow-y: auto; flex: 1; }
-    .ax-module-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; border-left: 4px solid transparent; transition: all 0.15s ease; }
-    .ax-module-item:hover { background: #1e293b; color: #f8fafc; }
+    .ax-module-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--sidebar-text); cursor: pointer; border-left: 4px solid transparent; transition: all 0.15s ease; }
+    .ax-module-item:hover { background: rgba(255, 255, 255, 0.08); color: #f8fafc; }
     .ax-module-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 
-    .ax-main { flex: 1; display: flex; flex-direction: column; background: #f8fafc; overflow: hidden; }
-    .ax-topbar { height: 44px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-    .ax-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; }
-    .ax-breadcrumb-current { font-weight: 600; color: #0f172a; }
+    .ax-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-body); overflow: hidden; }
+    .ax-topbar { height: 44px; background: var(--topbar-bg); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .ax-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+    .ax-breadcrumb-current { font-weight: 600; color: var(--text-main); }
 
-    .ax-content-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; gap: 12px; font-size: 14px; text-align: center; padding: 20px; }
-    .ax-content-placeholder svg { width: 64px; height: 64px; stroke: #cbd5e1; fill: none; stroke-width: 1.5; }
+    .ax-content-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); gap: 12px; font-size: 14px; text-align: center; padding: 20px; }
+    .ax-content-placeholder svg { width: 64px; height: 64px; stroke: var(--text-muted); fill: none; stroke-width: 1.5; }
 
-    .window-content-inner { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #f8fafc; }
+    .window-content-inner { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg-body); }
 
-    .mr-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-    .mr-card-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .mr-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--card-border); padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .mr-card-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .mr-card-title svg { width: 16px; height: 16px; stroke: #0284c7; fill: none; stroke-width: 2; }
     .mr-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
 
     .budget-type-wrapper { display: flex; gap: 10px; align-items: center; margin-top: 2px; }
-    .radio-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; font-size: 12px; font-weight: 600; color: #475569; }
+    .radio-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--input-border); cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-muted); }
     .radio-badge:has(input:checked) { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
 
-    .excel-grid-container { overflow: auto; border: 1px solid #d1d5db; background: #ffffff; border-radius: 4px; box-shadow: inset 0 0 4px rgba(0,0,0,0.05); position: relative; flex: 1; }
+    .excel-grid-container { overflow: auto; border: 1px solid var(--table-border); background: var(--table-bg); border-radius: 4px; box-shadow: inset 0 0 4px rgba(0,0,0,0.05); position: relative; flex: 1; }
     .excel-table { border-collapse: collapse; width: 100%; font-family: "Segoe UI", Arial, sans-serif; font-size: 12px; table-layout: fixed; }
-    .excel-table th { background: #f3f4f6; color: #374151; font-weight: 600; text-align: left; padding: 6px 10px; border: 1px solid #d1d5db; position: relative; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .excel-table td { border: 1px solid #e5e7eb; padding: 6px 10px; background: #ffffff; position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .excel-table td input, .excel-table td select { width: 100%; height: 100%; border: none; outline: none; padding: 4px 6px; font-family: inherit; font-size: 12px; background: transparent; color: #1f2937; }
-    .excel-table td input:focus, .excel-table td select:focus { box-shadow: inset 0 0 0 2px #0284c7; background: #f0f9ff; }
-    .excel-table tr:hover td { background-color: #f9fafb; }
+    .excel-table th { background: var(--table-header-bg); color: var(--text-main); font-weight: 600; text-align: left; padding: 6px 10px; border: 1px solid var(--table-border); position: relative; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .excel-table td { border: 1px solid var(--table-cell-border); padding: 6px 10px; background: var(--table-bg); color: var(--text-main); position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .excel-table td input, .excel-table td select { width: 100%; height: 100%; border: none; outline: none; padding: 4px 6px; font-family: inherit; font-size: 12px; background: transparent; color: var(--text-main); }
+    .excel-table td input:focus, .excel-table td select:focus { box-shadow: inset 0 0 0 2px #0284c7; background: rgba(2, 132, 199, 0.08); }
+    .excel-table tr:hover td { background-color: rgba(150, 150, 150, 0.05); }
 
     .col-resizer { position: absolute; right: 0; top: 0; bottom: 0; width: 5px; cursor: col-resize; user-select: none; z-index: 10; }
     .col-resizer:hover, .col-resizer.resizing { background: #0284c7; }
@@ -123,13 +163,30 @@
     .btn-delete-row { background: transparent; color: #ef4444; border: none; font-size: 16px; cursor: pointer; width: 100%; height: 100%; }
     .btn-delete-row:hover { color: #dc2626; background: #fee2e2; }
 
-    .editable-cell { background-color: #f0f9ff !important; font-weight: 600; border: 1px dashed #0284c7 !important; padding: 0 !important; }
+    .editable-cell { background-color: rgba(2, 132, 199, 0.08) !important; font-weight: 600; border: 1px dashed #0284c7 !important; padding: 0 !important; }
 
-    .ax-footer { height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 11px; color: #64748b; }
+    .ax-footer { height: 28px; background: var(--topbar-bg); border-top: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 11px; color: var(--text-muted); }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: #22c55e; }
+
+    /* Custom Popup Modal Styling */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(2px); }
+    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; width: 360px; max-width: 90%; padding: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+    .modal-message { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; word-break: break-word; }
+    .modal-btn { padding: 8px 20px; background: #0284c7; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .modal-btn:hover { background: #0369a1; }
   </style>
 </head>
 <body>
+
+  <!-- CUSTOM MODAL POPUP -->
+  <div class="modal-overlay" id="customModal">
+    <div class="modal-card">
+      <div class="modal-title" id="modalTitle">Notification</div>
+      <div class="modal-message" id="modalMessage">Message content goes here.</div>
+      <button class="modal-btn" id="modalCloseBtn">OK</button>
+    </div>
+  </div>
 
   <!-- 1. LOGIN PANEL WINDOW -->
   <div class="window" id="loginWindow">
@@ -150,13 +207,13 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Masukkan username" required autocomplete="off">
+          <input type="text" id="username" placeholder="Enter username" required autocomplete="off">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Masukkan password" required>
+          <input type="password" id="password" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn-submit" id="btnLogin">Masuk</button>
+        <button type="submit" class="btn-submit" id="btnLogin">Sign In</button>
         <div id="error-message"></div>
       </form>
     </div>
@@ -183,6 +240,9 @@
         <button class="win-btn logout-btn" id="btnLogout" title="Logout">
           <svg viewBox="0 0 12 12"><path d="M 4.5 1.5 L 2 1.5 C 1.5 1.5 1 2 1 2.5 L 1 9.5 C 1 10 1.5 10.5 2 10.5 L 4.5 10.5" /><line x1="5.5" y1="6" x2="11" y2="6" /><polyline points="8.5 3.5 11 6 8.5 8.5" /></svg>
         </button>
+        <button class="win-btn" id="btnThemeToggle" title="Switch Theme (Dark/Light)">
+          <svg viewBox="0 0 24 24" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
       </div>
@@ -191,7 +251,7 @@
     <div class="window-body">
       <div class="ax-layout">
         <div class="ax-sidebar">
-          <div class="ax-sidebar-header">MODULES AX 2012</div>
+          <div class="ax-sidebar-header">AX 2012 MODULES</div>
           <ul class="ax-module-list">
             <li class="ax-module-item" id="btnOpenMrForm">
               <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -217,7 +277,7 @@
 
           <div class="ax-content-placeholder">
             <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-            <p>Pilih menu pada sidebar di sebelah kiri untuk membuka Window Modul secara terpisah.</p>
+            <p>Select a module from the left sidebar to open the respective window.</p>
           </div>
 
           <div class="ax-footer">
@@ -248,17 +308,17 @@
         <div class="mr-card">
           <div class="mr-card-title">
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <span>Header Material Request (MR)</span>
+            <span>Material Request Header</span>
           </div>
           <div class="mr-form-grid">
             <div class="form-group">
-              <label>Jenis Anggaran (Budget Type)</label>
+              <label>Budget Type</label>
               <div class="budget-type-wrapper">
                 <label class="radio-badge"><input type="radio" name="mrBudgetType" value="OPEX" checked><span>OPEX</span></label>
                 <label class="radio-badge"><input type="radio" name="mrBudgetType" value="CAPEX"><span>CAPEX</span></label>
               </div>
             </div>
-            <div class="form-group"><label>Department</label><select id="mrDepartment"><option value="IT">IT & Infrastructure</option><option value="FINANCE">Finance & Accounting</option><option value="WAREHOUSE">Warehouse</option><option value="SPAREPARTS">Spareparts</option><option value="MAINTENANCE">Maintenance</option><option value="PRODUKSI">Produksi</option></select></div>
+            <div class="form-group"><label>Department</label><select id="mrDepartment"><option value="IT">IT & Infrastructure</option><option value="FINANCE">Finance & Accounting</option><option value="WAREHOUSE">Warehouse</option><option value="SPAREPARTS">Spareparts</option><option value="MAINTENANCE">Maintenance</option><option value="PRODUKSI">Production</option></select></div>
             <div class="form-group"><label>Requester</label><input type="text" id="mrRequester" value="Console AX 2012"></div>
             <div class="form-group"><label>Priority Level</label><select id="mrPriority"><option value="Normal">Normal</option><option value="High">High</option><option value="Urgent">Urgent</option></select></div>
           </div>
@@ -270,7 +330,7 @@
               <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
               <span>Item Lines (Excel Style GridView)</span>
             </div>
-            <button type="button" class="btn-action btn-add-row" id="btnAddRow">+ Tambah Row</button>
+            <button type="button" class="btn-action btn-add-row" id="btnAddRow">+ Add Row</button>
           </div>
 
           <div class="excel-grid-container">
@@ -278,16 +338,16 @@
               <thead>
                 <tr>
                   <th style="width: 40px; text-align: center;">No<div class="col-resizer"></div></th>
-                  <th style="width: 130px;">Tanggal MR<div class="col-resizer"></div></th>
-                  <th style="width: 130px;">Kode Barang<div class="col-resizer"></div></th>
-                  <th style="width: 220px;">Nama Barang<div class="col-resizer"></div></th>
+                  <th style="width: 130px;">MR Date<div class="col-resizer"></div></th>
+                  <th style="width: 130px;">Item Code<div class="col-resizer"></div></th>
+                  <th style="width: 220px;">Item Name<div class="col-resizer"></div></th>
                   <th style="width: 80px;">Quantity<div class="col-resizer"></div></th>
-                  <th style="width: 100px;">Satuan<div class="col-resizer"></div></th>
-                  <th style="width: 120px;">Harga<div class="col-resizer"></div></th>
+                  <th style="width: 100px;">Unit<div class="col-resizer"></div></th>
+                  <th style="width: 120px;">Price<div class="col-resizer"></div></th>
                   <th style="width: 130px;">Total<div class="col-resizer"></div></th>
                   <th style="width: 220px;">Purpose<div class="col-resizer"></div></th>
                   <th style="width: 110px;">Status<div class="col-resizer"></div></th>
-                  <th style="width: 45px; text-align: center;">Aksi</th>
+                  <th style="width: 50px; text-align: center;">Action</th>
                 </tr>
               </thead>
               <tbody id="excelGridBody"></tbody>
@@ -295,7 +355,7 @@
           </div>
 
           <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="excelGrandTotal">Grand Total: Rp 0</div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-main);" id="excelGrandTotal">Grand Total: Rp 0</div>
             <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 8px 20px;">Submit</button>
           </div>
         </div>
@@ -303,7 +363,7 @@
     </div>
   </div>
 
-  <!-- 4. INSTANCE WINDOW: MR LIST DATA (14 KOLOM LENGKAP SEPERTI SHEETS) -->
+  <!-- 4. INSTANCE WINDOW: MR LIST DATA -->
   <div class="window app-instance-window" id="mrListWindow">
     <div class="resize-handle top"></div><div class="resize-handle bottom"></div>
     <div class="resize-handle left"></div><div class="resize-handle right"></div>
@@ -337,23 +397,23 @@
               <thead>
                 <tr>
                   <th style="width: 40px; text-align: center;">No<div class="col-resizer"></div></th>
-                  <th style="width: 100px;">Tanggal MR<div class="col-resizer"></div></th>
+                  <th style="width: 100px;">MR Date<div class="col-resizer"></div></th>
                   <th style="width: 90px;">Budget Type<div class="col-resizer"></div></th>
-                  <th style="width: 120px;">Departements<div class="col-resizer"></div></th>
+                  <th style="width: 120px;">Departments<div class="col-resizer"></div></th>
                   <th style="width: 120px;">Requester<div class="col-resizer"></div></th>
                   <th style="width: 100px;">Priority Level<div class="col-resizer"></div></th>
-                  <th style="width: 110px;">Kode Barang<div class="col-resizer"></div></th>
-                  <th style="width: 180px;">Nama Barang<div class="col-resizer"></div></th>
+                  <th style="width: 110px;">Item Code<div class="col-resizer"></div></th>
+                  <th style="width: 180px;">Item Name<div class="col-resizer"></div></th>
                   <th style="width: 90px; color: #0284c7;">Quantity (Edit)<div class="col-resizer"></div></th>
-                  <th style="width: 80px;">Satuan<div class="col-resizer"></div></th>
-                  <th style="width: 110px;">Harga<div class="col-resizer"></div></th>
+                  <th style="width: 80px;">Unit<div class="col-resizer"></div></th>
+                  <th style="width: 110px;">Price<div class="col-resizer"></div></th>
                   <th style="width: 120px;">Total<div class="col-resizer"></div></th>
                   <th style="width: 180px;">Purpose<div class="col-resizer"></div></th>
                   <th style="width: 120px; color: #0284c7;">Status (Edit)<div class="col-resizer"></div></th>
                 </tr>
               </thead>
               <tbody id="mrListBody">
-                <tr><td colspan="14" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>
+                <tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading data from Google Sheets...</td></tr>
               </tbody>
             </table>
           </div>
@@ -393,14 +453,14 @@
               <thead>
                 <tr>
                   <th style="width: 50px; text-align: center;">No<div class="col-resizer"></div></th>
-                  <th style="width: 150px;">Kode Barang<div class="col-resizer"></div></th>
-                  <th style="width: 250px;">Nama Barang<div class="col-resizer"></div></th>
-                  <th style="width: 200px;">Departements<div class="col-resizer"></div></th>
+                  <th style="width: 150px;">Item Code<div class="col-resizer"></div></th>
+                  <th style="width: 250px;">Item Name<div class="col-resizer"></div></th>
+                  <th style="width: 200px;">Departments<div class="col-resizer"></div></th>
                   <th style="width: 120px;">Quantity<div class="col-resizer"></div></th>
                 </tr>
               </thead>
               <tbody id="stockListBody">
-                <tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Klik 'Load Data' untuk mengambil data dari Google Sheets.</td></tr>
+                <tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">Click 'Load Data' to fetch data from Google Sheets.</td></tr>
               </tbody>
             </table>
           </div>
@@ -409,7 +469,7 @@
     </div>
   </div>
 
-  <button id="openHomeBtn" title="Buka Window HOME">
+  <button id="openHomeBtn" title="Open HOME Window">
     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Home</span>
   </button>
@@ -418,9 +478,35 @@
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwARJAXmtGqvlV4-oicW_HBUiBz_JvYHxLMjl23LoxtFOSvAk0EUxpYIJvPC_OYaI0n/exec";
 
     const iconMaximizeSVG = `<rect x="1.5" y="1.5" width="9" height="9" rx="2" />`;
-    const iconRestoreSVG = `<rect x="3.5" y="1.5" width="7" height="7" rx="1.5" /><rect x="1.5" y="3.5" width="7" height="7" rx="1.5" style="fill: #ece7f8;" />`;
+    const iconRestoreSVG = `<rect x="3.5" y="1.5" width="7" height="7" rx="1.5" /><rect x="1.5" y="3.5" width="7" height="7" rx="1.5" style="fill: var(--win-bg);" />`;
 
     let activeZIndex = 100;
+
+    // CUSTOM MODAL POPUP FUNCTION
+    function showModal(message, title = "Notification") {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalMessage').innerText = message;
+      document.getElementById('customModal').style.display = 'flex';
+    }
+
+    document.getElementById('modalCloseBtn').addEventListener('click', () => {
+      document.getElementById('customModal').style.display = 'none';
+    });
+
+    // THEME TOGGLE (DARK/LIGHT)
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const sunSVG = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+    const moonSVG = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+
+    btnThemeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      if (document.body.classList.contains('dark-theme')) {
+        themeIcon.innerHTML = sunSVG;
+      } else {
+        themeIcon.innerHTML = moonSVG;
+      }
+    });
 
     function initWindowEvents(win) {
       const header = win.querySelector('.window-title');
@@ -586,10 +672,10 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="text-align: center; font-weight: 600; color: #64748b;" class="row-num">1</td>
+          <td style="text-align: center; font-weight: 600; color: var(--text-muted);" class="row-num">1</td>
           <td style="padding: 0;"><input type="date" class="inp-tanggal" value="${dateVal}"></td>
           <td style="padding: 0;"><input type="text" class="inp-sku" placeholder="SKU-1001" value="${sku}"></td>
-          <td style="padding: 0;"><input type="text" class="inp-name" placeholder="Nama barang..." value="${name}"></td>
+          <td style="padding: 0;"><input type="text" class="inp-name" placeholder="Item name..." value="${name}"></td>
           <td style="padding: 0;"><input type="number" class="inp-qty" min="1" value="${qty}"></td>
           <td style="padding: 0;">
             <select class="inp-unit">
@@ -601,7 +687,7 @@
           </td>
           <td style="padding: 0;"><input type="number" class="inp-price" min="0" value="${price}"></td>
           <td style="padding: 6px 10px; font-weight: 600;" class="cell-total">Rp 0</td>
-          <td style="padding: 0;"><input type="text" class="inp-purpose" placeholder="Justifikasi..." value="${purpose}"></td>
+          <td style="padding: 0;"><input type="text" class="inp-purpose" placeholder="Justification..." value="${purpose}"></td>
           <td style="padding: 0;">
             <select class="inp-status">
               <option value="Pending" ${status==='Pending'?'selected':''}>Pending</option>
@@ -609,7 +695,7 @@
               <option value="Rejected" ${status==='Rejected'?'selected':''}>Rejected</option>
             </select>
           </td>
-          <td style="text-align: center; padding: 0;"><button type="button" class="btn-delete-row" title="Hapus">&times;</button></td>
+          <td style="text-align: center; padding: 0;"><button type="button" class="btn-delete-row" title="Delete">&times;</button></td>
         `;
 
         gridBody.appendChild(tr);
@@ -650,12 +736,12 @@
       btnAddRow.addEventListener('click', () => addRow());
 
       const todayStr = new Date().toISOString().split('T')[0];
-      addRow(todayStr, 'SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
+      addRow(todayStr, 'SKU-1001', 'Workstation Laptop Core i7', 5, 'Unit', 15000000, 'Developer Project Requirement', 'Pending');
 
       document.getElementById('btnSubmitMR').addEventListener('click', async () => {
         const rows = gridBody.querySelectorAll('tr');
         if (rows.length === 0) {
-          alert('Harap isi minimal 1 row item!');
+          showModal('Please fill in at least 1 item row!', 'Validation Warning');
           return;
         }
 
@@ -698,13 +784,13 @@
         });
 
         if (!isValid) {
-          alert('Harap lengkapi Tanggal MR, Kode Barang, Nama Barang, dan Purpose!');
+          showModal('Please complete MR Date, Item Code, Item Name, and Purpose fields!', 'Validation Warning');
           return;
         }
 
         const btnSubmit = document.getElementById('btnSubmitMR');
         btnSubmit.disabled = true;
-        btnSubmit.innerText = 'Menyimpan...';
+        btnSubmit.innerText = 'Saving...';
 
         try {
           const response = await fetch(APP_SCRIPT_URL, {
@@ -715,14 +801,14 @@
           const result = await response.json();
 
           if (result.success) {
-            alert('Data MR Berhasil disimpan ke MR_DATA!');
+            showModal('MR Data successfully saved to MR_DATA!', 'Success');
             gridBody.innerHTML = '';
             addRow();
           } else {
-            alert('Gagal menyimpan: ' + result.message);
+            showModal('Failed to save: ' + result.message, 'Error');
           }
         } catch (err) {
-          alert('Terjadi kesalahan koneksi.');
+          showModal('A connection error occurred.', 'Error');
           console.error(err);
         } finally {
           btnSubmit.disabled = false;
@@ -731,10 +817,9 @@
       });
     }
 
-    // --- FETCH MENAMPILKAN SELURUH 14 KOLOM DARI SHEETS "MR_DATA" ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
-      tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari MR_DATA...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading data from MR_DATA...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getMRData`);
@@ -742,7 +827,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di MR_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: var(--text-muted);">No records found in MR_DATA</td></tr>`;
             return;
           }
 
@@ -796,10 +881,10 @@
             });
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #ef4444;">Failed: ${result.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="14" style="padding: 16px; text-align: center; color: #ef4444;">Failed to fetch data from server.</td></tr>`;
       }
     }
 
@@ -808,7 +893,7 @@
       const rows = tbody.querySelectorAll('tr');
 
       if (rows.length === 0 || rows[0].getAttribute('data-row-num') === null) {
-        alert('Tidak ada data yang dapat diperbarui.');
+        showModal('No data available to update.', 'Warning');
         return;
       }
 
@@ -843,14 +928,14 @@
 
         const result = await response.json();
         if (result.success) {
-          alert('MR_DATA berhasil di-update!');
+          showModal('MR_DATA updated successfully!', 'Success');
           fetchMRListData();
           fetchStockData();
         } else {
-          alert('Gagal update: ' + result.message);
+          showModal('Update failed: ' + result.message, 'Error');
         }
       } catch (err) {
-        alert('Terjadi kesalahan koneksi.');
+        showModal('A connection error occurred.', 'Error');
         console.error(err);
       } finally {
         btnUpdate.disabled = false;
@@ -860,7 +945,7 @@
 
     async function fetchStockData() {
       const tbody = document.getElementById('stockListBody');
-      tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Memuat data STOCK_DATA...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading STOCK_DATA...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getStockData`);
@@ -868,7 +953,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di STOCK_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">No records found in STOCK_DATA</td></tr>`;
             return;
           }
 
@@ -885,10 +970,10 @@
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Failed: ${result.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #ef4444;">Failed to fetch data from server.</td></tr>`;
       }
     }
 
@@ -921,7 +1006,7 @@
       const btnLogin = document.getElementById('btnLogin');
 
       errorMessage.style.color = '#0284c7';
-      errorMessage.innerText = 'Memeriksa kredensial...';
+      errorMessage.innerText = 'Checking credentials...';
       btnLogin.disabled = true;
 
       try {
@@ -935,11 +1020,11 @@
           document.getElementById('openHomeBtn').style.display = 'none';
         } else {
           errorMessage.style.color = '#c42b1c';
-          errorMessage.innerText = result.message || 'Username atau Password salah.';
+          errorMessage.innerText = result.message || 'Invalid Username or Password.';
         }
       } catch (err) {
         errorMessage.style.color = '#c42b1c';
-        errorMessage.innerText = 'Gagal terhubung ke Google Apps Script.';
+        errorMessage.innerText = 'Failed to connect to Google Apps Script.';
       } finally {
         btnLogin.disabled = false;
       }
