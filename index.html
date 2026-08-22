@@ -308,7 +308,6 @@
             <div class="ax-breadcrumb">
               <span>Dynamics AX</span> / <span class="ax-breadcrumb-current" id="breadcrumbText">Material Request</span>
             </div>
-            <div class="ax-company-tag">Company: DAT</div>
           </div>
 
           <div class="ax-content">
@@ -327,9 +326,9 @@
                       <label class="radio-badge"><input type="radio" name="mrBudgetType" value="CAPEX"><span>CAPEX</span></label>
                     </div>
                   </div>
-                  <div class="form-group"><label>Department</label><select id="mrDepartment"><option value="IT">IT & Infrastructure</option><option value="FINANCE">Finance & Accounting</option></select></div>
+                  <div class="form-group"><label>Department</label><select id="mrDepartment"><option value="IT">IT & Infrastructure</option><option value="FINANCE">Finance & Accounting</option><option value="WAREHOUSE">Warehouse</option><option value="SPAREPARTS">Spareparts</option><option value="MAINTENANCE">Maintenance</option><option value="PRODUKSI">Produksi</option></select></div>
                   <div class="form-group"><label>Requester</label><input type="text" id="mrRequester" value="Console AX 2012"></div>
-                  <div class="form-group"><label>Priority Level</label><select id="mrPriority"><option value="Normal">Normal</option><option value="High">High</option></select></div>
+                  <div class="form-group"><label>Priority Level</label><select id="mrPriority"><option value="Normal">Normal</option><option value="High">High</option><option value="Urgent">Urgent</option></select></div>
                 </div>
               </div>
 
@@ -354,6 +353,7 @@
                         <th style="width: 120px;">Harga<div class="col-resizer"></div></th>
                         <th style="width: 130px;">Total<div class="col-resizer"></div></th>
                         <th style="width: 220px;">Purpose<div class="col-resizer"></div></th>
+                        <th style="width: 110px;">Status<div class="col-resizer"></div></th>
                         <th style="width: 45px; text-align: center;">Aksi</th>
                       </tr>
                     </thead>
@@ -363,7 +363,7 @@
 
                 <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
                   <div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="excelGrandTotal">Grand Total: Rp 0</div>
-                  <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 8px 20px;">Simpan ke Google Sheets</button>
+                  <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 8px 20px;">Submit</button>
                 </div>
               </div>
             </div>
@@ -391,10 +391,11 @@
                         <th style="width: 120px;">Harga<div class="col-resizer"></div></th>
                         <th style="width: 130px;">Total<div class="col-resizer"></div></th>
                         <th style="width: 220px;">Purpose<div class="col-resizer"></div></th>
+                        <th style="width: 110px;">Status<div class="col-resizer"></div></th>
                       </tr>
                     </thead>
                     <tbody id="mrListBody">
-                      <tr><td colspan="8" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>
+                      <tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -404,7 +405,6 @@
 
           <div class="ax-footer">
             <div class="ax-status-item"><span class="status-dot"></span><span>AOS Server Connected</span></div>
-            <div>MR Engine v2.5</div>
           </div>
         </div>
       </div>
@@ -593,7 +593,7 @@
       const gridBody = document.getElementById('excelGridBody');
       const btnAddRow = document.getElementById('btnAddRow');
 
-      function addRow(sku = '', name = '', qty = 1, unit = 'Unit', price = 0, purpose = '') {
+      function addRow(sku = '', name = '', qty = 1, unit = 'Unit', price = 0, purpose = '', status = 'Pending') {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align: center; font-weight: 600; color: #64748b;" class="row-num">1</td>
@@ -611,6 +611,13 @@
           <td><input type="number" class="inp-price" min="0" value="${price}"></td>
           <td style="padding: 6px 10px; font-weight: 600;" class="cell-total">Rp 0</td>
           <td><input type="text" class="inp-purpose" placeholder="Justifikasi..." value="${purpose}"></td>
+          <td>
+            <select class="inp-status">
+              <option value="Pending" ${status==='Pending'?'selected':''}>Pending</option>
+              <option value="Approved" ${status==='Approved'?'selected':''}>Approved</option>
+              <option value="Rejected" ${status==='Rejected'?'selected':''}>Rejected</option>
+            </select>
+          </td>
           <td style="text-align: center;"><button type="button" class="btn-delete-row" title="Hapus">&times;</button></td>
         `;
 
@@ -652,7 +659,7 @@
       btnAddRow.addEventListener('click', () => addRow());
 
       // Row Default Initial
-      addRow('SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer');
+      addRow('SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
 
       // Submit Data ke Google Sheets
       document.getElementById('btnSubmitMR').addEventListener('click', async () => {
@@ -672,11 +679,12 @@
           const unit = tr.querySelector('.inp-unit').value;
           const price = parseFloat(tr.querySelector('.inp-price').value) || 0;
           const purpose = tr.querySelector('.inp-purpose').value.trim();
+          const status = tr.querySelector('.inp-status').value;
           const total = qty * price;
 
           if (!sku || !name || !purpose) isValid = false;
 
-          items.push({ kodeBarang: sku, namaBarang: name, quantity: qty, satuan: unit, harga: price, total: total, purpose: purpose });
+          items.push({ kodeBarang: sku, namaBarang: name, quantity: qty, satuan: unit, harga: price, total: total, purpose: purpose, status: status });
         });
 
         if (!isValid) {
@@ -707,7 +715,7 @@
           console.error(err);
         } finally {
           btnSubmit.disabled = false;
-          btnSubmit.innerText = 'Simpan ke Google Sheets';
+          btnSubmit.innerText = 'Submit';
         }
       });
     }
@@ -715,7 +723,7 @@
     // --- Fetch MR List Data ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
-      tbody.innerHTML = `<tr><td colspan="8" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Memuat data dari Google Sheets...</td></tr>`;
 
       try {
         const response = await fetch(`${APP_SCRIPT_URL}?action=getMRData`);
@@ -723,7 +731,7 @@
 
         if (result.success) {
           if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di MR_DATA</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #64748b;">Belum ada data di MR_DATA</td></tr>`;
             return;
           }
 
@@ -739,14 +747,15 @@
               <td style="padding: 6px 10px;">Rp ${(parseFloat(row.harga)||0).toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px; font-weight: 600;">Rp ${(parseFloat(row.total)||0).toLocaleString('id-ID')}</td>
               <td style="padding: 6px 10px;">${row.purpose || ''}</td>
+              <td style="padding: 6px 10px;">${row.status || 'Pending'}</td>
             `;
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="8" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #ef4444;">Gagal: ${result.message}</td></tr>`;
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="8" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="padding: 16px; text-align: center; color: #ef4444;">Gagal mengambil data dari server.</td></tr>`;
       }
     }
 
