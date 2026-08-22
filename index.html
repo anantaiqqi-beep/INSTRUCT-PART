@@ -58,6 +58,38 @@
       transition: background-color 0.3s ease;
     }
 
+    /* SAP FOCUS ANIMATOR OBJECT STYLING */
+    #sapFocusIndicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 99999;
+      opacity: 0;
+      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  opacity 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    #sapFocusIndicator.active {
+      opacity: 1;
+    }
+
+    /* 4 Corner Bracket Markers (Red) */
+    .sap-corner {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: #ef4444;
+      border-style: solid;
+    }
+    .sap-corner-tl { top: -4px; left: -4px; border-width: 3px 0 0 3px; border-top-left-radius: 4px; }
+    .sap-corner-tr { top: -4px; right: -4px; border-width: 3px 3px 0 0; border-top-right-radius: 4px; }
+    .sap-corner-bl { bottom: -4px; left: -4px; border-width: 0 0 3px 3px; border-bottom-left-radius: 4px; }
+    .sap-corner-br { bottom: -4px; right: -4px; border-width: 0 3px 3px 0; border-bottom-right-radius: 4px; }
+
     .window {
       position: absolute; background: var(--win-bg); border-radius: 10px;
       border: 1px solid var(--win-border); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
@@ -147,7 +179,7 @@
     .excel-grid-container { overflow: auto; border: 1px solid var(--table-border); background: var(--table-bg); border-radius: 4px; box-shadow: inset 0 0 4px rgba(0,0,0,0.05); position: relative; flex: 1; }
     .excel-table { border-collapse: collapse; width: 100%; font-family: "Segoe UI", Arial, sans-serif; font-size: 12px; table-layout: fixed; }
     .excel-table th { background: var(--table-header-bg); color: var(--text-main); font-weight: 600; text-align: left; padding: 6px 10px; border: 1px solid var(--table-border); position: relative; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .excel-table td { border: 1px solid var(--table-cell-border); padding: 6px 10px; background: var(--table-bg); color: var(--text-main); position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .excel-table td { border: 1px solid var(--table-cell-border); padding: 6px 10px; background: var(--table-bg); color: var(--text-main); position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
     .excel-table td input, .excel-table td select { width: 100%; height: 100%; border: none; outline: none; padding: 4px 6px; font-family: inherit; font-size: 12px; background: transparent; color: var(--text-main); }
     .excel-table td input:focus, .excel-table td select:focus { box-shadow: inset 0 0 0 2px #0284c7; background: rgba(2, 132, 199, 0.08); }
     .excel-table tr:hover td { background-color: rgba(150, 150, 150, 0.05); }
@@ -178,6 +210,14 @@
   </style>
 </head>
 <body>
+
+  <!-- SAP FOCUS ANIMATOR OBJECT -->
+  <div id="sapFocusIndicator">
+    <div class="sap-corner sap-corner-tl"></div>
+    <div class="sap-corner sap-corner-tr"></div>
+    <div class="sap-corner sap-corner-bl"></div>
+    <div class="sap-corner sap-corner-br"></div>
+  </div>
 
   <!-- CUSTOM MODAL POPUP -->
   <div class="modal-overlay" id="customModal">
@@ -482,6 +522,45 @@
 
     let activeZIndex = 100;
 
+    // --- SAP FOCUS ANIMATOR LOGIC ---
+    let currentFocusedTarget = null;
+
+    function moveSapFocusIndicator(targetElement) {
+      if (!targetElement) return;
+      currentFocusedTarget = targetElement;
+
+      const indicator = document.getElementById('sapFocusIndicator');
+      const rect = targetElement.getBoundingClientRect();
+
+      // Periksa apakah target memiliki ukuran yang valid
+      if (rect.width === 0 || rect.height === 0) return;
+
+      indicator.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0)`;
+      indicator.style.width = `${rect.width}px`;
+      indicator.style.height = `${rect.height}px`;
+      indicator.classList.add('active');
+    }
+
+    // Dynamic reposisi jika layar di-resize atau di-scroll
+    window.addEventListener('resize', () => { if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget); });
+    window.addEventListener('scroll', () => { if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget); }, true);
+
+    // Global Event Listener untuk mendeteksi klik / fokus di SELURUH elemen
+    document.addEventListener('click', (e) => {
+      // Prioritaskan elemen yang paling spesifik (Button, Input, Select, Grid Cell TD/TH, Li, Radio, DLL)
+      const target = e.target.closest('button, input, select, td, th, li, .radio-badge, .window-header, .user-header-badge, a');
+      if (target && !target.closest('#sapFocusIndicator')) {
+        moveSapFocusIndicator(target);
+      }
+    }, true);
+
+    document.addEventListener('focusin', (e) => {
+      const target = e.target.closest('button, input, select, td, th, li, .radio-badge, .window-header, .user-header-badge, a');
+      if (target && !target.closest('#sapFocusIndicator')) {
+        moveSapFocusIndicator(target);
+      }
+    }, true);
+
     // CUSTOM MODAL POPUP FUNCTION
     function showModal(message, title = "Notification") {
       document.getElementById('modalTitle').innerText = title;
@@ -557,6 +636,7 @@
           let newY = e.clientY - offsetY;
           win.style.left = `${Math.max(0, Math.min(newX, window.innerWidth - win.offsetWidth))}px`;
           win.style.top = `${Math.max(0, Math.min(newY, window.innerHeight - win.offsetHeight))}px`;
+          if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget);
         } else if (isResizing && currentHandle) {
           e.preventDefault();
           const dx = e.clientX - startX;
@@ -592,6 +672,7 @@
             const h = Math.max(250, startH - dy);
             if (h > 250) { win.style.height = h + 'px'; win.style.top = (startT + dy) + 'px'; }
           }
+          if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget);
         }
       });
 
@@ -619,6 +700,7 @@
           saveCurrentState(); win.classList.add('maximized');
           if (iconMax) iconMax.innerHTML = iconRestoreSVG; isMaximized = true;
         }
+        setTimeout(() => { if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget); }, 300);
       });
 
       if (btnClose) btnClose.addEventListener('click', () => {
@@ -647,6 +729,7 @@
           const onMouseMove = (moveEvent) => {
             const newWidth = Math.max(30, startWidth + (moveEvent.clientX - startX));
             th.style.width = newWidth + 'px';
+            if (currentFocusedTarget) moveSapFocusIndicator(currentFocusedTarget);
           };
 
           const onMouseUp = () => {
@@ -1045,6 +1128,12 @@
       document.querySelectorAll('.window').forEach(win => initWindowEvents(win));
       initExcelGrid();
       initColumnResizers();
+
+      // Inisialisasi awal fokus indikator ke tombol Sign In
+      setTimeout(() => {
+        const initialFocusTarget = document.getElementById('btnLogin');
+        if (initialFocusTarget) moveSapFocusIndicator(initialFocusTarget);
+      }, 200);
     });
   </script>
 </body>
