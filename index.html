@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 11 Style Floating Panel with Dynamics AX & Material Request (MR)</title>
+  <title>Dynamics AX 2012 - Material Request (MR)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,7 +12,7 @@
     }
 
     body {
-      background-color: ButtonFace;
+      background-color: #f0f2f5;
       font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
       height: 100vh;
       width: 100vw;
@@ -25,8 +25,6 @@
     body.resizing-active * {
       user-select: none !important;
       -webkit-user-select: none !important;
-      -moz-user-select: none !important;
-      -ms-user-select: none !important;
     }
 
     /* Taskbar Container */
@@ -38,15 +36,20 @@
       flex-direction: column-reverse;
       gap: 8px;
       z-index: 9999;
+      pointer-events: none;
     }
 
-    /* Floating Window Structure */
+    #taskbar-container .window {
+      pointer-events: auto;
+    }
+
+    /* Window Structure */
     .window {
       position: absolute;
       background: #ece7f8;
       border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -59,52 +62,56 @@
 
     /* Window Sizes */
     #loginWindow {
-      top: 20%;
+      top: 15%;
       left: 35%;
-      width: 360px;
-      height: 440px;
-      min-width: 300px;
-      min-height: 320px;
+      width: 380px;
+      height: 450px;
+      min-width: 320px;
+      min-height: 350px;
       z-index: 100;
     }
 
     #homeWindow {
-      top: 5%;
-      left: 10%;
-      width: 1080px;
-      height: 680px;
-      min-width: 780px;
-      min-height: 480px;
+      top: 4%;
+      left: 8%;
+      width: 1100px;
+      height: 700px;
+      min-width: 800px;
+      min-height: 500px;
       display: none;
       z-index: 101;
     }
 
-    /* Resize Handles */
-    .resize-handle { position: absolute; z-index: 10; }
-    .resize-handle.top    { top: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
-    .resize-handle.bottom { bottom: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
-    .resize-handle.left   { top: 8px; bottom: 8px; left: 0; width: 6px; cursor: ew-resize; }
-    .resize-handle.right  { top: 8px; bottom: 8px; right: 0; width: 6px; cursor: ew-resize; }
-    .resize-handle.top-left     { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
-    .resize-handle.top-right    { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
-    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
-    .resize-handle.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+    /* Resize Handles (Point-events & Z-index Fix) */
+    .resize-handle {
+      position: absolute;
+      z-index: 5;
+    }
+    .resize-handle.top    { top: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
+    .resize-handle.bottom { bottom: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
+    .resize-handle.left   { top: 10px; bottom: 10px; left: 0; width: 5px; cursor: ew-resize; }
+    .resize-handle.right  { top: 10px; bottom: 10px; right: 0; width: 5px; cursor: ew-resize; }
+    .resize-handle.top-left     { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
+    .resize-handle.top-right    { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
+    .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
+    .resize-handle.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
 
     /* Window Header */
     .window-header {
       height: 44px;
       user-select: none;
-      -webkit-user-select: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-left: 12px;
       position: relative;
+      z-index: 10;
+      background: transparent;
     }
 
     .window-title {
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       color: #1c1b1f;
       cursor: move;
       flex: 1;
@@ -116,17 +123,17 @@
       text-overflow: ellipsis;
     }
 
-    /* Header User Badge */
+    /* User Badge Header */
     .user-header-badge {
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 20px;
       transition: background-color 0.2s ease;
     }
-    .user-header-badge:hover { background-color: rgba(0, 0, 0, 0.06); }
+    .user-header-badge:hover { background-color: rgba(0, 0, 0, 0.08); }
     .user-avatar-small {
       width: 26px;
       height: 26px;
@@ -135,17 +142,12 @@
       border: 1px solid rgba(0,0,0,0.15);
       background-color: #ffd166;
     }
-    .user-header-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.1;
-    }
+    .user-header-info { display: flex; flex-direction: column; line-height: 1.1; }
     .user-display-name { font-size: 12px; font-weight: 600; color: #1c1b1f; }
     .user-handle-name { font-size: 10px; color: #666; font-family: monospace; }
 
     /* Control Buttons */
-    .win-controls { display: flex; height: 100%; align-items: center; z-index: 11; }
+    .win-controls { display: flex; height: 100%; align-items: center; z-index: 12; }
     .win-btn {
       width: 46px;
       height: 100%;
@@ -162,16 +164,16 @@
       width: 12px;
       height: 12px;
       stroke: #1c1b1f;
-      stroke-width: 1.2;
+      stroke-width: 1.4;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-    .win-btn:hover { background-color: rgba(0, 0, 0, 0.06); }
+    .win-btn:hover { background-color: rgba(0, 0, 0, 0.08); }
     .win-btn.close-btn:hover { background-color: #c42b1c; }
     .win-btn.close-btn:hover svg { stroke: #ffffff; }
     .win-btn.close-btn { border-top-right-radius: 12px; }
-    .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.1); }
+    .win-btn.logout-btn:hover { background-color: rgba(196, 43, 28, 0.12); }
     .win-btn.logout-btn svg { stroke: #c42b1c; }
 
     /* Window Body Base */
@@ -182,11 +184,12 @@
       background: #ffffff;
       margin: 0 8px 8px 8px;
       border-radius: 8px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       position: relative;
+      z-index: 8;
     }
 
-    /* LOGIN STYLES */
+    /* LOGIN FORM STYLES */
     #loginWindow .window-body {
       padding: 24px;
       flex-direction: column;
@@ -194,43 +197,47 @@
       background: #fcfbfe;
     }
     .login-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #1a1a1a; text-align: center; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 6px; color: #444; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 9px 12px;
-      border: 1px solid #c5c5c5;
-      border-bottom: 2px solid #757575;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
       font-size: 13px;
       outline: none;
       background-color: #ffffff;
       font-family: inherit;
+      color: #0f172a;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-bottom-color: #005fb8; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    }
     .btn-submit {
       width: 100%;
-      padding: 9px;
-      background: #005fb8;
+      padding: 10px;
+      background: #0284c7;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
+      transition: background-color 0.15s ease;
     }
-    .btn-submit:hover { background: #004e98; }
+    .btn-submit:hover { background: #0369a1; }
     #error-message { color: #c42b1c; font-size: 12px; margin-top: 10px; text-align: center; min-height: 16px; }
 
-    /* Floating Capsule Button (+ Home) */
+    /* Open Home Capsule Button */
     #openHomeBtn {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      padding: 10px 20px;
+      padding: 10px 24px;
       border-radius: 50px;
-      background: #005fb8;
+      background: #0284c7;
       color: #ffffff;
       border: none;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
@@ -243,71 +250,64 @@
       font-family: inherit;
       transition: all 0.2s ease;
       z-index: 50;
-      user-select: none;
     }
-    #openHomeBtn:hover { background: #004e98; transform: translate(-50%, -50%) scale(1.05); }
-    #openHomeBtn svg { width: 18px; height: 18px; stroke: #ffffff; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    #openHomeBtn:hover { background: #0369a1; transform: translate(-50%, -50%) scale(1.05); }
+    #openHomeBtn svg { width: 18px; height: 18px; stroke: #ffffff; stroke-width: 2.5; fill: none; }
 
-    /* Hugging Face Style Popup Profile Card */
+    /* Hugging Face Profile Card */
     #hfProfileCard {
       position: absolute;
       top: 48px; left: 12px;
-      width: 310px;
+      width: 300px;
       background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(0,0,0,0.1);
       overflow: hidden;
       display: none;
       z-index: 2000;
-      animation: fadeInPopup 0.2s ease-out forwards;
     }
-    @keyframes fadeInPopup {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .hf-banner { height: 70px; background: linear-gradient(135deg, #fce38a 0%, #38302e 100%); }
+    .hf-banner { height: 60px; background: linear-gradient(135deg, #38bdf8 0%, #0369a1 100%); }
     .hf-body { padding: 0 16px 16px 16px; position: relative; }
     .hf-avatar-wrapper {
-      position: relative; margin-top: -36px;
+      position: relative; margin-top: -30px;
       display: flex; justify-content: space-between; align-items: flex-end;
       margin-bottom: 10px;
     }
     .hf-avatar {
-      width: 64px; height: 64px;
+      width: 56px; height: 56px;
       border-radius: 50%; border: 3px solid #ffffff;
       object-fit: cover; background-color: #ffd166;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .hf-like-btn {
       display: flex; align-items: center; gap: 4px;
       padding: 4px 10px; border-radius: 20px;
-      border: 1px solid #e5e7eb; background: #ffffff;
-      font-size: 12px; font-weight: 600; color: #374151;
-      cursor: pointer; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0; background: #ffffff;
+      font-size: 12px; font-weight: 600; color: #334155;
+      cursor: pointer;
     }
-    .hf-like-btn:hover { background: #f9fafb; }
+    .hf-like-btn:hover { background: #f8fafc; }
     .hf-like-btn svg { width: 14px; height: 14px; fill: #ef4444; }
-    .hf-display-name { font-size: 18px; font-weight: 700; color: #111827; line-height: 1.2; }
+    .hf-display-name { font-size: 16px; font-weight: 700; color: #0f172a; }
     .hf-username-tag {
-      display: inline-block; margin-top: 6px; padding: 3px 8px;
-      background: #f3f4f6; color: #4b5563; border-radius: 6px;
+      display: inline-block; margin-top: 4px; padding: 2px 6px;
+      background: #f1f5f9; color: #64748b; border-radius: 4px;
       font-family: monospace; font-size: 11px;
     }
 
-    /* Minimized & Maximized Styles */
+    /* Minimized & Maximized States */
     .window.minimized {
       position: relative !important; top: auto !important; left: auto !important;
       width: 220px !important; height: 40px !important; min-height: 40px !important;
       border-radius: 8px;
     }
-    .window.minimized .window-body, .window.minimized .resize-handle, .window.minimized #hfProfileCard { display: none !important; }
+    .window.minimized .window-body, 
+    .window.minimized .resize-handle, 
+    .window.minimized #hfProfileCard { display: none !important; }
     .window.maximized { top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0; }
     .window.maximized .resize-handle { display: none !important; }
 
-    /* ========================================================= */
-    /* DYNAMICS AX MODERN & MATERIAL REQUEST (MR) STYLES          */
-    /* ========================================================= */
+    /* DYNAMICS AX WORKSPACE STYLES */
     .ax-layout { display: flex; width: 100%; height: 100%; background: #f8fafc; }
 
     /* Sidebar Navigation */
@@ -331,7 +331,7 @@
     .ax-module-item.active { background: #1e293b; color: #38bdf8; border-left-color: #38bdf8; font-weight: 600; }
     .ax-module-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* Main Dynamic Content Area */
+    /* Main Area */
     .ax-main { flex: 1; display: flex; flex-direction: column; background: #f8fafc; overflow: hidden; }
     .ax-topbar {
       height: 48px; background: #ffffff; border-bottom: 1px solid #e2e8f0;
@@ -343,7 +343,7 @@
 
     .ax-content { flex: 1; padding: 20px; overflow-y: auto; }
 
-    /* Grid cards for General AX Modules */
+    /* General AX Cards View */
     .ax-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; align-content: start; }
     .ax-group-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
     .ax-group-header {
@@ -359,35 +359,35 @@
     }
     .ax-link-item a:hover { background: #f8fafc; color: #0284c7; padding-left: 18px; }
 
-    /* ========================================================= */
-    /* MATERIAL REQUEST (MR) FORM & GRIDVIEW STYLES              */
-    /* ========================================================= */
+    /* MATERIAL REQUEST (MR) STYLES */
     .mr-container { display: flex; flex-direction: column; gap: 16px; height: 100%; }
     .mr-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
     .mr-card-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     .mr-card-title svg { width: 16px; height: 16px; stroke: #0284c7; fill: none; stroke-width: 2; }
 
-    /* Header Form Grid */
+    /* Form Grid */
     .mr-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
     
-    /* OPEX vs CAPEX Badging Select */
-    .budget-type-wrapper { display: flex; gap: 12px; align-items: center; }
+    /* OPEX & CAPEX Selector */
+    .budget-type-wrapper { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
     .radio-badge {
-      display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+      display: flex; align-items: center; gap: 6px; padding: 8px 16px;
       border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer;
-      font-size: 12px; font-weight: 600; color: #475569; transition: all 0.15s;
+      font-size: 12px; font-weight: 600; color: #475569; user-select: none;
+      transition: all 0.15s;
     }
-    .radio-badge input { display: none; }
+    .radio-badge input { cursor: pointer; }
     .radio-badge:has(input:checked) { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
 
-    /* GridView Table Items */
-    .gridview-container { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 8px; }
+    /* GridView Table */
+    .gridview-container { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 8px; background: #ffffff; }
     .mr-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     .mr-table th { background: #f1f5f9; padding: 10px 12px; font-weight: 600; color: #334155; border-bottom: 1px solid #e2e8f0; }
-    .mr-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #475569; }
+    .mr-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #475569; vertical-align: middle; }
     .mr-table input, .mr-table select {
-      width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;
+      width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; outline: none;
     }
+    .mr-table input:focus, .mr-table select:focus { border-color: #0284c7; }
 
     .btn-action {
       padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
@@ -395,12 +395,12 @@
     }
     .btn-add-row { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
     .btn-add-row:hover { background: #bae6fd; }
-    .btn-delete-row { background: #fee2e2; color: #991b1b; padding: 4px 8px; }
+    .btn-delete-row { background: #fee2e2; color: #991b1b; padding: 4px 8px; border: 1px solid #fca5a5; }
     .btn-delete-row:hover { background: #fca5a5; }
 
     .mr-summary-row { background: #f8fafc; font-weight: 700; color: #0f172a; }
 
-    /* Footer Status */
+    /* Footer Status Bar */
     .ax-footer {
       height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0;
       display: flex; align-items: center; justify-content: space-between;
@@ -424,7 +424,7 @@
     <div class="resize-handle bottom-right"></div>
 
     <div class="window-header">
-      <div class="window-title" ondragstart="return false;">Login Panel</div>
+      <div class="window-title">Login Panel</div>
       <div class="win-controls">
         <button class="win-btn btn-minimize" title="Minimize"><svg viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6"/></svg></button>
         <button class="win-btn btn-maximize" title="Maximize"><svg viewBox="0 0 12 12" class="icon-max"><rect x="1.5" y="1.5" width="9" height="9" rx="2"/></svg></button>
@@ -460,8 +460,7 @@
     <div class="resize-handle bottom-right"></div>
 
     <div class="window-header">
-      <!-- Header User Avatar & Display Name -->
-      <div class="window-title" id="homeHeaderTitle" ondragstart="return false;">
+      <div class="window-title" id="homeHeaderTitle">
         <div class="user-header-badge" id="userBadgeToggle">
           <img src="https://api.dicebear.com/7.x/bottts/svg?seed=AntIllustrious" alt="User Avatar" class="user-avatar-small" id="headerAvatarImg">
           <div class="user-header-info">
@@ -484,7 +483,7 @@
         <button class="win-btn close-btn btn-close" title="Close"><svg viewBox="0 0 12 12"><line x1="1.5" y1="1.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="1.5" x2="1.5" y2="10.5"/></svg></button>
       </div>
 
-      <!-- Hugging Face Popup Card -->
+      <!-- Profile Popup -->
       <div id="hfProfileCard">
         <div class="hf-banner"></div>
         <div class="hf-body">
@@ -495,16 +494,15 @@
               <span id="likeCount">1</span>
             </button>
           </div>
-          <div class="hf-display-name" id="cardDisplayName">AntIllustrious</div>
-          <div class="hf-username-tag" id="cardUsernameTag">AnantaXLIllustrious</div>
+          <div class="hf-display-name" id="cardDisplayName">Bayu Adi Ananta</div>
+          <div class="hf-username-tag" id="cardUsernameTag">AnantaXLLustrious</div>
         </div>
       </div>
     </div>
 
-    <!-- DYNAMICS AX 2012 WORKSPACE -->
+    <!-- DYNAMICS AX 2012 WORKSPACE BODY -->
     <div class="window-body">
       <div class="ax-layout">
-        <!-- Sidebar Navigation -->
         <div class="ax-sidebar">
           <div class="ax-sidebar-header">Modules AX 2012</div>
           <ul class="ax-module-list" id="axModuleList">
@@ -535,9 +533,7 @@
           </ul>
         </div>
 
-        <!-- Main Workspace Area -->
         <div class="ax-main">
-          <!-- Top Bar -->
           <div class="ax-topbar">
             <div class="ax-breadcrumb">
               <span>Dynamics AX</span>
@@ -547,16 +543,14 @@
             <div class="ax-company-tag">Company: DAT</div>
           </div>
 
-          <!-- Dynamic Workspace Content -->
           <div class="ax-content" id="axContentArea">
-            <!-- Content render via Javascript -->
+            <!-- Dynamic Content Load via JS -->
           </div>
 
-          <!-- Status Bar -->
           <div class="ax-footer">
             <div class="ax-status-item">
               <span class="status-dot"></span>
-              <span>AOS Server Active</span>
+              <span>AOS Server Connected</span>
             </div>
             <div>MR Engine v2.4</div>
           </div>
@@ -565,7 +559,6 @@
     </div>
   </div>
 
-  <!-- Tombol Kapsul Home -->
   <button id="openHomeBtn" title="Buka Window HOME">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Home</span>
@@ -584,7 +577,7 @@
 
     let activeZIndex = 100;
 
-    // --- DYNAMICS AX MENU DATA ---
+    // AX Modules Data
     const axMenuData = {
       "General Ledger": [
         { group: "Common", links: ["Main Accounts", "General Journals", "Chart of Accounts", "Trial Balance"] },
@@ -607,9 +600,11 @@
       ]
     };
 
-    // --- RENDER MATERIAL REQUEST (MR) FORM WITH OPEX / CAPEX & GRIDVIEW ---
+    // Render Material Request (MR) Module
     function renderMaterialRequestModule() {
       const contentArea = document.getElementById('axContentArea');
+      const requesterDefault = document.getElementById('headerDisplayName').innerText || 'Bayu Adi Ananta';
+
       contentArea.innerHTML = `
         <div class="mr-container">
           <!-- Header Info Card -->
@@ -619,10 +614,10 @@
               <span>Header Material Request (MR)</span>
             </div>
             
-            <form id="mrHeaderForm">
+            <form id="mrHeaderForm" onsubmit="return false;">
               <div class="mr-form-grid">
                 <div class="form-group">
-                  <label>Budget Type (Jenis Anggaran)</label>
+                  <label>Jenis Anggaran (Budget Type)</label>
                   <div class="budget-type-wrapper">
                     <label class="radio-badge">
                       <input type="radio" name="mrBudgetType" value="OPEX" checked>
@@ -637,7 +632,7 @@
 
                 <div class="form-group">
                   <label for="mrDepartment">Department</label>
-                  <select id="mrDepartment" required>
+                  <select id="mrDepartment">
                     <option value="IT">IT & Infrastructure</option>
                     <option value="FINANCE">Finance & Accounting</option>
                     <option value="HR">Human Resources</option>
@@ -647,7 +642,7 @@
 
                 <div class="form-group">
                   <label for="mrRequester">Requester</label>
-                  <input type="text" id="mrRequester" value="${headerDisplayName.innerText || 'Bayu Adi Ananta'}" required>
+                  <input type="text" id="mrRequester" value="${requesterDefault}">
                 </div>
 
                 <div class="form-group">
@@ -661,7 +656,7 @@
 
                 <div class="form-group" style="grid-column: span 2;">
                   <label for="mrDescription">Purpose / Justification</label>
-                  <input type="text" id="mrDescription" placeholder="Alasan pengajuan material / barang..." required>
+                  <input type="text" id="mrDescription" placeholder="Alasan kebutuhan material...">
                 </div>
               </div>
             </form>
@@ -674,7 +669,7 @@
                 <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                 <span>Item Lines (GridView)</span>
               </div>
-              <button class="btn-action btn-add-row" id="btnAddMrRow">
+              <button type="button" class="btn-action btn-add-row" id="btnAddMrRow">
                 + Tambah Item
               </button>
             </div>
@@ -685,16 +680,14 @@
                   <tr>
                     <th style="width: 40px;">#</th>
                     <th>Nama / Deskripsi Barang</th>
-                    <th style="width: 100px;">Qty</th>
-                    <th style="width: 110px;">Satuan (Unit)</th>
+                    <th style="width: 90px;">Qty</th>
+                    <th style="width: 110px;">Satuan</th>
                     <th style="width: 160px;">Est. Harga Satuan (Rp)</th>
                     <th style="width: 160px;">Total (Rp)</th>
                     <th style="width: 60px; text-align: center;">Aksi</th>
                   </tr>
                 </thead>
-                <tbody id="mrGridBody">
-                  <!-- Dynamic Rows -->
-                </tbody>
+                <tbody id="mrGridBody"></tbody>
                 <tfoot>
                   <tr class="mr-summary-row">
                     <td colspan="5" style="text-align: right; padding-right: 16px;">Grand Total Estimasi:</td>
@@ -706,7 +699,7 @@
             </div>
 
             <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
-              <button class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 10px 24px;">Submit Material Request</button>
+              <button type="button" class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 10px 24px;">Submit Material Request</button>
             </div>
           </div>
         </div>
@@ -715,7 +708,7 @@
       initMrGridEvents();
     }
 
-    // GridView Event Handlers
+    // GridView Logic
     function initMrGridEvents() {
       const gridBody = document.getElementById('mrGridBody');
       const btnAdd = document.getElementById('btnAddMrRow');
@@ -726,7 +719,7 @@
 
         tr.innerHTML = `
           <td>${rowCount}</td>
-          <td><input type="text" class="item-name" placeholder="Nama barang..." value="${itemName}" required></td>
+          <td><input type="text" class="item-name" placeholder="Nama barang..." value="${itemName}"></td>
           <td><input type="number" class="item-qty" min="1" value="${qty}"></td>
           <td>
             <select class="item-unit">
@@ -737,10 +730,10 @@
               <option value="Set" ${unit==='Set'?'selected':''}>Set</option>
             </select>
           </td>
-          <td><input type="number" class="item-price" min="0" step="500" value="${price}"></td>
+          <td><input type="number" class="item-price" min="0" value="${price}"></td>
           <td class="item-total" style="font-weight: 600;">Rp 0</td>
           <td style="text-align: center;">
-            <button class="btn-action btn-delete-row" title="Hapus Item">&times;</button>
+            <button type="button" class="btn-action btn-delete-row" title="Hapus Item">&times;</button>
           </td>
         `;
 
@@ -790,28 +783,27 @@
 
       btnAdd.addEventListener('click', () => addRow());
 
-      // Tambahkan 2 Baris Default
+      // Initial Rows
       addRow('Laptop Workstation Core i7', 1, 'Unit', 15000000);
       addRow('Kertas HVS A4 80gr', 5, 'Box', 250000);
 
-      // Submit Handler
+      // Submit Form
       document.getElementById('btnSubmitMR').addEventListener('click', () => {
         const budgetType = document.querySelector('input[name="mrBudgetType"]:checked').value;
-        const desc = document.getElementById('mrDescription').value;
+        const desc = document.getElementById('mrDescription').value.trim();
 
         if (!desc) {
-          alert('Mohon lengkapi Purpose / Justification MR!');
+          alert('Mohon isi Purpose / Justification MR terlebih dahulu!');
           return;
         }
 
-        alert(`Material Request (${budgetType}) Berhasil Dibuat!\nPengajuan telah dikirimkan untuk proses approval.`);
+        alert(`Material Request (${budgetType}) berhasil disubmit!\nData telah diproses ke dalam antrean approval.`);
       });
     }
 
-    // Render Dynamic Modules
+    // Module Switcher
     function renderAxModule(moduleName) {
-      const breadcrumbTitle = document.getElementById('axCurrentModuleName');
-      breadcrumbTitle.innerText = moduleName;
+      document.getElementById('axCurrentModuleName').innerText = moduleName;
 
       if (moduleName === "Material Request") {
         renderMaterialRequestModule();
@@ -843,20 +835,19 @@
       contentArea.innerHTML = html;
     }
 
-    // Module Switcher Click Event
+    // Sidebar Items Listener
     document.querySelectorAll('#axModuleList .ax-module-item').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('#axModuleList .ax-module-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
-        const modName = item.getAttribute('data-module');
-        renderAxModule(modName);
+        renderAxModule(item.getAttribute('data-module'));
       });
     });
 
-    // Initial AX Load
+    // Default Load Module
     renderAxModule('Material Request');
 
-    // --- WINDOW CONTROLS LOGIC ---
+    // Window Management & Resize/Drag Control
     document.querySelectorAll('.window').forEach(win => {
       const header = win.querySelector('.window-title');
       const btnMin = win.querySelector('.btn-minimize');
@@ -873,7 +864,7 @@
         win.style.zIndex = activeZIndex;
       });
 
-      // DRAG LOGIC
+      // DRAG
       let isDragging = false;
       let offsetX = 0, offsetY = 0;
 
@@ -929,7 +920,7 @@
         win.classList.remove('maximized');
         win.classList.add('minimized');
         document.getElementById('taskbar-container').appendChild(win);
-        iconMax.innerHTML = iconMaximizeSVG;
+        if(iconMax) iconMax.innerHTML = iconMaximizeSVG;
       }
 
       function restoreWindow() {
@@ -952,34 +943,36 @@
           win.style.left = prevRect.left;
           win.style.width = prevRect.width;
           win.style.height = prevRect.height;
-          iconMax.innerHTML = iconMaximizeSVG;
+          if(iconMax) iconMax.innerHTML = iconMaximizeSVG;
           isMaximized = false;
         } else {
           saveCurrentState();
           win.classList.add('maximized');
-          iconMax.innerHTML = iconRestoreSVG;
+          if(iconMax) iconMax.innerHTML = iconRestoreSVG;
           isMaximized = true;
         }
       }
 
-      btnMin.addEventListener('click', minimizeWindow);
-      btnMax.addEventListener('click', toggleMaximize);
+      if(btnMin) btnMin.addEventListener('click', minimizeWindow);
+      if(btnMax) btnMax.addEventListener('click', toggleMaximize);
 
-      btnClose.addEventListener('click', () => {
-        if (win.id === 'loginWindow') {
-          minimizeWindow();
-        } else if (win.id === 'homeWindow') {
-          win.style.display = 'none';
-          document.getElementById('openHomeBtn').style.display = 'flex';
-          document.getElementById('hfProfileCard').style.display = 'none';
-        }
-      });
+      if(btnClose) {
+        btnClose.addEventListener('click', () => {
+          if (win.id === 'loginWindow') {
+            minimizeWindow();
+          } else if (win.id === 'homeWindow') {
+            win.style.display = 'none';
+            document.getElementById('openHomeBtn').style.display = 'flex';
+            document.getElementById('hfProfileCard').style.display = 'none';
+          }
+        });
+      }
 
       header.addEventListener('click', (e) => {
         if (isMinimized && !e.target.closest('#userBadgeToggle')) restoreWindow();
       });
 
-      // RESIZE LOGIC
+      // RESIZE
       let isResizing = false;
       let currentHandle = null;
       let startX = 0, startY = 0;
@@ -994,8 +987,6 @@
           e.stopPropagation();
 
           document.body.classList.add('resizing-active');
-          window.getSelection()?.removeAllRanges();
-
           isResizing = true;
           currentHandle = handle;
           win.classList.add('resizing');
@@ -1011,7 +1002,6 @@
 
       document.addEventListener('mousemove', (e) => {
         if (!isResizing || !currentHandle) return;
-        window.getSelection()?.removeAllRanges();
 
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
@@ -1047,7 +1037,7 @@
       });
     });
 
-    // --- ELEMENTS ---
+    // DOM Elements
     const loginForm = document.getElementById('loginForm');
     const btnLogin = document.getElementById('btnLogin');
     const errorMessage = document.getElementById('error-message');
@@ -1070,7 +1060,7 @@
 
     let likes = 1;
 
-    // --- POPUP CARD TOGGLE ---
+    // Profile Card Toggle
     userBadgeToggle.addEventListener('click', (e) => {
       e.stopPropagation();
       const isVisible = hfProfileCard.style.display === 'block';
@@ -1089,7 +1079,7 @@
       likeCount.innerText = likes;
     });
 
-    // --- UPDATE PROFIL USER ---
+    // Update User Profile
     function updateUserData(displayName, username) {
       const uname = username || 'User';
       const dName = displayName || uname;
@@ -1112,9 +1102,10 @@
       homeWindow.style.zIndex = activeZIndex;
 
       updateUserData(displayName, username);
+      renderMaterialRequestModule(); // Reload MR dengan nama user baru
     }
 
-    // --- CHECK SESSION LOCALSTORAGE ---
+    // Auto Login Check
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = localStorage.getItem('userSession');
       if (savedUser) {
@@ -1123,7 +1114,7 @@
       }
     });
 
-    // --- SUBMIT LOGIN ---
+    // Submit Login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -1131,7 +1122,7 @@
       const passVal = document.getElementById('password').value.trim();
       const mathToken = userVal + passVal;
 
-      errorMessage.style.color = '#005fb8';
+      errorMessage.style.color = '#0284c7';
       errorMessage.innerText = 'Memeriksa kredensial...';
       btnLogin.disabled = true;
 
@@ -1155,14 +1146,14 @@
         }
       } catch (err) {
         errorMessage.style.color = '#c42b1c';
-        errorMessage.innerText = 'Gagal terhubung ke Google Sheets API.';
+        errorMessage.innerText = 'Gagal terhubung ke Apps Script API.';
         console.error(err);
       } finally {
         btnLogin.disabled = false;
       }
     });
 
-    // --- OPEN HOME FROM CAPSULE BUTTON ---
+    // Open Home Button
     openHomeBtn.addEventListener('click', () => {
       homeWindow.style.display = 'flex';
       openHomeBtn.style.display = 'none';
@@ -1170,7 +1161,7 @@
       homeWindow.style.zIndex = activeZIndex;
     });
 
-    // --- LOGOUT ---
+    // Logout Button
     btnLogout.addEventListener('click', () => {
       localStorage.removeItem('userSession');
 
