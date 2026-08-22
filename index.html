@@ -20,6 +20,15 @@
       position: relative;
     }
 
+    /* Mencegah Teks Ter-select Saat Sedang Resize / Drag Panel */
+    body.resizing-active, 
+    body.resizing-active * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+
     /* Taskbar Container */
     #taskbar-container {
       position: absolute;
@@ -252,35 +261,39 @@
       min-height: 16px;
     }
 
-    /* Floating Center Add Button */
+    /* Floating Capsule Button (+ Home) */
     #openHomeBtn {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
+      padding: 10px 20px;
+      border-radius: 50px; /* Bentuk Kapsul */
       background: #005fb8;
       color: #ffffff;
       border: none;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
       display: none;
-      justify-content: center;
       align-items: center;
+      gap: 8px;
       cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
       transition: all 0.2s ease;
       z-index: 50;
+      user-select: none;
     }
 
     #openHomeBtn:hover {
       background: #004e98;
-      transform: translate(-50%, -50%) scale(1.08);
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
     }
 
     #openHomeBtn svg {
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
       stroke: #ffffff;
       stroke-width: 2.5;
       fill: none;
@@ -370,7 +383,6 @@
     <div class="window-header">
       <div class="window-title" id="homeTitle" ondragstart="return false;">Home</div>
       <div class="win-controls">
-        <!-- Tombol Logout Khusus Window HOME -->
         <button class="win-btn logout-btn" id="btnLogout" title="Logout">
           <svg viewBox="0 0 12 12">
             <path d="M 4.5 1.5 L 2 1.5 C 1.5 1.5 1 2 1 2.5 L 1 9.5 C 1 10 1.5 10.5 2 10.5 L 4.5 10.5" />
@@ -388,12 +400,13 @@
     </div>
   </div>
 
-  <!-- Tombol Tambah di Tengah Body (Akan Muncul Jika Home Window Di-Close) -->
+  <!-- Tombol Kapsul + Home -->
   <button id="openHomeBtn" title="Buka Window HOME">
     <svg viewBox="0 0 24 24">
       <line x1="12" y1="5" x2="12" y2="19"></line>
       <line x1="5" y1="12" x2="19" y2="12"></line>
     </svg>
+    <span>Home</span>
   </button>
 
   <div id="taskbar-container"></div>
@@ -432,6 +445,9 @@
 
       header.addEventListener('mousedown', (e) => {
         if (isMaximized || isMinimized) return;
+        e.preventDefault(); // Mencegah highlight teks
+        document.body.classList.add('resizing-active');
+
         isDragging = true;
         win.classList.add('dragging');
         offsetX = e.clientX - win.offsetLeft;
@@ -451,8 +467,11 @@
       });
 
       document.addEventListener('mouseup', () => {
-        isDragging = false;
-        win.classList.remove('dragging');
+        if (isDragging) {
+          isDragging = false;
+          win.classList.remove('dragging');
+          document.body.classList.remove('resizing-active');
+        }
       });
 
       // CONTROLS LOGIC
@@ -514,13 +533,11 @@
       btnMin.addEventListener('click', minimizeWindow);
       btnMax.addEventListener('click', toggleMaximize);
 
-      // JIKA TOMBOL CLOSE DIKLIK
       btnClose.addEventListener('click', () => {
         if (win.id === 'loginWindow') {
           minimizeWindow();
         } else if (win.id === 'homeWindow') {
           win.style.display = 'none';
-          // Tampilkan tombol Tambah di Tengah Screen saat Home ditutup
           document.getElementById('openHomeBtn').style.display = 'flex';
         }
       });
@@ -529,7 +546,7 @@
         if (isMinimized) restoreWindow();
       });
 
-      // RESIZE LOGIC
+      // RESIZE LOGIC (DENGAN PENANGANAN AGAR TIDAK SELECT ALL)
       let isResizing = false;
       let currentHandle = null;
       let startX = 0, startY = 0;
@@ -540,7 +557,13 @@
       win.querySelectorAll('.resize-handle').forEach(handle => {
         handle.addEventListener('mousedown', (e) => {
           if (isMaximized || isMinimized) return;
+          e.preventDefault(); // Mencegah default browser select/drag
           e.stopPropagation();
+
+          // Matikan seleksi teks global
+          document.body.classList.add('resizing-active');
+          window.getSelection()?.removeAllRanges();
+
           isResizing = true;
           currentHandle = handle;
           win.classList.add('resizing');
@@ -556,6 +579,10 @@
 
       document.addEventListener('mousemove', (e) => {
         if (!isResizing || !currentHandle) return;
+        
+        // Memastikan tidak ada teks ter-highlight saat di-drag
+        window.getSelection()?.removeAllRanges();
+
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
 
@@ -581,9 +608,12 @@
       });
 
       document.addEventListener('mouseup', () => {
-        isResizing = false;
-        currentHandle = null;
-        win.classList.remove('resizing');
+        if (isResizing) {
+          isResizing = false;
+          currentHandle = null;
+          win.classList.remove('resizing');
+          document.body.classList.remove('resizing-active');
+        }
       });
     });
 
@@ -597,17 +627,16 @@
     const openHomeBtn = document.getElementById('openHomeBtn');
     const btnLogout = document.getElementById('btnLogout');
 
-    // MENGATUR TAMPILAN JENDELA HOME
     function showHomeWindow(displayName) {
       loginWindow.style.display = 'none';
       homeWindow.style.display = 'flex';
-      openHomeBtn.style.display = 'none'; // Sembunyikan tombol + jika home terbuka
+      openHomeBtn.style.display = 'none';
       activeZIndex++;
       homeWindow.style.zIndex = activeZIndex;
       homeTitle.innerText = `Home - Welcome ${displayName}`;
     }
 
-    // --- CEK SESI LOGIN SAAT HALAMAN DI-RELOAD ---
+    // --- AUTO LOGIN CHECK ---
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = localStorage.getItem('userSession');
       if (savedUser) {
@@ -616,7 +645,7 @@
       }
     });
 
-    // --- PROSES SUBMIT LOGIN ---
+    // --- SUBMIT LOGIN ---
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -636,7 +665,6 @@
           errorMessage.innerText = '';
           const fullName = [result.user.firstName, result.user.lastName].filter(Boolean).join(' ') || userVal;
           
-          // Simpan Sesi Login di LocalStorage
           localStorage.setItem('userSession', JSON.stringify({
             username: userVal,
             displayName: fullName
@@ -656,7 +684,7 @@
       }
     });
 
-    // --- KLIK TOMBOL + UNTUK MEMBUKA KEMBALI WINDOW HOME ---
+    // --- KLIK TOMBOL KAPSUL HOME ---
     openHomeBtn.addEventListener('click', () => {
       homeWindow.style.display = 'flex';
       openHomeBtn.style.display = 'none';
@@ -664,16 +692,13 @@
       homeWindow.style.zIndex = activeZIndex;
     });
 
-    // --- KLIK TOMBOL LOGOUT ---
+    // --- LOGOUT ---
     btnLogout.addEventListener('click', () => {
-      // Hapus Sesi Login
       localStorage.removeItem('userSession');
 
-      // Sembunyikan Home Window & Tombol Plus
       homeWindow.style.display = 'none';
       openHomeBtn.style.display = 'none';
 
-      // Tampilkan kembali Window Login & Reset Form
       loginWindow.style.display = 'flex';
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
