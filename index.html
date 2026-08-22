@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows OS Style Floating Login</title>
+  <title>Windows 11 Style Floating Panel</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,63 +12,69 @@
     }
 
     body {
-      background-color: #202020;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2b1055, #7597de);
+      font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, sans-serif;
       height: 100vh;
       width: 100vw;
       overflow: hidden;
       position: relative;
     }
 
-    /* Container untuk Menampung Window yang di-Minimize/Close di Pojok Kiri Bawah */
+    /* Container untuk window yang di-minimize/close di pojok kiri bawah */
     #taskbar-container {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
+      bottom: 16px;
+      left: 16px;
       display: flex;
       flex-direction: column-reverse;
-      gap: 6px;
+      gap: 8px;
       z-index: 9999;
     }
 
-    /* Floating Window Main Structure */
+    /* Floating Window Main Structure - Windows 11 Style */
     .window {
       position: absolute;
       top: 20%;
       left: 35%;
-      width: 340px;
-      height: 420px;
-      min-width: 280px;
-      min-height: 250px;
-      background: #ffffff;
-      border: 1px solid #1f1f1f;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      width: 360px;
+      height: 440px;
+      min-width: 300px;
+      min-height: 280px;
+      background: rgba(236, 231, 248, 0.92); /* Warna pastel lavender ala sampel gambar */
+      backdrop-filter: blur(20px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
       display: flex;
       flex-direction: column;
       resize: both;
       overflow: hidden;
-      transition: top 0.2s ease, left 0.2s ease, width 0.2s ease, height 0.2s ease;
+      transition: top 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), 
+                  left 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), 
+                  width 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), 
+                  height 0.25s cubic-bezier(0.1, 0.9, 0.2, 1),
+                  border-radius 0.25s ease;
     }
 
     .window.dragging, .window.resizing {
-      transition: none; /* Hilangkan transisi saat di-drag/resize agar responsif */
+      transition: none;
     }
 
-    /* Header Window ala Windows OS */
+    /* Window Header */
     .window-header {
-      background: #f3f3f3;
-      height: 32px;
+      height: 40px;
       user-select: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #e5e5e5;
+      background: transparent;
+      padding-left: 16px;
     }
 
     .window-title {
-      padding-left: 12px;
-      font-size: 12px;
-      color: #1a1a1a;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1c1b1f;
       cursor: move;
       flex: 1;
       height: 100%;
@@ -76,10 +82,11 @@
       align-items: center;
     }
 
-    /* Control Buttons (Minimize, Maximize, Close) */
+    /* Windows 11 Control Buttons Container */
     .win-controls {
       display: flex;
       height: 100%;
+      align-items: center;
     }
 
     .win-btn {
@@ -88,25 +95,40 @@
       border: none;
       background: transparent;
       outline: none;
-      font-family: Segoe MDL2 Assets, "Segoe UI", sans-serif;
-      font-size: 11px;
-      color: #000000;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .win-btn svg {
+      width: 12px;
+      height: 12px;
+      stroke: #1c1b1f;
+      stroke-width: 1.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .win-btn:hover {
-      background-color: #e5e5e5;
+      background-color: rgba(0, 0, 0, 0.06);
     }
 
     .win-btn.close-btn:hover {
-      background-color: #e81123;
-      color: #ffffff;
+      background-color: #c42b1c;
     }
 
-    /* Body/Content */
+    .win-btn.close-btn:hover svg {
+      stroke: #ffffff;
+    }
+
+    .win-btn.close-btn {
+      border-top-right-radius: 12px;
+    }
+
+    /* Body / Content Area */
     .window-body {
       padding: 24px;
       flex: 1;
@@ -114,77 +136,89 @@
       flex-direction: column;
       justify-content: center;
       overflow-y: auto;
-      background-color: #fafafa;
+      background: rgba(255, 255, 255, 0.65);
+      margin: 0 8px 8px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .login-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       color: #1a1a1a;
       text-align: center;
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .form-group label {
       display: block;
       font-size: 12px;
-      margin-bottom: 4px;
-      color: #333333;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #444;
     }
 
     .form-group input {
       width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #8a8a8a;
-      border-radius: 2px;
+      padding: 9px 12px;
+      border: 1px solid #c5c5c5;
+      border-bottom: 2px solid #757575;
+      border-radius: 4px;
       font-size: 13px;
       outline: none;
       background-color: #ffffff;
+      transition: border-color 0.2s;
     }
 
     .form-group input:focus {
-      border-color: #0067c0;
-      box-shadow: 0 0 0 1px #0067c0;
+      border-bottom-color: #005fb8;
+      background-color: #ffffff;
     }
 
     .btn-submit {
       width: 100%;
-      padding: 8px;
-      background: #0067c0;
+      padding: 9px;
+      background: #005fb8;
       color: white;
       border: none;
-      border-radius: 2px;
+      border-radius: 4px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 8px;
+      transition: background-color 0.2s, opacity 0.2s;
     }
 
     .btn-submit:hover {
-      background: #005fb8;
+      background: #004e98;
     }
 
-    /* Style Ketika Window Di-Minimize ke Pojok Kiri Bawah */
+    /* Style Saat Window Di-Minimize ke Pojok Kiri Bawah */
     .window.minimized {
       position: relative !important;
       top: auto !important;
       left: auto !important;
       width: 220px !important;
-      height: 36px !important;
-      min-height: 36px !important;
+      height: 40px !important;
+      min-height: 40px !important;
       resize: none !important;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
     }
 
     .window.minimized .window-body {
       display: none;
     }
 
-    /* Style Ketika Window Di-Maximize */
+    .window.minimized .win-btn.close-btn {
+      border-top-right-radius: 8px;
+    }
+
+    /* Style Saat Window Di-Maximize */
     .window.maximized {
       top: 0 !important;
       left: 0 !important;
@@ -192,6 +226,10 @@
       height: 100vh !important;
       resize: none !important;
       border-radius: 0;
+    }
+
+    .window.maximized .win-btn.close-btn {
+      border-top-right-radius: 0;
     }
   </style>
 </head>
@@ -202,9 +240,27 @@
     <div class="window-header">
       <div class="window-title" id="windowHeader">Login Panel</div>
       <div class="win-controls">
-        <button class="win-btn" id="btnMinimize" title="Minimize">&#xE921; &#8722;</button>
-        <button class="win-btn" id="btnMaximize" title="Maximize">&#9633;</button>
-        <button class="win-btn close-btn" id="btnClose" title="Close">&#10005;</button>
+        <!-- Minimize Button -->
+        <button class="win-btn" id="btnMinimize" title="Minimize">
+          <svg viewBox="0 0 12 12">
+            <line x1="1" y1="6" x2="11" y2="6" />
+          </svg>
+        </button>
+        <!-- Maximize / Restore Button -->
+        <button class="win-btn" id="btnMaximize" title="Maximize">
+          <svg viewBox="0 0 12 12" id="iconMaximize">
+            <!-- Icon kotak bertumpuk rounded seperti gambar sampel -->
+            <rect x="3.5" y="1.5" width="7" height="7" rx="1.5" />
+            <rect x="1.5" y="3.5" width="7" height="7" rx="1.5" style="fill: rgba(236,231,248,0.92);" />
+          </svg>
+        </button>
+        <!-- Close Button -->
+        <button class="win-btn close-btn" id="btnClose" title="Close">
+          <svg viewBox="0 0 12 12">
+            <line x1="1.5" y1="1.5" x2="10.5" y2="10.5" />
+            <line x1="10.5" y1="1.5" x2="1.5" y2="10.5" />
+          </svg>
+        </button>
       </div>
     </div>
     <div class="window-body">
@@ -223,7 +279,7 @@
     </div>
   </div>
 
-  <!-- Container untuk menampung window yang minimised di pojok bawah -->
+  <!-- Container untuk menampung window yang diminimize di pojok bawah -->
   <div id="taskbar-container"></div>
 
   <script>
@@ -234,8 +290,18 @@
     const btnMinimize = document.getElementById("btnMinimize");
     const btnMaximize = document.getElementById("btnMaximize");
     const btnClose = document.getElementById("btnClose");
+    const iconMaximize = document.getElementById("iconMaximize");
 
-    // Menyimpan posisi dan ukuran sebelum di-maximize atau di-minimize
+    // SVG Icons untuk Maximize & Restore
+    const iconRestoreSVG = `
+      <rect x="3.5" y="1.5" width="7" height="7" rx="1.5" />
+      <rect x="1.5" y="3.5" width="7" height="7" rx="1.5" style="fill: rgba(236,231,248,0.92);" />
+    `;
+    const iconMaximizeSVG = `
+      <rect x="1.5" y="1.5" width="9" height="9" rx="2" />
+    `;
+
+    // Menyimpan posisi & ukuran sebelum maximize/minimize
     let prevRect = {
       top: win.offsetTop + "px",
       left: win.offsetLeft + "px",
@@ -251,7 +317,7 @@
     let offsetX = 0, offsetY = 0;
 
     winHeader.addEventListener("mousedown", (e) => {
-      if (isMaximized || isMinimized) return; // Mencegah drag saat maximize/minimize
+      if (isMaximized || isMinimized) return;
       isDragging = true;
       win.classList.add("dragging");
       offsetX = e.clientX - win.offsetLeft;
@@ -265,7 +331,6 @@
       let newX = e.clientX - offsetX;
       let newY = e.clientY - offsetY;
 
-      // Batasi agar tidak melampaui batas layar
       const maxX = window.innerWidth - win.offsetWidth;
       const maxY = window.innerHeight - win.offsetHeight;
 
@@ -282,9 +347,7 @@
       document.body.style.userSelect = "auto";
     });
 
-    // --- WINDOW CONTROL BUTTONS LOGIC ---
-
-    // Save posisi saat ini sebelum berpindah status
+    // --- WINDOW CONTROLS LOGIC ---
     function saveCurrentState() {
       if (!isMaximized && !isMinimized) {
         prevRect = {
@@ -310,9 +373,8 @@
       win.classList.remove("maximized");
       win.classList.add("minimized");
       
-      // Pindahkan elemen window ke container di pojok kiri bawah
       taskbarContainer.appendChild(win);
-      btnMaximize.innerHTML = "&#9633;";
+      iconMaximize.innerHTML = iconMaximizeSVG;
     }
 
     // MAXIMIZE / RESTORE
@@ -322,31 +384,28 @@
       }
 
       if (isMaximized) {
-        // Restore ke ukuran biasa
         win.classList.remove("maximized");
         win.style.top = prevRect.top;
         win.style.left = prevRect.left;
         win.style.width = prevRect.width;
         win.style.height = prevRect.height;
-        btnMaximize.innerHTML = "&#9633;"; // Simbol kotak tunggal
+        iconMaximize.innerHTML = iconRestoreSVG;
         isMaximized = false;
       } else {
-        // Maximize
         saveCurrentState();
         win.classList.add("maximized");
-        btnMaximize.innerHTML = "&#10064;"; // Simbol Restore (dua kotak bertumpuk)
+        iconMaximize.innerHTML = iconMaximizeSVG;
         isMaximized = true;
       }
     }
 
-    // RESTORE WINDOW (Mengembalikan dari state Minimize ke posisi semula)
+    // RESTORE WINDOW
     function restoreWindow() {
       if (!isMinimized) return;
       
       isMinimized = false;
       win.classList.remove("minimized");
       
-      // Kembalikan window ke root body
       document.body.appendChild(win);
       
       win.style.top = prevRect.top;
@@ -355,7 +414,7 @@
       win.style.height = prevRect.height;
     }
 
-    // CLOSE (Mengirim ke Pojok Kiri Bawah sebagai Minimized)
+    // CLOSE
     function closeWindow() {
       minimizeWindow();
     }
@@ -365,7 +424,6 @@
     btnMaximize.addEventListener("click", toggleMaximize);
     btnClose.addEventListener("click", closeWindow);
 
-    // Klik pada header saat minimized akan memulihkan window (Restore)
     winHeader.addEventListener("click", () => {
       if (isMinimized) restoreWindow();
     });
