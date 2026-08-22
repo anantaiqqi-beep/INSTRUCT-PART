@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 11 Style Floating Panel with Dynamics AX Menu</title>
+  <title>Windows 11 Style Floating Panel with Dynamics AX & Material Request (MR)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -69,27 +69,22 @@
     }
 
     #homeWindow {
-      top: 8%;
-      left: 15%;
-      width: 960px;
-      height: 600px;
-      min-width: 680px;
-      min-height: 420px;
+      top: 5%;
+      left: 10%;
+      width: 1080px;
+      height: 680px;
+      min-width: 780px;
+      min-height: 480px;
       display: none;
       z-index: 101;
     }
 
     /* Resize Handles */
-    .resize-handle {
-      position: absolute;
-      z-index: 10;
-    }
-
+    .resize-handle { position: absolute; z-index: 10; }
     .resize-handle.top    { top: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
     .resize-handle.bottom { bottom: 0; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
     .resize-handle.left   { top: 8px; bottom: 8px; left: 0; width: 6px; cursor: ew-resize; }
     .resize-handle.right  { top: 8px; bottom: 8px; right: 0; width: 6px; cursor: ew-resize; }
-
     .resize-handle.top-left     { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
     .resize-handle.top-right    { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
     .resize-handle.bottom-left  { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
@@ -121,7 +116,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Custom Header User Badge for HOME Panel */
+    /* Header User Badge */
     .user-header-badge {
       display: flex;
       align-items: center;
@@ -131,11 +126,7 @@
       border-radius: 20px;
       transition: background-color 0.2s ease;
     }
-
-    .user-header-badge:hover {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-
+    .user-header-badge:hover { background-color: rgba(0, 0, 0, 0.06); }
     .user-avatar-small {
       width: 26px;
       height: 26px;
@@ -144,34 +135,17 @@
       border: 1px solid rgba(0,0,0,0.15);
       background-color: #ffd166;
     }
-
     .user-header-info {
       display: flex;
       flex-direction: column;
       justify-content: center;
       line-height: 1.1;
     }
-
-    .user-display-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: #1c1b1f;
-    }
-
-    .user-handle-name {
-      font-size: 10px;
-      color: #666;
-      font-family: monospace;
-    }
+    .user-display-name { font-size: 12px; font-weight: 600; color: #1c1b1f; }
+    .user-handle-name { font-size: 10px; color: #666; font-family: monospace; }
 
     /* Control Buttons */
-    .win-controls {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      z-index: 11;
-    }
-
+    .win-controls { display: flex; height: 100%; align-items: center; z-index: 11; }
     .win-btn {
       width: 46px;
       height: 100%;
@@ -184,7 +158,6 @@
       cursor: pointer;
       transition: background-color 0.15s ease;
     }
-
     .win-btn svg {
       width: 12px;
       height: 12px;
@@ -194,7 +167,6 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-
     .win-btn:hover { background-color: rgba(0, 0, 0, 0.06); }
     .win-btn.close-btn:hover { background-color: #c42b1c; }
     .win-btn.close-btn:hover svg { stroke: #ffffff; }
@@ -214,32 +186,17 @@
       position: relative;
     }
 
-    /* LOGIN BODY STYLES */
+    /* LOGIN STYLES */
     #loginWindow .window-body {
       padding: 24px;
       flex-direction: column;
       justify-content: center;
       background: #fcfbfe;
     }
-
-    .login-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      color: #1a1a1a;
-      text-align: center;
-    }
-
+    .login-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #1a1a1a; text-align: center; }
     .form-group { margin-bottom: 16px; }
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: #444;
-    }
-
-    .form-group input {
+    .form-group label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 6px; color: #444; }
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%;
       padding: 9px 12px;
       border: 1px solid #c5c5c5;
@@ -248,10 +205,9 @@
       font-size: 13px;
       outline: none;
       background-color: #ffffff;
+      font-family: inherit;
     }
-
-    .form-group input:focus { border-bottom-color: #005fb8; }
-
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-bottom-color: #005fb8; }
     .btn-submit {
       width: 100%;
       padding: 9px;
@@ -264,21 +220,13 @@
       cursor: pointer;
       margin-top: 8px;
     }
-
     .btn-submit:hover { background: #004e98; }
-    #error-message {
-      color: #c42b1c;
-      font-size: 12px;
-      margin-top: 10px;
-      text-align: center;
-      min-height: 16px;
-    }
+    #error-message { color: #c42b1c; font-size: 12px; margin-top: 10px; text-align: center; min-height: 16px; }
 
     /* Floating Capsule Button (+ Home) */
     #openHomeBtn {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       padding: 10px 20px;
       border-radius: 50px;
@@ -297,26 +245,13 @@
       z-index: 50;
       user-select: none;
     }
-
-    #openHomeBtn:hover {
-      background: #004e98;
-      transform: translate(-50%, -50%) scale(1.05);
-    }
-
-    #openHomeBtn svg {
-      width: 18px;
-      height: 18px;
-      stroke: #ffffff;
-      stroke-width: 2.5;
-      fill: none;
-      stroke-linecap: round;
-    }
+    #openHomeBtn:hover { background: #004e98; transform: translate(-50%, -50%) scale(1.05); }
+    #openHomeBtn svg { width: 18px; height: 18px; stroke: #ffffff; stroke-width: 2.5; fill: none; stroke-linecap: round; }
 
     /* Hugging Face Style Popup Profile Card */
     #hfProfileCard {
       position: absolute;
-      top: 48px;
-      left: 12px;
+      top: 48px; left: 12px;
       width: 310px;
       background: #ffffff;
       border-radius: 16px;
@@ -327,326 +262,152 @@
       z-index: 2000;
       animation: fadeInPopup 0.2s ease-out forwards;
     }
-
     @keyframes fadeInPopup {
       from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .hf-banner {
-      height: 70px;
-      background: linear-gradient(135deg, #fce38a 0%, #38302e 100%);
-    }
-
-    .hf-body {
-      padding: 0 16px 16px 16px;
-      position: relative;
-    }
-
+    .hf-banner { height: 70px; background: linear-gradient(135deg, #fce38a 0%, #38302e 100%); }
+    .hf-body { padding: 0 16px 16px 16px; position: relative; }
     .hf-avatar-wrapper {
-      position: relative;
-      margin-top: -36px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
+      position: relative; margin-top: -36px;
+      display: flex; justify-content: space-between; align-items: flex-end;
       margin-bottom: 10px;
     }
-
     .hf-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 3px solid #ffffff;
-      object-fit: cover;
-      background-color: #ffd166;
+      width: 64px; height: 64px;
+      border-radius: 50%; border: 3px solid #ffffff;
+      object-fit: cover; background-color: #ffd166;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
     .hf-like-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      font-size: 12px;
-      font-weight: 600;
-      color: #374151;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      transition: background 0.15s ease;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid #e5e7eb; background: #ffffff;
+      font-size: 12px; font-weight: 600; color: #374151;
+      cursor: pointer; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
-
     .hf-like-btn:hover { background: #f9fafb; }
     .hf-like-btn svg { width: 14px; height: 14px; fill: #ef4444; }
-
-    .hf-display-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.2;
-    }
-
+    .hf-display-name { font-size: 18px; font-weight: 700; color: #111827; line-height: 1.2; }
     .hf-username-tag {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 3px 8px;
-      background: #f3f4f6;
-      color: #4b5563;
-      border-radius: 6px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 11px;
+      display: inline-block; margin-top: 6px; padding: 3px 8px;
+      background: #f3f4f6; color: #4b5563; border-radius: 6px;
+      font-family: monospace; font-size: 11px;
     }
 
-    /* Minimized Style */
+    /* Minimized & Maximized Styles */
     .window.minimized {
-      position: relative !important;
-      top: auto !important;
-      left: auto !important;
-      width: 220px !important;
-      height: 40px !important;
-      min-height: 40px !important;
+      position: relative !important; top: auto !important; left: auto !important;
+      width: 220px !important; height: 40px !important; min-height: 40px !important;
       border-radius: 8px;
     }
-
-    .window.minimized .window-body,
-    .window.minimized .resize-handle,
-    .window.minimized #hfProfileCard {
-      display: none !important;
-    }
-
-    /* Maximized Style */
-    .window.maximized {
-      top: 0 !important;
-      left: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      border-radius: 0;
-    }
-
+    .window.minimized .window-body, .window.minimized .resize-handle, .window.minimized #hfProfileCard { display: none !important; }
+    .window.maximized { top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0; }
     .window.maximized .resize-handle { display: none !important; }
 
     /* ========================================================= */
-    /* DYNAMICS AX 2012 MODERN NAVIGATION MENU STYLES            */
+    /* DYNAMICS AX MODERN & MATERIAL REQUEST (MR) STYLES          */
     /* ========================================================= */
+    .ax-layout { display: flex; width: 100%; height: 100%; background: #f8fafc; }
 
-    .ax-layout {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      background: #f8fafc;
-    }
-
-    /* Left Sidebar - Module Navigation */
+    /* Sidebar Navigation */
     .ax-sidebar {
-      width: 220px;
-      background: #0f172a;
-      color: #94a3b8;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      border-right: 1px solid #1e293b;
+      width: 220px; background: #0f172a; color: #94a3b8;
+      display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #1e293b;
     }
-
     .ax-sidebar-header {
-      padding: 14px 16px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #64748b;
+      padding: 14px 16px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;
       border-bottom: 1px solid #1e293b;
     }
-
-    .ax-module-list {
-      list-style: none;
-      overflow-y: auto;
-      flex: 1;
-    }
-
+    .ax-module-list { list-style: none; overflow-y: auto; flex: 1; }
     .ax-module-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #cbd5e1;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 16px; font-size: 13px; font-weight: 500;
+      color: #cbd5e1; cursor: pointer; transition: all 0.15s ease;
       border-left: 3px solid transparent;
     }
+    .ax-module-item:hover { background: #1e293b; color: #ffffff; }
+    .ax-module-item.active { background: #1e293b; color: #38bdf8; border-left-color: #38bdf8; font-weight: 600; }
+    .ax-module-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-    .ax-module-item:hover {
-      background: #1e293b;
-      color: #ffffff;
-    }
-
-    .ax-module-item.active {
-      background: #1e293b;
-      color: #38bdf8;
-      border-left-color: #38bdf8;
-      font-weight: 600;
-    }
-
-    .ax-module-item svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* Main Area - Dynamics AX Workspace Content */
-    .ax-main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: #f8fafc;
-      overflow: hidden;
-    }
-
-    /* AX Breadcrumb / Top Bar */
+    /* Main Dynamic Content Area */
+    .ax-main { flex: 1; display: flex; flex-direction: column; background: #f8fafc; overflow: hidden; }
     .ax-topbar {
-      height: 48px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
+      height: 48px; background: #ffffff; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
     }
+    .ax-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; }
+    .ax-breadcrumb-current { font-weight: 600; color: #0f172a; }
+    .ax-company-tag { font-size: 11px; font-weight: 600; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; border: 1px solid #bae6fd; }
 
-    .ax-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #64748b;
-    }
+    .ax-content { flex: 1; padding: 20px; overflow-y: auto; }
 
-    .ax-breadcrumb-current {
-      font-weight: 600;
-      color: #0f172a;
-    }
-
-    .ax-company-tag {
-      font-size: 11px;
-      font-weight: 600;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid #bae6fd;
-    }
-
-    /* AX Navigation Grid / Accordions */
-    .ax-content {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      align-content: start;
-    }
-
-    /* Section Card (Common, Inquiries, Reports, Setup, Periodic) */
-    .ax-group-card {
-      background: #ffffff;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      overflow: hidden;
-    }
-
+    /* Grid cards for General AX Modules */
+    .ax-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; align-content: start; }
+    .ax-group-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
     .ax-group-header {
-      background: #f1f5f9;
-      padding: 10px 14px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #334155;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: #f1f5f9; padding: 10px 14px; font-size: 12px; font-weight: 700;
+      color: #334155; text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
     }
-
-    .ax-group-header svg {
-      width: 14px;
-      height: 14px;
-      stroke: #0284c7;
-      fill: none;
-      stroke-width: 2;
-    }
-
-    .ax-link-list {
-      list-style: none;
-      padding: 6px 0;
-    }
-
+    .ax-group-header svg { width: 14px; height: 14px; stroke: #0284c7; fill: none; stroke-width: 2; }
+    .ax-link-list { list-style: none; padding: 6px 0; }
     .ax-link-item a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 14px;
-      font-size: 13px;
-      color: #475569;
-      text-decoration: none;
-      transition: all 0.15s ease;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 14px; font-size: 13px; color: #475569; text-decoration: none; transition: all 0.15s ease;
+    }
+    .ax-link-item a:hover { background: #f8fafc; color: #0284c7; padding-left: 18px; }
+
+    /* ========================================================= */
+    /* MATERIAL REQUEST (MR) FORM & GRIDVIEW STYLES              */
+    /* ========================================================= */
+    .mr-container { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+    .mr-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .mr-card-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .mr-card-title svg { width: 16px; height: 16px; stroke: #0284c7; fill: none; stroke-width: 2; }
+
+    /* Header Form Grid */
+    .mr-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    
+    /* OPEX vs CAPEX Badging Select */
+    .budget-type-wrapper { display: flex; gap: 12px; align-items: center; }
+    .radio-badge {
+      display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+      border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer;
+      font-size: 12px; font-weight: 600; color: #475569; transition: all 0.15s;
+    }
+    .radio-badge input { display: none; }
+    .radio-badge:has(input:checked) { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
+
+    /* GridView Table Items */
+    .gridview-container { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 8px; }
+    .mr-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    .mr-table th { background: #f1f5f9; padding: 10px 12px; font-weight: 600; color: #334155; border-bottom: 1px solid #e2e8f0; }
+    .mr-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #475569; }
+    .mr-table input, .mr-table select {
+      width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;
     }
 
-    .ax-link-item a:hover {
-      background: #f8fafc;
-      color: #0284c7;
-      padding-left: 18px;
+    .btn-action {
+      padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
+      border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
     }
+    .btn-add-row { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .btn-add-row:hover { background: #bae6fd; }
+    .btn-delete-row { background: #fee2e2; color: #991b1b; padding: 4px 8px; }
+    .btn-delete-row:hover { background: #fca5a5; }
 
-    .ax-link-item a svg {
-      width: 12px;
-      height: 12px;
-      stroke: #cbd5e1;
-      fill: none;
-      stroke-width: 2;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
+    .mr-summary-row { background: #f8fafc; font-weight: 700; color: #0f172a; }
 
-    .ax-link-item a:hover svg {
-      opacity: 1;
-      stroke: #0284c7;
-    }
-
-    /* AX Status Footer */
+    /* Footer Status */
     .ax-footer {
-      height: 28px;
-      background: #ffffff;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      font-size: 11px;
-      color: #64748b;
+      height: 28px; background: #ffffff; border-top: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; font-size: 11px; color: #64748b;
     }
-
-    .ax-status-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: #22c55e;
-    }
+    .ax-status-item { display: flex; align-items: center; gap: 6px; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: #22c55e; }
   </style>
 </head>
 <body>
@@ -687,7 +448,7 @@
     </div>
   </div>
 
-  <!-- 2. HOME WINDOW PANEL WITH DYNAMICS AX MENU -->
+  <!-- 2. HOME WINDOW PANEL WITH DYNAMICS AX & MATERIAL REQUEST -->
   <div class="window" id="homeWindow">
     <div class="resize-handle top"></div>
     <div class="resize-handle bottom"></div>
@@ -740,14 +501,18 @@
       </div>
     </div>
 
-    <!-- DYNAMICS AX 2012 MODERN NAVIGATION WORKSPACE -->
+    <!-- DYNAMICS AX 2012 WORKSPACE -->
     <div class="window-body">
       <div class="ax-layout">
-        <!-- Sidebar Navigation (Modules List) -->
+        <!-- Sidebar Navigation -->
         <div class="ax-sidebar">
           <div class="ax-sidebar-header">Modules AX 2012</div>
           <ul class="ax-module-list" id="axModuleList">
-            <li class="ax-module-item active" data-module="General Ledger">
+            <li class="ax-module-item active" data-module="Material Request">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>Material Request (MR)</span>
+            </li>
+            <li class="ax-module-item" data-module="General Ledger">
               <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
               <span>General Ledger</span>
             </li>
@@ -759,49 +524,41 @@
               <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               <span>Accounts Payable</span>
             </li>
-            <li class="ax-module-item" data-module="Sales & Marketing">
-              <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Sales & Marketing</span>
+            <li class="ax-module-item" data-module="Procurement & Sourcing">
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              <span>Procurement</span>
             </li>
             <li class="ax-module-item" data-module="Inventory Management">
               <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
               <span>Inventory Management</span>
             </li>
-            <li class="ax-module-item" data-module="Procurement & Sourcing">
-              <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              <span>Procurement</span>
-            </li>
-            <li class="ax-module-item" data-module="System Administration">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              <span>System Admin</span>
-            </li>
           </ul>
         </div>
 
-        <!-- Main Dynamic Area -->
+        <!-- Main Workspace Area -->
         <div class="ax-main">
-          <!-- Top Bar / Breadcrumb -->
+          <!-- Top Bar -->
           <div class="ax-topbar">
             <div class="ax-breadcrumb">
               <span>Dynamics AX</span>
               <span>/</span>
-              <span class="ax-breadcrumb-current" id="axCurrentModuleName">General Ledger</span>
+              <span class="ax-breadcrumb-current" id="axCurrentModuleName">Material Request (MR)</span>
             </div>
             <div class="ax-company-tag">Company: DAT</div>
           </div>
 
-          <!-- Dynamic Links Area -->
+          <!-- Dynamic Workspace Content -->
           <div class="ax-content" id="axContentArea">
-            <!-- Content render via JavaScript -->
+            <!-- Content render via Javascript -->
           </div>
 
-          <!-- AX Status Footer -->
+          <!-- Status Bar -->
           <div class="ax-footer">
             <div class="ax-status-item">
               <span class="status-dot"></span>
-              <span>Connected to AOS Server</span>
+              <span>AOS Server Active</span>
             </div>
-            <div>Partition: initial</div>
+            <div>MR Engine v2.4</div>
           </div>
         </div>
       </div>
@@ -810,10 +567,7 @@
 
   <!-- Tombol Kapsul Home -->
   <button id="openHomeBtn" title="Buka Window HOME">
-    <svg viewBox="0 0 24 24">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     <span>Home</span>
   </button>
 
@@ -830,142 +584,263 @@
 
     let activeZIndex = 100;
 
-    // --- DYNAMICS AX 2012 MENU DATA ---
+    // --- DYNAMICS AX MENU DATA ---
     const axMenuData = {
       "General Ledger": [
-        {
-          group: "Common",
-          links: ["Main Accounts", "General Journals", "Chart of Accounts", "Trial Balance"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Voucher Transactions", "Ledger Statements", "Financial Reports"]
-        },
-        {
-          group: "Periodic Tasks",
-          links: ["Fiscal Year Close", "Currency Revaluation", "Journal Allocation"]
-        },
-        {
-          group: "Setup",
-          links: ["Ledger Setup", "Posting Definitions", "Currencies & Exchange Rates"]
-        }
+        { group: "Common", links: ["Main Accounts", "General Journals", "Chart of Accounts", "Trial Balance"] },
+        { group: "Inquiries & Reports", links: ["Voucher Transactions", "Ledger Statements"] },
+        { group: "Setup", links: ["Ledger Setup", "Posting Definitions"] }
       ],
       "Accounts Receivable": [
-        {
-          group: "Common",
-          links: ["All Customers", "Free Text Invoices", "Customer Payments", "Collections"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Customer Aging Report", "Customer Statistics", "Invoice Journal"]
-        },
-        {
-          group: "Setup",
-          links: ["Customer Groups", "Payment Terms", "Terms of Delivery"]
-        }
+        { group: "Common", links: ["All Customers", "Free Text Invoices", "Customer Payments"] },
+        { group: "Reports", links: ["Customer Aging Report", "Customer Statistics"] }
       ],
       "Accounts Payable": [
-        {
-          group: "Common",
-          links: ["All Vendors", "Vendor Invoices", "Payment Journals", "Purchase Order Matching"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Vendor Aging Report", "Vendor History", "Payment History"]
-        },
-        {
-          group: "Setup",
-          links: ["Vendor Groups", "Methods of Payment", "Posting Profiles"]
-        }
-      ],
-      "Sales & Marketing": [
-        {
-          group: "Common",
-          links: ["All Sales Orders", "Quotations", "Prospects & Leads", "Opportunities"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Sales Performance Analysis", "Customer Item Statistics"]
-        },
-        {
-          group: "Setup",
-          links: ["Sales Origin", "Commission Setup", "Sales Categories"]
-        }
-      ],
-      "Inventory Management": [
-        {
-          group: "Common",
-          links: ["On-hand Inventory", "Item Master", "Inventory Adjustment Journals", "Transfer Orders"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Inventory Valuation Report", "Batch History", "Traceability"]
-        },
-        {
-          group: "Setup",
-          links: ["Warehouses", "Inventory Groups", "Dimension Groups"]
-        }
+        { group: "Common", links: ["All Vendors", "Vendor Invoices", "Payment Journals"] },
+        { group: "Reports", links: ["Vendor Aging Report"] }
       ],
       "Procurement & Sourcing": [
-        {
-          group: "Common",
-          links: ["All Purchase Orders", "Purchase Requisitions", "Requests for Quotations"]
-        },
-        {
-          group: "Inquiries & Reports",
-          links: ["Spend Analysis", "Vendor Performance"]
-        },
-        {
-          group: "Setup",
-          links: ["Procurement Categories", "Purchasing Policies"]
-        }
+        { group: "Common", links: ["All Purchase Orders", "Purchase Requisitions", "Requests for Quotations"] }
       ],
-      "System Administration": [
-        {
-          group: "Common",
-          links: ["Users & Security", "Batch Jobs", "Event Log", "System Service Management"]
-        },
-        {
-          group: "Setup",
-          links: ["License Configuration", "System Parameters", "Email Parameters"]
-        }
+      "Inventory Management": [
+        { group: "Common", links: ["On-hand Inventory", "Item Master", "Transfer Orders"] }
       ]
     };
 
-    // Render AX Workspace Links
-    function renderAxModule(moduleName) {
+    // --- RENDER MATERIAL REQUEST (MR) FORM WITH OPEX / CAPEX & GRIDVIEW ---
+    function renderMaterialRequestModule() {
       const contentArea = document.getElementById('axContentArea');
+      contentArea.innerHTML = `
+        <div class="mr-container">
+          <!-- Header Info Card -->
+          <div class="mr-card">
+            <div class="mr-card-title">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span>Header Material Request (MR)</span>
+            </div>
+            
+            <form id="mrHeaderForm">
+              <div class="mr-form-grid">
+                <div class="form-group">
+                  <label>Budget Type (Jenis Anggaran)</label>
+                  <div class="budget-type-wrapper">
+                    <label class="radio-badge">
+                      <input type="radio" name="mrBudgetType" value="OPEX" checked>
+                      <span>OPEX</span>
+                    </label>
+                    <label class="radio-badge">
+                      <input type="radio" name="mrBudgetType" value="CAPEX">
+                      <span>CAPEX</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="mrDepartment">Department</label>
+                  <select id="mrDepartment" required>
+                    <option value="IT">IT & Infrastructure</option>
+                    <option value="FINANCE">Finance & Accounting</option>
+                    <option value="HR">Human Resources</option>
+                    <option value="OPS">Operations & Supply Chain</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="mrRequester">Requester</label>
+                  <input type="text" id="mrRequester" value="${headerDisplayName.innerText || 'Bayu Adi Ananta'}" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="mrPriority">Priority Level</label>
+                  <select id="mrPriority">
+                    <option value="Normal">Normal</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label for="mrDescription">Purpose / Justification</label>
+                  <input type="text" id="mrDescription" placeholder="Alasan pengajuan material / barang..." required>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Items GridView Card -->
+          <div class="mr-card" style="flex: 1; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div class="mr-card-title" style="margin-bottom: 0;">
+                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                <span>Item Lines (GridView)</span>
+              </div>
+              <button class="btn-action btn-add-row" id="btnAddMrRow">
+                + Tambah Item
+              </button>
+            </div>
+
+            <div class="gridview-container" style="flex: 1;">
+              <table class="mr-table" id="mrGridTable">
+                <thead>
+                  <tr>
+                    <th style="width: 40px;">#</th>
+                    <th>Nama / Deskripsi Barang</th>
+                    <th style="width: 100px;">Qty</th>
+                    <th style="width: 110px;">Satuan (Unit)</th>
+                    <th style="width: 160px;">Est. Harga Satuan (Rp)</th>
+                    <th style="width: 160px;">Total (Rp)</th>
+                    <th style="width: 60px; text-align: center;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="mrGridBody">
+                  <!-- Dynamic Rows -->
+                </tbody>
+                <tfoot>
+                  <tr class="mr-summary-row">
+                    <td colspan="5" style="text-align: right; padding-right: 16px;">Grand Total Estimasi:</td>
+                    <td id="mrGrandTotal">Rp 0</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+              <button class="btn-submit" id="btnSubmitMR" style="width: auto; padding: 10px 24px;">Submit Material Request</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      initMrGridEvents();
+    }
+
+    // GridView Event Handlers
+    function initMrGridEvents() {
+      const gridBody = document.getElementById('mrGridBody');
+      const btnAdd = document.getElementById('btnAddMrRow');
+
+      function addRow(itemName = '', qty = 1, unit = 'Pcs', price = 0) {
+        const rowCount = gridBody.rows.length + 1;
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>${rowCount}</td>
+          <td><input type="text" class="item-name" placeholder="Nama barang..." value="${itemName}" required></td>
+          <td><input type="number" class="item-qty" min="1" value="${qty}"></td>
+          <td>
+            <select class="item-unit">
+              <option value="Pcs" ${unit==='Pcs'?'selected':''}>Pcs</option>
+              <option value="Unit" ${unit==='Unit'?'selected':''}>Unit</option>
+              <option value="Box" ${unit==='Box'?'selected':''}>Box</option>
+              <option value="Pack" ${unit==='Pack'?'selected':''}>Pack</option>
+              <option value="Set" ${unit==='Set'?'selected':''}>Set</option>
+            </select>
+          </td>
+          <td><input type="number" class="item-price" min="0" step="500" value="${price}"></td>
+          <td class="item-total" style="font-weight: 600;">Rp 0</td>
+          <td style="text-align: center;">
+            <button class="btn-action btn-delete-row" title="Hapus Item">&times;</button>
+          </td>
+        `;
+
+        gridBody.appendChild(tr);
+        recalculateRow(tr);
+        bindRowEvents(tr);
+      }
+
+      function bindRowEvents(tr) {
+        const qtyInput = tr.querySelector('.item-qty');
+        const priceInput = tr.querySelector('.item-price');
+        const btnDelete = tr.querySelector('.btn-delete-row');
+
+        qtyInput.addEventListener('input', () => recalculateRow(tr));
+        priceInput.addEventListener('input', () => recalculateRow(tr));
+
+        btnDelete.addEventListener('click', () => {
+          tr.remove();
+          reindexRows();
+          calculateGrandTotal();
+        });
+      }
+
+      function recalculateRow(tr) {
+        const qty = parseFloat(tr.querySelector('.item-qty').value) || 0;
+        const price = parseFloat(tr.querySelector('.item-price').value) || 0;
+        const total = qty * price;
+        tr.querySelector('.item-total').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        calculateGrandTotal();
+      }
+
+      function calculateGrandTotal() {
+        let grandTotal = 0;
+        document.querySelectorAll('#mrGridBody tr').forEach(row => {
+          const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+          const price = parseFloat(row.querySelector('.item-price').value) || 0;
+          grandTotal += (qty * price);
+        });
+        document.getElementById('mrGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+      }
+
+      function reindexRows() {
+        document.querySelectorAll('#mrGridBody tr').forEach((row, idx) => {
+          row.cells[0].innerText = idx + 1;
+        });
+      }
+
+      btnAdd.addEventListener('click', () => addRow());
+
+      // Tambahkan 2 Baris Default
+      addRow('Laptop Workstation Core i7', 1, 'Unit', 15000000);
+      addRow('Kertas HVS A4 80gr', 5, 'Box', 250000);
+
+      // Submit Handler
+      document.getElementById('btnSubmitMR').addEventListener('click', () => {
+        const budgetType = document.querySelector('input[name="mrBudgetType"]:checked').value;
+        const desc = document.getElementById('mrDescription').value;
+
+        if (!desc) {
+          alert('Mohon lengkapi Purpose / Justification MR!');
+          return;
+        }
+
+        alert(`Material Request (${budgetType}) Berhasil Dibuat!\nPengajuan telah dikirimkan untuk proses approval.`);
+      });
+    }
+
+    // Render Dynamic Modules
+    function renderAxModule(moduleName) {
       const breadcrumbTitle = document.getElementById('axCurrentModuleName');
       breadcrumbTitle.innerText = moduleName;
 
+      if (moduleName === "Material Request") {
+        renderMaterialRequestModule();
+        return;
+      }
+
+      const contentArea = document.getElementById('axContentArea');
       const data = axMenuData[moduleName] || [];
-      contentArea.innerHTML = '';
-
+      
+      let html = `<div class="ax-grid-view">`;
       data.forEach(sec => {
-        const card = document.createElement('div');
-        card.className = 'ax-group-card';
-
         let linksHtml = sec.links.map(link => `
           <li class="ax-link-item">
-            <a href="#" onclick="return false;">
-              <span>${link}</span>
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </a>
+            <a href="#" onclick="return false;"><span>${link}</span></a>
           </li>
         `).join('');
 
-        card.innerHTML = `
-          <div class="ax-group-header">
-            <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-            <span>${sec.group}</span>
+        html += `
+          <div class="ax-group-card">
+            <div class="ax-group-header">
+              <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span>${sec.group}</span>
+            </div>
+            <ul class="ax-link-list">${linksHtml}</ul>
           </div>
-          <ul class="ax-link-list">
-            ${linksHtml}
-          </ul>
         `;
-
-        contentArea.appendChild(card);
       });
+      html += `</div>`;
+      contentArea.innerHTML = html;
     }
 
     // Module Switcher Click Event
@@ -979,7 +854,7 @@
     });
 
     // Initial AX Load
-    renderAxModule('General Ledger');
+    renderAxModule('Material Request');
 
     // --- WINDOW CONTROLS LOGIC ---
     document.querySelectorAll('.window').forEach(win => {
@@ -1047,10 +922,7 @@
       }
 
       function minimizeWindow() {
-        if (isMinimized) {
-          restoreWindow();
-          return;
-        }
+        if (isMinimized) { restoreWindow(); return; }
         saveCurrentState();
         isMinimized = true;
         isMaximized = false;
