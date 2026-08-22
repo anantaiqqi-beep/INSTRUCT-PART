@@ -648,12 +648,19 @@
       const todayStr = new Date().toISOString().split('T')[0];
       addRow(todayStr, 'SKU-1001', 'Laptop Workstation Core i7', 5, 'Unit', 15000000, 'Kebutuhan Project Developer', 'Pending');
 
+      // --- DISESUAIKAN: PROSES SUBMIT MATERIAL REQUEST (MR) ---
       document.getElementById('btnSubmitMR').addEventListener('click', async () => {
         const rows = gridBody.querySelectorAll('tr');
         if (rows.length === 0) {
           alert('Harap isi minimal 1 row item!');
           return;
         }
+
+        // Ambil elemen Header MR
+        const budgetType = document.querySelector('input[name="mrBudgetType"]:checked')?.value || 'OPEX';
+        const department = document.getElementById('mrDepartment').value;
+        const requester = document.getElementById('mrRequester').value.trim();
+        const priority = document.getElementById('mrPriority').value;
 
         const items = [];
         let isValid = true;
@@ -673,6 +680,10 @@
 
           items.push({ 
             tanggalMR: tanggalMR,
+            budgetType: budgetType,
+            departements: department,
+            requester: requester,
+            priorityLevel: priority,
             kodeBarang: sku, 
             namaBarang: name, 
             quantity: qty, 
@@ -702,7 +713,7 @@
           const result = await response.json();
 
           if (result.success) {
-            alert('Data MR Berhasil disimpan!');
+            alert('Data MR Berhasil disimpan ke MR_DATA!');
             gridBody.innerHTML = '';
             addRow();
           } else {
@@ -718,6 +729,7 @@
       });
     }
 
+    // --- DISESUAIKAN: FETCH DATA UNTUK MR LIST DATA ---
     async function fetchMRListData() {
       const tbody = document.getElementById('mrListBody');
       tbody.innerHTML = `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #64748b;">Memuat data...</td></tr>`;
@@ -826,7 +838,7 @@
 
         const result = await response.json();
         if (result.success) {
-          alert('MR_DATA & STOCK_DATA berhasil di-update!');
+          alert('MR_DATA berhasil di-update!');
           fetchMRListData(); // Refresh MR list
           fetchStockData();  // Refresh Stock data apabila window stok dibuka
         } else {
